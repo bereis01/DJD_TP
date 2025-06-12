@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
-#include "Math.h"
+#include "Utils/Math.h"
 
 class Game {
 public:
@@ -57,9 +57,6 @@ public:
     // Texture functions
     SDL_Texture *LoadTexture(const std::string &texturePath);
 
-    // Game-specific
-    class Mario *GetMario() { return mMario; }
-
 private:
     // Game processing functions
     void ProcessInput();
@@ -104,7 +101,6 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
-    class Mario *mMario;
 
     // Level data
     int **mLevelData;

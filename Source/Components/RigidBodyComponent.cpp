@@ -13,6 +13,7 @@ RigidBodyComponent::RigidBodyComponent(class Actor *owner, float mass, float fri
     : Component(owner, updateOrder)
       , mMass(mass)
       , mApplyGravity(applyGravity)
+      , mApplyFriction(true)
       , mFrictionCoefficient(friction)
       , mVelocity(Vector2::Zero)
       , mAcceleration(Vector2::Zero) {
@@ -29,7 +30,7 @@ void RigidBodyComponent::Update(float deltaTime) {
     }
 
     // Apply friction
-    if (Math::Abs(mVelocity.x) > 0.05f) {
+    if (mApplyFriction && Math::Abs(mVelocity.x) > 0.05f) {
         ApplyForce(Vector2::UnitX * -mFrictionCoefficient * mVelocity.x);
     }
 
@@ -45,18 +46,23 @@ void RigidBodyComponent::Update(float deltaTime) {
 
     auto collider = mOwner->GetComponent<AABBColliderComponent>();
 
-    mOwner->SetPosition(Vector2(mOwner->GetPosition().x + mVelocity.x * deltaTime,
-                                mOwner->GetPosition().y));
+    if (mVelocity.x != 0.0f) {
+        mOwner->SetPosition(Vector2(mOwner->GetPosition().x + mVelocity.x * deltaTime,
+                                    mOwner->GetPosition().y));
 
-    if (collider)
-        if (collider->IsEnabled())
+        if (collider) {
             collider->DetectHorizontalCollision(this);
+        }
+    }
 
-    mOwner->SetPosition(Vector2(mOwner->GetPosition().x,
-                                mOwner->GetPosition().y + mVelocity.y * deltaTime));
-    if (collider)
-        if (collider->IsEnabled())
+    if (mVelocity.y != 0.0f) {
+        mOwner->SetPosition(Vector2(mOwner->GetPosition().x,
+                                    mOwner->GetPosition().y + mVelocity.y * deltaTime));
+
+        if (collider) {
             collider->DetectVertialCollision(this);
+        }
+    }
 
     mAcceleration.Set(0.f, 0.f);
 }

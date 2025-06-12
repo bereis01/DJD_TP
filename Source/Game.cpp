@@ -4,8 +4,8 @@
 #include <map>
 #include <vector>
 #include <SDL_image.h>
-#include "CSV.h"
-#include "Random.h"
+#include "Utils/CSV.h"
+#include "Utils/Random.h"
 #include "Game.h"
 #include "Actors/Actor.h"
 #include "Components/DrawComponents/DrawComponent.h"
@@ -157,18 +157,6 @@ void Game::UpdateGame() {
 }
 
 void Game::UpdateCamera() {
-    // Calculates new camera position based on player
-    int newCameraX = mMario->GetPosition().x - mWindowWidth / 2;
-
-    // Limits it to the level space
-    if (newCameraX < 0)
-        newCameraX = 0;
-    if (newCameraX > (LEVEL_WIDTH * TILE_SIZE - mWindowWidth))
-        newCameraX = LEVEL_WIDTH * TILE_SIZE - mWindowWidth;
-
-    // Updates only if the player has moved forward
-    if (newCameraX > mCameraPos.x)
-        mCameraPos.x = newCameraX;
 }
 
 void Game::UpdateActors(float deltaTime) {

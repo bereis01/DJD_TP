@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <SDL2/SDL_stdinc.h>
-#include "../Math.h"
+#include "../Utils/Math.h"
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
 
 enum class ActorState {

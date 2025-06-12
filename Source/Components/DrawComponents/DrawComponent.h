@@ -1,6 +1,6 @@
 #pragma once
 #include "../Component.h"
-#include "../../Math.h"
+#include "../../Utils/Math.h"
 #include <vector>
 #include <SDL.h>
 
@@ -11,7 +11,7 @@ public:
 
     ~DrawComponent() override;
 
-    virtual void Draw(SDL_Renderer *renderer);
+    virtual void Draw(SDL_Renderer *renderer, const Vector3 &modColor = Color::White);
 
     bool IsVisible() const { return mIsVisible; }
     void SetIsVisible(const bool isVisible) { mIsVisible = isVisible; }

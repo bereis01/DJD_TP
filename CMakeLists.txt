@@ -10,10 +10,10 @@ find_package(SDL2 2.32.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
 
 add_executable(${PROJECT_NAME}
-        Source/Math.cpp
-        Source/Random.cpp
-        Source/Json.h
-        Source/CSV.h
+        Source/Utils/Math.cpp
+        Source/Utils/Random.cpp
+        Source/Utils/Json.h
+        Source/Utils/CSV.h
         Source/Main.cpp
         Source/Game.cpp
         Source/Actors/Actor.cpp

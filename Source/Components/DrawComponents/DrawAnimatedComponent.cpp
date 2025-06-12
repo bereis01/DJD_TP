@@ -1,7 +1,7 @@
 #include "DrawAnimatedComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
-#include "../../Json.h"
+#include "../../Utils/Json.h"
 #include <fstream>
 
 DrawAnimatedComponent::DrawAnimatedComponent(class Actor *owner, const std::string &spriteSheetPath,
@@ -11,6 +11,8 @@ DrawAnimatedComponent::DrawAnimatedComponent(class Actor *owner, const std::stri
 }
 
 DrawAnimatedComponent::~DrawAnimatedComponent() {
+    DrawSpriteComponent::~DrawSpriteComponent();
+
     for (const auto &rect: mSpriteSheetData) {
         delete rect;
     }
@@ -37,38 +39,47 @@ void DrawAnimatedComponent::LoadSpriteSheet(const std::string &texturePath, cons
     }
 }
 
-void DrawAnimatedComponent::Draw(SDL_Renderer *renderer) {
-    // Calculates the correct sprite index based on elapsed time and target framerate
+void DrawAnimatedComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor) {
     int spriteIdx = mAnimations[mAnimName][static_cast<int>(mAnimTimer)];
-
-    // Renders the correct sprite
     SDL_Rect *srcRect = mSpriteSheetData[spriteIdx];
-    SDL_RendererFlip flip = mOwner->GetRotation() == 0 ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-    Vector2 ownerPosition = mOwner->GetPosition();
-    Vector2 cameraPosition = mOwner->GetGame()->GetCameraPos();
+
     SDL_Rect dstRect = {
-        static_cast<int>(ownerPosition.x - cameraPosition.x), static_cast<int>(ownerPosition.y - cameraPosition.y),
-        srcRect->w, srcRect->h
+        static_cast<int>(mOwner->GetPosition().x - mOwner->GetGame()->GetCameraPos().x),
+        static_cast<int>(mOwner->GetPosition().y - mOwner->GetGame()->GetCameraPos().y),
+        srcRect->w,
+        srcRect->h
     };
-    SDL_RenderCopyEx(renderer, mSpriteSheetSurface, srcRect, &dstRect, 0, nullptr, flip);
+
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (mOwner->GetRotation() == Math::Pi) {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
+
+    SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureColorMod(mSpriteSheetSurface,
+                           static_cast<Uint8>(modColor.x),
+                           static_cast<Uint8>(modColor.y),
+                           static_cast<Uint8>(modColor.z));
+
+    SDL_RenderCopyEx(renderer, mSpriteSheetSurface, srcRect, &dstRect, mOwner->GetRotation(), nullptr, flip);
 }
 
 void DrawAnimatedComponent::Update(float deltaTime) {
-    // Do nothing if animation is paused
-    if (mIsPaused)
+    if (mIsPaused) {
         return;
+    }
 
-    // Updates animation timer based on elapsed time and target framerate
-    mAnimTimer += deltaTime * mAnimFPS;
-
-    // Adjusts the timer based on current animation
-    while (mAnimTimer >= mAnimations[mAnimName].size())
-        mAnimTimer -= mAnimations[mAnimName].size();
+    mAnimTimer += mAnimFPS * deltaTime;
+    if (mAnimTimer >= mAnimations[mAnimName].size()) {
+        while (mAnimTimer >= mAnimations[mAnimName].size()) {
+            mAnimTimer -= mAnimations[mAnimName].size();
+        }
+    }
 }
 
 void DrawAnimatedComponent::SetAnimation(const std::string &name) {
     mAnimName = name;
-    Update(0.0f); // Resets animation timer
+    Update(0.0f);
 }
 
 void DrawAnimatedComponent::AddAnimation(const std::string &name, const std::vector<int> &spriteNums) {
