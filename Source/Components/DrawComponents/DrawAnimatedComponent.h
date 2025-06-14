@@ -5,12 +5,12 @@
 class DrawAnimatedComponent : public DrawSpriteComponent {
 public:
     // (Lower draw order corresponds with further back)
-    DrawAnimatedComponent(class Actor *owner, const std::string &spriteSheetPath, const std::string &spriteSheetData,
+    DrawAnimatedComponent(Actor *owner, const std::string &spriteSheetPath, const std::string &spriteSheetData,
                           int drawOrder = 100);
 
     ~DrawAnimatedComponent() override;
 
-    void Draw(SDL_Renderer *renderer, const Vector3 &modColor = Color::White) override;
+    void Draw(SDL_Renderer *renderer, const Vector3 &modColor = Color::White);
 
     void Update(float deltaTime) override;
 
@@ -27,12 +27,14 @@ public:
     void AddAnimation(const std::string &name, const std::vector<int> &images);
 
 private:
+    // Loads animation sprites as spritesheet
     void LoadSpriteSheet(const std::string &texturePath, const std::string &dataPath);
 
-    // Vector of sprites
+    // Vector of sprites (contains all of them)
     std::vector<SDL_Rect *> mSpriteSheetData;
 
-    // Map of animation name to vector of textures corresponding to the animation
+    // Map of animation name to vector of indexes
+    // Indices correspond to the animations sprites in mSpriteSheetData
     std::unordered_map<std::string, std::vector<int> > mAnimations;
 
     // Name of current animation
@@ -44,6 +46,6 @@ private:
     // The frames per second the animation should run at
     float mAnimFPS = 10.0f;
 
-    // Whether or not the animation is paused (defaults to false)
+    // Whether the animation is paused (defaults to false)
     bool mIsPaused = false;
 };

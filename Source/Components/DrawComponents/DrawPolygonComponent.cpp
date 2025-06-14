@@ -3,15 +3,15 @@
 #include "../../Game.h"
 
 DrawPolygonComponent::DrawPolygonComponent(class Actor *owner, std::vector<Vector2> &vertices, int drawOrder)
-    : DrawComponent(owner)
-      , mVertices(vertices)
-      , mDrawOrder(drawOrder) {
+    : DrawComponent(owner, drawOrder)
+      , mVertices(vertices) {
 }
 
-void DrawPolygonComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor) {
-    // Set draw color to green
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+void DrawPolygonComponent::Draw(SDL_Renderer *renderer, const Vector3 &color) {
+    // Set draw color to passed color
+    SDL_SetRenderDrawColor(renderer, color.x, color.y, color.z, 255);
 
+    // Gets positions
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
 
