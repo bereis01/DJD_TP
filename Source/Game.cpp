@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "Actors/Actor.h"
 #include "Actors/Tile.h"
+#include "Actors/Cursor.h"
 #include "Components/DrawComponents/DrawComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
@@ -45,6 +46,8 @@ bool Game::Initialize() {
 
     // Init all game actors
     InitializeActors();
+    mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
+    mCursor->SetPosition(Vector2::Zero);
 
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
@@ -54,7 +57,7 @@ bool Game::Initialize() {
 
 void Game::InitializeActors() {
     // Loads first level
-    mLevelData = LoadLevel("../Assets/Levels/Level1.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
+    mLevelData = LoadLevel("../Assets/Levels/Level1Small.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
     // Checks if loading was successful and builds the level
     if (mLevelData == nullptr) {
@@ -142,14 +145,20 @@ void Game::ProcessInput() {
             case SDL_QUIT:
                 Quit();
                 break;
+            case SDL_KEYDOWN:
+                // Handles key presses for actors
+                for (auto actor: mActors)
+                    actor->HandleKeyPress(event.key.keysym.sym, event.key.repeat == 0);
+                break;
+            default:
+                break;
         }
     }
 
     // Gets the keyboard state and processes actor input
     const Uint8 *state = SDL_GetKeyboardState(nullptr);
-    for (auto actor: mActors) {
+    for (auto actor: mActors)
         actor->ProcessInput(state);
-    }
 }
 
 void Game::UpdateGame() {
@@ -173,6 +182,16 @@ void Game::UpdateGame() {
 }
 
 void Game::UpdateCamera() {
+    // Makes the camera move as the cursor touches the edges
+    Vector2 pos = mCursor->GetPosition();
+    if (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
+        mCameraPos.x += TILE_SIZE;
+    if (pos.x < mCameraPos.x)
+        mCameraPos.x -= TILE_SIZE;
+    if (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
+        mCameraPos.y += TILE_SIZE;
+    if (pos.y < mCameraPos.y)
+        mCameraPos.y -= TILE_SIZE;
 }
 
 void Game::UpdateActors(float deltaTime) {

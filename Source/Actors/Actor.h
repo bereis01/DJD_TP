@@ -22,6 +22,9 @@ public:
     // ProcessInput function called from Game (not overridable)
     void ProcessInput(const Uint8 *keyState);
 
+    // HandleKeyPress function called from Game (not overridable)
+    void HandleKeyPress(const int key, const bool isPressed);
+
     // Position getter/setter
     const Vector2 &GetPosition() const { return mPosition; }
     void SetPosition(const Vector2 &pos) { mPosition = pos; }
@@ -71,8 +74,9 @@ protected:
     // Any actor-specific update code (overridable)
     virtual void OnUpdate(float deltaTime);
 
-    // Any actor-specific update code (overridable)
     virtual void OnProcessInput(const Uint8 *keyState);
+
+    virtual void OnHandleKeyPress(const int key, const bool isPressed);
 
     // Actor's state
     ActorState mState;

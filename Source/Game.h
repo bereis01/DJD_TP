@@ -6,9 +6,9 @@
 
 class Game {
 public:
-    static const int LEVEL_WIDTH = 100; // In tiles
-    static const int LEVEL_HEIGHT = 100; // In tiles
-    static const int TILE_SIZE = 32; // In pixels
+    static const int LEVEL_WIDTH = 30; // In tiles
+    static const int LEVEL_HEIGHT = 30; // In tiles
+    static const int TILE_SIZE = 64; // In pixels
 
     Game(int windowWidth, int windowHeight);
 
@@ -103,6 +103,7 @@ private:
     Vector2 mCameraPos;
 
     // Game-specific
+    class Cursor *mCursor;
 
     // Level data
     int **mLevelData;

@@ -64,7 +64,23 @@ void Actor::ProcessInput(const Uint8 *keyState) {
     }
 }
 
+void Actor::HandleKeyPress(const int key, const bool isPressed) {
+    // Only processes key presses if active
+    if (mState == ActorState::Active) {
+        // Processes key presses for all components
+        for (auto comp: mComponents) {
+            //comp->HandleKeyPress(key, isPressed);
+        }
+
+        // Processes own key press
+        OnHandleKeyPress(key, isPressed);
+    }
+}
+
 void Actor::OnProcessInput(const Uint8 *keyState) {
+}
+
+void Actor::OnHandleKeyPress(const int key, const bool isPressed) {
 }
 
 void Actor::AddComponent(Component *c) {

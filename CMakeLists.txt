@@ -34,6 +34,8 @@ add_executable(${PROJECT_NAME}
         Source/Components/DrawComponents/DrawAnimatedComponent.h
         Source/Actors/Tile.cpp
         Source/Actors/Tile.h
+        Source/Actors/Cursor.cpp
+        Source/Actors/Cursor.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
