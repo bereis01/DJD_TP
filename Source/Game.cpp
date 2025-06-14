@@ -8,6 +8,7 @@
 #include "Utils/Random.h"
 #include "Game.h"
 #include "Actors/Actor.h"
+#include "Actors/Block.h"
 #include "Components/DrawComponents/DrawComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
@@ -18,7 +19,8 @@ Game::Game(int windowWidth, int windowHeight)
       , mIsRunning(true)
       , mUpdatingActors(false)
       , mWindowWidth(windowWidth)
-      , mWindowHeight(windowHeight) {
+      , mWindowHeight(windowHeight)
+      , mCameraPos(Vector2::Zero) {
 }
 
 bool Game::Initialize() {
@@ -52,9 +54,9 @@ bool Game::Initialize() {
 
 void Game::InitializeActors() {
     // Loads first level
-    mLevelData = LoadLevel("../Assets/Levels/", LEVEL_WIDTH, LEVEL_HEIGHT);
+    mLevelData = LoadLevel("../Assets/Levels/Level1.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
-    // Checks if loading was successfull and builds the level
+    // Checks if loading was successful and builds the level
     if (mLevelData == nullptr) {
         SDL_Log("Failed initializing level");
         return;
@@ -67,6 +69,16 @@ void Game::BuildLevel(int **levelData, int width, int height) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             switch (levelData[i][j]) {
+                case 0: {
+                    Block *block = new Block(this, "../Assets/Sprites/Blocks/Grass.png");
+                    block->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    break;
+                }
+                case 1: {
+                    Block *block = new Block(this, "../Assets/Sprites/Blocks/Water.png");
+                    block->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    break;
+                }
                 default:
                     break;
             }
@@ -76,7 +88,7 @@ void Game::BuildLevel(int **levelData, int width, int height) {
 
 int **Game::LoadLevel(const std::string &fileName, int width, int height) {
     // Loads background
-    mBackground = LoadTexture("../Assets/Sprites/Background.png");
+    // mBackground = LoadTexture("../Assets/Sprites/Background.png");
 
     // Creates level matrix
     int **level = new int *[height];
@@ -247,10 +259,6 @@ void Game::GenerateOutput() {
 
     // Clear back buffer
     SDL_RenderClear(mRenderer);
-
-    // Draws background
-    SDL_Rect dstRect = {static_cast<int>(TILE_SIZE - mCameraPos.x), static_cast<int>(-mCameraPos.y), 6784, 448};
-    SDL_RenderCopyEx(mRenderer, mBackground, nullptr, &dstRect, 0, nullptr, SDL_FLIP_NONE);
 
     // Draws drawable components
     for (auto drawable: mDrawables) {

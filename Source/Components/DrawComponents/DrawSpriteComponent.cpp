@@ -21,7 +21,7 @@ DrawSpriteComponent::~DrawSpriteComponent() {
     }
 }
 
-void DrawSpriteComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor) {
+void DrawSpriteComponent::Draw(SDL_Renderer *renderer) {
     // Gets positions
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
@@ -41,10 +41,7 @@ void DrawSpriteComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor) 
     }
 
     // Renders the texture
-    SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureColorMod(mSpriteSheetSurface,
-                           static_cast<Uint8>(modColor.x),
-                           static_cast<Uint8>(modColor.y),
-                           static_cast<Uint8>(modColor.z));
+    // SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
+    // SDL_SetTextureColorMod(mSpriteSheetSurface, static_cast<Uint8>(modColor.x), static_cast<Uint8>(modColor.y), static_cast<Uint8>(modColor.z));
     SDL_RenderCopyEx(renderer, mSpriteSheetSurface, nullptr, &dstRect, mOwner->GetRotation(), nullptr, flip);
 }

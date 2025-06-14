@@ -10,7 +10,7 @@ public:
 
     ~DrawSpriteComponent() override;
 
-    void Draw(SDL_Renderer *renderer, const Vector3 &modColor = Color::White);
+    void Draw(SDL_Renderer *renderer) override;
 
 protected:
     // Sprite as a texture

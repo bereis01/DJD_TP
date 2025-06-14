@@ -32,6 +32,8 @@ add_executable(${PROJECT_NAME}
         Source/Components/DrawComponents/DrawPolygonComponent.h
         Source/Components/DrawComponents/DrawAnimatedComponent.cpp
         Source/Components/DrawComponents/DrawAnimatedComponent.h
+        Source/Actors/Block.cpp
+        Source/Actors/Block.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
