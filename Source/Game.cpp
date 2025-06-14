@@ -8,7 +8,7 @@
 #include "Utils/Random.h"
 #include "Game.h"
 #include "Actors/Actor.h"
-#include "Actors/Block.h"
+#include "Actors/Tile.h"
 #include "Components/DrawComponents/DrawComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
@@ -70,13 +70,13 @@ void Game::BuildLevel(int **levelData, int width, int height) {
         for (int j = 0; j < width; j++) {
             switch (levelData[i][j]) {
                 case 0: {
-                    Block *block = new Block(this, "../Assets/Sprites/Blocks/Grass.png");
-                    block->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Grass.png");
+                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
                     break;
                 }
                 case 1: {
-                    Block *block = new Block(this, "../Assets/Sprites/Blocks/Water.png");
-                    block->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Water.png");
+                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
                     break;
                 }
                 default:

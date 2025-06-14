@@ -2,9 +2,9 @@
 #include <string>
 #include "Actor.h"
 
-class Block : public Actor {
+class Tile : public Actor {
 public:
-    Block(Game *game, const std::string &texturePath, bool isStatic = true);
+    Tile(Game *game, const std::string &texturePath, bool isStatic = true);
 
     void OnUpdate(float deltaTime) override;
 

@@ -8,7 +8,7 @@ class Game {
 public:
     static const int LEVEL_WIDTH = 100; // In tiles
     static const int LEVEL_HEIGHT = 100; // In tiles
-    static const int TILE_SIZE = 16; // In pixels
+    static const int TILE_SIZE = 32; // In pixels
 
     Game(int windowWidth, int windowHeight);
 
