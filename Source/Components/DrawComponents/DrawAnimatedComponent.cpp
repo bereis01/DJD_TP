@@ -42,7 +42,7 @@ void DrawAnimatedComponent::LoadSpriteSheet(const std::string &texturePath, cons
     }
 }
 
-void DrawAnimatedComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor) {
+void DrawAnimatedComponent::Draw(SDL_Renderer *renderer) {
     // From the sprite name and the animation timer,
     // gets the index of the correct sprite and its texture
     int spriteIdx = mAnimations[mAnimName][static_cast<int>(mAnimTimer)];
@@ -65,12 +65,8 @@ void DrawAnimatedComponent::Draw(SDL_Renderer *renderer, const Vector3 &modColor
     }
 
     // Renders the texture
-    SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureColorMod(mSpriteSheetSurface,
-                           static_cast<Uint8>(modColor.x),
-                           static_cast<Uint8>(modColor.y),
-                           static_cast<Uint8>(modColor.z));
-
+    // SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
+    // SDL_SetTextureColorMod(mSpriteSheetSurface, static_cast<Uint8>(modColor.x), static_cast<Uint8>(modColor.y), static_cast<Uint8>(modColor.z));
     SDL_RenderCopyEx(renderer, mSpriteSheetSurface, srcRect, &dstRect, mOwner->GetRotation(), nullptr, flip);
 }
 

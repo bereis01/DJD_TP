@@ -10,7 +10,7 @@ public:
 
     ~DrawAnimatedComponent() override;
 
-    void Draw(SDL_Renderer *renderer, const Vector3 &modColor = Color::White);
+    void Draw(SDL_Renderer *renderer) override;
 
     void Update(float deltaTime) override;
 
