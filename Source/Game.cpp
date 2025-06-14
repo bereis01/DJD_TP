@@ -9,7 +9,6 @@
 #include "Game.h"
 #include "Actors/Actor.h"
 #include "Components/DrawComponents/DrawComponent.h"
-#include "Components/ColliderComponents/AABBColliderComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)

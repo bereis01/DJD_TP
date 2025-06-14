@@ -2,9 +2,6 @@
 #include "../Component.h"
 #include "../../Utils/Math.h"
 #include "../RigidBodyComponent.h"
-#include <algorithm>
-#include <vector>
-#include <set>
 
 enum class ColliderLayer {
     Player,
@@ -19,27 +16,33 @@ public:
 
     ~AABBColliderComponent() override;
 
+    // Detects intersection and collision
     bool Intersect(const AABBColliderComponent &b) const;
 
     float DetectHorizontalCollision(RigidBodyComponent *rigidBody);
 
     float DetectVertialCollision(RigidBodyComponent *rigidBody);
 
+    // Gets edges of hit box
     Vector2 GetMin() const;
 
     Vector2 GetMax() const;
 
+    // Returns the corresponding layer
     ColliderLayer GetLayer() const { return mLayer; }
 
 private:
+    // Calculates minimum overlay between hitboxes
     float GetMinVerticalOverlap(AABBColliderComponent *b) const;
 
     float GetMinHorizontalOverlap(AABBColliderComponent *b) const;
 
-    void ResolveHorizontalCollisions(RigidBodyComponent *rigidBody, const float minOverlap);
+    // Resolves collision between elements
+    void ResolveHorizontalCollisions(RigidBodyComponent *rigidBody, float minOverlap);
 
-    void ResolveVerticalCollisions(RigidBodyComponent *rigidBody, const float minOverlap);
+    void ResolveVerticalCollisions(RigidBodyComponent *rigidBody, float minOverlap);
 
+    // Attributes
     Vector2 mOffset;
     int mWidth;
     int mHeight;

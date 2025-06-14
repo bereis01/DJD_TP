@@ -72,13 +72,16 @@ private:
     void BuildLevel(int **levelData, int width, int height);
 
     // All the actors in the game
+    // Updated by the actor
     std::vector<class Actor *> mActors;
     std::vector<class Actor *> mPendingActors;
 
     // All the draw components
+    // Updated by the component
     std::vector<class DrawComponent *> mDrawables;
 
     // All the collision components
+    // Updated by the component
     std::vector<class AABBColliderComponent *> mColliders;
 
     // SDL stuff

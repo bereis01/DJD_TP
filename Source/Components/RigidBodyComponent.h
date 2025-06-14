@@ -2,6 +2,10 @@
 #include "Component.h"
 #include "../Utils/Math.h"
 
+const float MAX_SPEED_X = 750.0f;
+const float MAX_SPEED_Y = 750.0f;
+const float GRAVITY = 2000.0f;
+
 class RigidBodyComponent : public Component {
 public:
     // Lower update order to update first
@@ -28,7 +32,6 @@ private:
     // Physical properties
     float mFrictionCoefficient;
     float mMass;
-    float m;
 
     Vector2 mVelocity;
     Vector2 mAcceleration;

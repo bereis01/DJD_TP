@@ -10,10 +10,12 @@ AABBColliderComponent::AABBColliderComponent(class Actor *owner, int dx, int dy,
       , mWidth(w)
       , mHeight(h)
       , mLayer(layer) {
+    // Adds collider to game's list of colliders
     mOwner->GetGame()->AddCollider(this);
 }
 
 AABBColliderComponent::~AABBColliderComponent() {
+    // Removes collider to game's list of colliders
     mOwner->GetGame()->RemoveCollider(this);
 }
 
@@ -75,41 +77,28 @@ float AABBColliderComponent::GetMinHorizontalOverlap(AABBColliderComponent *b) c
 }
 
 float AABBColliderComponent::DetectHorizontalCollision(RigidBodyComponent *rigidBody) {
+    // Do nothing if static
     if (mIsStatic) return false;
 
-    auto colliders = mOwner->GetGame()->GetColliders();
-
     // Orders the colliders based on the player's movement
-    struct {
-        bool operator()(AABBColliderComponent *a, AABBColliderComponent *b) const {
-            return a->GetMax().x < b->GetMax().x;
-        }
-    } customRight;
-    struct {
-        bool operator()(AABBColliderComponent *a, AABBColliderComponent *b) const {
-            return a->GetMin().x < b->GetMin().x;
-        }
-    } customLeft;
-
-    Vector2 ownerVelocity = rigidBody->GetVelocity();
-    if (ownerVelocity.x > 0)
-        std::sort(colliders.begin(), colliders.end(), customRight);
-    else if (ownerVelocity.x < 0)
-        std::sort(colliders.begin(), colliders.end(), customLeft);
-    else
-        return 0.0f;
-
-    int pos = std::find(colliders.begin(), colliders.end(), this) - colliders.begin();
-    std::rotate(colliders.begin(), colliders.begin() + pos, colliders.end());
+    // Code was removed cause we wont use collision. Can be added.
 
     // Checks collision with all colliders
+    auto colliders = mOwner->GetGame()->GetColliders();
     for (auto it = colliders.begin(); it != colliders.end(); it++) {
         AABBColliderComponent *targetCollider = *it;
+
+        // Ignores itself
         if (!targetCollider->IsEnabled() || targetCollider == this)
             continue;
+
+            // Checks the collision
         else if (Intersect(*targetCollider)) {
+            // Resolves the collision (change the objects position, hence the rigid body)
             float minOverlap = GetMinHorizontalOverlap(*it);
             ResolveHorizontalCollisions(rigidBody, minOverlap);
+
+            // Callback to do stuff if collided, after separation
             mOwner->OnHorizontalCollision(minOverlap, targetCollider);
             return minOverlap;
         }
@@ -119,41 +108,28 @@ float AABBColliderComponent::DetectHorizontalCollision(RigidBodyComponent *rigid
 }
 
 float AABBColliderComponent::DetectVertialCollision(RigidBodyComponent *rigidBody) {
+    // Do nothing if static
     if (mIsStatic) return false;
 
-    auto colliders = mOwner->GetGame()->GetColliders();
-
-    // Orders the colliders based on the players movement
-    struct {
-        bool operator()(AABBColliderComponent *a, AABBColliderComponent *b) const {
-            return a->GetMax().x < b->GetMax().x;
-        }
-    } customTop;
-    struct {
-        bool operator()(AABBColliderComponent *a, AABBColliderComponent *b) const {
-            return a->GetMin().x < b->GetMin().x;
-        }
-    } customBottom;
-
-    Vector2 ownerVelocity = rigidBody->GetVelocity();
-    if (ownerVelocity.y > 0)
-        std::sort(colliders.begin(), colliders.end(), customTop);
-    else if (ownerVelocity.y < 0)
-        std::sort(colliders.begin(), colliders.end(), customBottom);
-    else
-        return 0.0f;
-
-    int pos = std::find(colliders.begin(), colliders.end(), this) - colliders.begin();
-    std::rotate(colliders.begin(), colliders.begin() + pos, colliders.end());
+    // Orders the colliders based on the player's movement
+    // Code was removed cause we wont use collision. Can be added.
 
     // Checks collision with all colliders
+    auto colliders = mOwner->GetGame()->GetColliders();
     for (auto it = colliders.begin(); it != colliders.end(); it++) {
         AABBColliderComponent *targetCollider = *it;
+
+        // Ignores itself
         if (!targetCollider->IsEnabled() || targetCollider == this)
             continue;
+
+            // Checks the collision
         else if (Intersect(*targetCollider)) {
+            // Resolves the collision (change the objects position, hence the rigid body)
             float minOverlap = GetMinVerticalOverlap(*it);
             ResolveVerticalCollisions(rigidBody, minOverlap);
+
+            // Callback to do stuff if collided, after separation
             mOwner->OnVerticalCollision(minOverlap, targetCollider);
             return minOverlap;
         }
@@ -184,8 +160,4 @@ void AABBColliderComponent::ResolveVerticalCollisions(RigidBodyComponent *rigidB
     Vector2 newVelocity = rigidBody->GetVelocity();
     newVelocity.y = 0;
     rigidBody->SetVelocity(newVelocity);
-
-    // Sets on ground if ground collision (collision from the bottom)
-    if (minYOverlap < 0)
-        mOwner->SetOnGround();
 }
