@@ -12,7 +12,7 @@ enum class ActorState {
 
 class Actor {
 public:
-    Actor(class Game *game);
+    Actor(Game *game);
 
     virtual ~Actor();
 
@@ -57,19 +57,16 @@ public:
     }
 
     // Game specific
-    void SetOnGround() { mIsOnGround = true; };
-    void SetOffGround() { mIsOnGround = false; };
-    bool IsOnGround() const { return mIsOnGround; };
 
     // Any actor-specific collision code (overridable)
-    virtual void OnHorizontalCollision(const float minOverlap, AABBColliderComponent *other);
+    virtual void OnHorizontalCollision(float minOverlap, AABBColliderComponent *other);
 
-    virtual void OnVerticalCollision(const float minOverlap, AABBColliderComponent *other);
+    virtual void OnVerticalCollision(float minOverlap, AABBColliderComponent *other);
 
     virtual void Kill();
 
 protected:
-    class Game *mGame;
+    Game *mGame;
 
     // Any actor-specific update code (overridable)
     virtual void OnUpdate(float deltaTime);
@@ -86,15 +83,14 @@ protected:
     float mRotation;
 
     // Components
-    std::vector<class Component *> mComponents;
+    std::vector<Component *> mComponents;
 
     // Game specific
-    bool mIsOnGround;
 
 private:
     friend class Component;
 
     // Adds component to Actor (this is automatically called
     // in the component constructor)
-    void AddComponent(class Component *c);
+    void AddComponent(Component *c);
 };

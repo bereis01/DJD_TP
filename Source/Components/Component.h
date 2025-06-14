@@ -1,11 +1,11 @@
 #pragma once
+#include "../Game.h"
 #include <SDL2/SDL_stdinc.h>
 
 class Component {
 public:
-    // Constructor
-    // (the lower the update order, the earlier the component updates)
-    explicit Component(class Actor *owner, int updateOrder = 100);
+    // Constructor (the lower the update order, the earlier the component updates)
+    Component(Actor *owner, int updateOrder = 100);
 
     // Destructor
     virtual ~Component();
@@ -17,16 +17,16 @@ public:
     virtual void ProcessInput(const Uint8 *keyState);
 
     int GetUpdateOrder() const { return mUpdateOrder; }
-    class Actor *GetOwner() const { return mOwner; }
+    Actor *GetOwner() const { return mOwner; }
 
-    class Game *GetGame() const;
+    Game *GetGame() const;
 
     void SetEnabled(const bool enabled) { mIsEnabled = enabled; };
     bool IsEnabled() const { return mIsEnabled; };
 
 protected:
     // Owning actor
-    class Actor *mOwner;
+    Actor *mOwner;
 
     // Update order
     int mUpdateOrder;

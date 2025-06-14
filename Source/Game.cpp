@@ -23,29 +23,30 @@ Game::Game(int windowWidth, int windowHeight)
 }
 
 bool Game::Initialize() {
+    // Initializes SDL video stuff
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return false;
     }
-
     mWindow = SDL_CreateWindow("Aymr", 0, 0, mWindowWidth, mWindowHeight, 0);
     if (!mWindow) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         return false;
     }
-
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!mRenderer) {
         SDL_Log("Failed to create renderer: %s", SDL_GetError());
         return false;
     }
 
+    // Initializes random number generator library
     Random::Init();
-
-    mTicksCount = SDL_GetTicks();
 
     // Init all game actors
     InitializeActors();
+
+    // Initializes time counter
+    mTicksCount = SDL_GetTicks();
 
     return true;
 }
@@ -63,7 +64,7 @@ void Game::InitializeActors() {
 }
 
 void Game::BuildLevel(int **levelData, int width, int height) {
-    // Traverses the level data matrix, instantiating objects
+    // Traverses the level data matrix, instantiating actors
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             switch (levelData[i][j]) {
@@ -123,6 +124,7 @@ void Game::RunLoop() {
 }
 
 void Game::ProcessInput() {
+    // Processes events from SDL
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -132,21 +134,24 @@ void Game::ProcessInput() {
         }
     }
 
+    // Gets the keyboard state and processes actor input
     const Uint8 *state = SDL_GetKeyboardState(nullptr);
-
     for (auto actor: mActors) {
         actor->ProcessInput(state);
     }
 }
 
 void Game::UpdateGame() {
+    // Locks framerate to 60
     while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16));
 
+    // Delta time equals time past from the last frame
     float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
     if (deltaTime > 0.05f) {
         deltaTime = 0.05f;
     }
 
+    // Updates time count
     mTicksCount = SDL_GetTicks();
 
     // Update all actors and pending actors
@@ -160,17 +165,20 @@ void Game::UpdateCamera() {
 }
 
 void Game::UpdateActors(float deltaTime) {
+    // Updates all actors
     mUpdatingActors = true;
     for (auto actor: mActors) {
         actor->Update(deltaTime);
     }
     mUpdatingActors = false;
 
+    // Puts newly created actors to the list
     for (auto pending: mPendingActors) {
         mActors.emplace_back(pending);
     }
     mPendingActors.clear();
 
+    // Puts destroyed actors to the dead list
     std::vector<Actor *> deadActors;
     for (auto actor: mActors) {
         if (actor->GetState() == ActorState::Destroy) {
@@ -178,12 +186,15 @@ void Game::UpdateActors(float deltaTime) {
         }
     }
 
+    // Deletes dead actors
     for (auto actor: deadActors) {
         delete actor;
     }
 }
 
 void Game::AddActor(Actor *actor) {
+    // If in the middle of updating, adds to pending
+    // Else, puts directly on actors list
     if (mUpdatingActors) {
         mPendingActors.emplace_back(actor);
     } else {
@@ -192,6 +203,7 @@ void Game::AddActor(Actor *actor) {
 }
 
 void Game::RemoveActor(Actor *actor) {
+    // Searches in the pending list and removes if there
     auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
     if (iter != mPendingActors.end()) {
         // Swap to end of vector and pop off (avoid erase copies)
@@ -199,6 +211,7 @@ void Game::RemoveActor(Actor *actor) {
         mPendingActors.pop_back();
     }
 
+    // Searches in the normal list and removes if there
     iter = std::find(mActors.begin(), mActors.end(), actor);
     if (iter != mActors.end()) {
         // Swap to end of vector and pop off (avoid erase copies)
@@ -208,8 +221,8 @@ void Game::RemoveActor(Actor *actor) {
 }
 
 void Game::AddDrawable(class DrawComponent *drawable) {
+    // Adds drawable to the list and sorts by draw order
     mDrawables.emplace_back(drawable);
-
     std::sort(mDrawables.begin(), mDrawables.end(), [](DrawComponent *a, DrawComponent *b) {
         return a->GetDrawOrder() < b->GetDrawOrder();
     });
@@ -240,7 +253,7 @@ void Game::GenerateOutput() {
     SDL_Rect dstRect = {static_cast<int>(TILE_SIZE - mCameraPos.x), static_cast<int>(-mCameraPos.y), 6784, 448};
     SDL_RenderCopyEx(mRenderer, mBackground, nullptr, &dstRect, 0, nullptr, SDL_FLIP_NONE);
 
-    // Draws actors
+    // Draws drawable components
     for (auto drawable: mDrawables) {
         if (drawable->IsVisible()) {
             drawable->Draw(mRenderer);
@@ -276,7 +289,7 @@ void Game::Shutdown() {
         delete mActors.back();
     }
 
-    // Delete level data
+    // Delete level data (deallocates matrix)
     if (mLevelData != nullptr) {
         for (int i = 0; i < LEVEL_HEIGHT; ++i) {
             if (mLevelData[i] != nullptr)
@@ -285,6 +298,7 @@ void Game::Shutdown() {
     }
     delete[] mLevelData;
 
+    // Closes SDL stuff
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();

@@ -18,6 +18,6 @@ void Component::Update(float deltaTime) {
 void Component::ProcessInput(const Uint8 *keyState) {
 }
 
-class Game *Component::GetGame() const {
+Game *Component::GetGame() const {
     return mOwner->GetGame();
 }

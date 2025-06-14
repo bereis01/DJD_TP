@@ -8,14 +8,16 @@ Actor::Actor(Game *game)
       , mPosition(Vector2::Zero)
       , mScale(1.0f)
       , mRotation(0.0f)
-      , mGame(game)
-      , mIsOnGround(false) {
+      , mGame(game) {
+    // Adds to the game
     mGame->AddActor(this);
 }
 
 Actor::~Actor() {
+    // Removes from the game
     mGame->RemoveActor(this);
 
+    // Deallocates components
     for (auto component: mComponents) {
         delete component;
     }
@@ -23,13 +25,16 @@ Actor::~Actor() {
 }
 
 void Actor::Update(float deltaTime) {
+    // Only updates if active
     if (mState == ActorState::Active) {
+        // Updates all components
         for (auto comp: mComponents) {
             if (comp->IsEnabled()) {
                 comp->Update(deltaTime);
             }
         }
 
+        // Updates itself
         OnUpdate(deltaTime);
     }
 }
@@ -47,11 +52,14 @@ void Actor::Kill() {
 }
 
 void Actor::ProcessInput(const Uint8 *keyState) {
+    // Only processes input if active
     if (mState == ActorState::Active) {
+        // Processes input for all components
         for (auto comp: mComponents) {
             comp->ProcessInput(keyState);
         }
 
+        // Processes own input
         OnProcessInput(keyState);
     }
 }
