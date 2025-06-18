@@ -4,12 +4,16 @@
 class DrawPolygonComponent : public DrawComponent {
 public:
     // (Lower draw order corresponds with further back)
-    DrawPolygonComponent(Actor *owner, std::vector<Vector2> &vertices, int drawOrder = 100);
+    DrawPolygonComponent(Actor *owner, Vector2 pos, Vector2 size, int drawOrder = 100);
 
-    void Draw(SDL_Renderer *renderer, const Vector3 &color = Color::White);
+    void SetColor(Vector3 color) { mColor = color; }
+    void SetAlpha(int alpha) { mAlpha = alpha; }
 
-    std::vector<Vector2> &GetVertices() { return mVertices; }
+    void Draw(SDL_Renderer *renderer) override;
 
 protected:
-    std::vector<Vector2> mVertices;
+    Vector2 mPosition;
+    Vector2 mSize;
+    Vector3 mColor = Vector3(255.0f, 255.0f, 255.0f);
+    int mAlpha = 255;
 };

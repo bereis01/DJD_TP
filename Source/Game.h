@@ -8,7 +8,7 @@ class Game {
 public:
     static const int LEVEL_WIDTH = 30; // In tiles
     static const int LEVEL_HEIGHT = 30; // In tiles
-    static const int TILE_SIZE = 64; // In pixels
+    static const int TILE_SIZE = 32; // In pixels
 
     Game(int windowWidth, int windowHeight);
 
@@ -51,7 +51,7 @@ public:
     int GetWindowHeight() const { return mWindowHeight; }
 
     // Level functions
-    int **GetLevelData() const { return mLevelData; }
+    int GetLevelData(const int x, const int y) const { return mLevelData[x][y]; }
 
     // Texture functions
     SDL_Texture *LoadTexture(const std::string &texturePath);

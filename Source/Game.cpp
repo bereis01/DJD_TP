@@ -46,8 +46,13 @@ bool Game::Initialize() {
 
     // Init all game actors
     InitializeActors();
+
+    // Loads cursor
     mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
     mCursor->SetPosition(Vector2::Zero);
+
+    // Loads background image
+    mBackground = LoadTexture("../Assets/Levels/Level1.png");
 
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
@@ -57,14 +62,14 @@ bool Game::Initialize() {
 
 void Game::InitializeActors() {
     // Loads first level
-    mLevelData = LoadLevel("../Assets/Levels/Level1Small.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
+    mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
     // Checks if loading was successful and builds the level
     if (mLevelData == nullptr) {
         SDL_Log("Failed initializing level");
         return;
     }
-    BuildLevel(mLevelData, LEVEL_WIDTH, LEVEL_HEIGHT);
+    // BuildLevel(mLevelData, LEVEL_WIDTH, LEVEL_HEIGHT);
 }
 
 void Game::BuildLevel(int **levelData, int width, int height) {
@@ -278,6 +283,17 @@ void Game::GenerateOutput() {
 
     // Clear back buffer
     SDL_RenderClear(mRenderer);
+
+    // Draws background texture considering camera position
+    if (mBackground) {
+        SDL_Rect dstRect = {
+            static_cast<int>(-mCameraPos.x),
+            static_cast<int>(-mCameraPos.y),
+            static_cast<int>(LEVEL_WIDTH * TILE_SIZE),
+            static_cast<int>(LEVEL_HEIGHT * TILE_SIZE)
+        };
+        SDL_RenderCopy(mRenderer, mBackground, nullptr, &dstRect);
+    }
 
     // Draws drawable components
     for (auto drawable: mDrawables) {

@@ -2,11 +2,24 @@
 #include "../Game.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 #include "../Components/ColliderComponents/AABBColliderComponent.h"
+#include "../Components/DrawComponents/DrawPolygonComponent.h"
 
 Cursor::Cursor(Game *game, const std::string &texturePath)
     : Actor(game) {
     // Creates all necessary components
+    mDrawPolygonComponent = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
+    mDrawPolygonComponent->SetColor(Vector3(255, 0, 0));
+    mDrawPolygonComponent->SetAlpha(100);
+
     new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
+}
+
+void Cursor::OnUpdate(float deltaTime) {
+    // Sets the cursor indicator to the appropriate color according to tile selected
+    if (mGame->GetLevelData(GetX(), GetY()) == 0)
+        mDrawPolygonComponent->SetColor(Vector3(255, 0, 0));
+    else
+        mDrawPolygonComponent->SetColor(Vector3(0, 255, 0));
 }
 
 
