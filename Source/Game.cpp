@@ -10,6 +10,7 @@
 #include "Actors/Actor.h"
 #include "Actors/Tile.h"
 #include "Actors/Cursor.h"
+#include "Actors/Unit.h"
 #include "Components/DrawComponents/DrawComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
@@ -49,7 +50,10 @@ bool Game::Initialize() {
 
     // Loads cursor
     mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
-    mCursor->SetPosition(Vector2::Zero);
+    mCursor->SetXY(20, 8);
+
+    mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
+    mKnight->SetXY(20, 8);
 
     // Loads background image
     mBackground = LoadTexture("../Assets/Levels/Level1.png");
@@ -189,13 +193,13 @@ void Game::UpdateGame() {
 void Game::UpdateCamera() {
     // Makes the camera move as the cursor touches the edges
     Vector2 pos = mCursor->GetPosition();
-    if (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
+    while (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
         mCameraPos.x += TILE_SIZE;
-    if (pos.x < mCameraPos.x)
+    while (pos.x < mCameraPos.x)
         mCameraPos.x -= TILE_SIZE;
-    if (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
+    while (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
         mCameraPos.y += TILE_SIZE;
-    if (pos.y < mCameraPos.y)
+    while (pos.y < mCameraPos.y)
         mCameraPos.y -= TILE_SIZE;
 }
 

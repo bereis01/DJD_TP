@@ -104,6 +104,7 @@ private:
 
     // Game-specific
     class Cursor *mCursor;
+    class Unit *mKnight;
 
     // Level data
     int **mLevelData;
