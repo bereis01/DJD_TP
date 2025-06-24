@@ -12,6 +12,8 @@
 #include "Actors/Cursor.h"
 #include "Actors/Unit.h"
 #include "Components/DrawComponents/DrawComponent.h"
+#include "StatScreen.h"
+#include "UIElements/UIScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -42,6 +44,11 @@ bool Game::Initialize() {
         return false;
     }
 
+    if (TTF_Init() != 0) {
+        SDL_Log("Failed to initialize SDL_ttf");
+        return false;
+    }
+
     // Initializes random number generator library
     Random::Init();
 
@@ -54,9 +61,14 @@ bool Game::Initialize() {
 
     mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
     mKnight->SetXY(20, 8);
+    Stats s = Stats("Edel", 30, 14, 4, 8, 9, 5);
+    mKnight->SetStats(s);
+    mUnits.emplace_back(mKnight);
 
     // Loads background image
     mBackground = LoadTexture("../Assets/Levels/Level1.png");
+
+    mStatScreen = new StatScreen(this,"../Assets/Fonts/Arial.ttf");
 
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
@@ -82,13 +94,13 @@ void Game::BuildLevel(int **levelData, int width, int height) {
         for (int j = 0; j < width; j++) {
             switch (levelData[i][j]) {
                 case 0: {
-                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Grass.png");
-                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    //Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Grass.png");
+                    //tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
                     break;
                 }
                 case 1: {
-                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Water.png");
-                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
+                    //Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Water.png");
+                    //tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
                     break;
                 }
                 default:
@@ -156,10 +168,10 @@ void Game::ProcessInput() {
                 break;
             case SDL_KEYDOWN:
                 // Handles key presses for actors
-                for (auto actor: mActors)
-                    actor->HandleKeyPress(event.key.keysym.sym, event.key.repeat == 0);
-                break;
-            default:
+                if (!mUIStack.empty()) {
+                    mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                }
+                HandleKeyPressActors(event.key.keysym.sym, event.key.repeat == 0);
                 break;
         }
     }
@@ -168,6 +180,12 @@ void Game::ProcessInput() {
     const Uint8 *state = SDL_GetKeyboardState(nullptr);
     for (auto actor: mActors)
         actor->ProcessInput(state);
+}
+
+void Game::HandleKeyPressActors(const int key, const bool isPressed)
+{
+    for (auto actor: mActors)
+        actor->HandleKeyPress(key, isPressed);
 }
 
 void Game::UpdateGame() {
@@ -188,6 +206,24 @@ void Game::UpdateGame() {
 
     // Update camera position
     UpdateCamera();
+    // Reinsert UI screens
+    for (auto ui : mUIStack) {
+        if (ui->GetState() == UIScreen::UIState::Active) {
+            ui->Update(deltaTime);
+        }
+    }
+
+    // Delete any UIElements that are closed
+    auto iter = mUIStack.begin();
+    while (iter != mUIStack.end()) {
+        if ((*iter)->GetState() == UIScreen::UIState::Closing) {
+            delete *iter;
+            iter = mUIStack.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
+
 }
 
 void Game::UpdateCamera() {
@@ -306,6 +342,10 @@ void Game::GenerateOutput() {
         }
     }
 
+    for (auto ui :mUIStack) {
+        ui->Draw(mRenderer);
+    }
+
     // Swap front buffer and back buffer
     SDL_RenderPresent(mRenderer);
 }
@@ -327,6 +367,30 @@ SDL_Texture *Game::LoadTexture(const std::string &texturePath) {
     }
 
     return texture;
+}
+
+UIFont* Game::LoadFont(const std::string& fileName)
+{
+    if (mFonts.find(fileName) != mFonts.end()) {
+        return mFonts[fileName];
+    }
+    auto *font = new UIFont(mRenderer);
+    if (font->Load(fileName)) {
+        mFonts[fileName] = font;
+        return mFonts[fileName];
+    }
+    font->Unload();
+    delete font;
+    return nullptr;
+}
+
+class Unit* Game::GetUnitByPosition(int x, int y) {
+    for (auto un: mUnits) {
+        if (un->GetX() == x && un->GetY() == y) {
+            return un;
+        }
+    }
+    return nullptr;
 }
 
 void Game::Shutdown() {

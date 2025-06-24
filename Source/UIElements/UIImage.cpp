@@ -1,36 +1,45 @@
+//
+// Created by Lucas N. Ferreira on 28/05/25.
+//
+
 #include "UIImage.h"
 
-UIImage::UIImage(SDL_Renderer *renderer, const std::string &imagePath, const Vector2 &pos, const Vector2 &size,
-                 const Vector3 &color)
+UIImage::UIImage(const std::string &imagePath, SDL_Renderer* renderer, const Vector2 &pos, const Vector2 &size, const Vector3 &color)
     : UIElement(pos, size, color),
-      mTexture(nullptr) {
-    SDL_Surface *surface = IMG_Load(imagePath.c_str());
-    if (!surface)
+    mTexture(nullptr)
+{
+    SDL_Surface* surface = IMG_Load(imagePath.c_str());
+    if (!surface) {
         SDL_Log("Failed to load image: %s", IMG_GetError());
+        return;
+    }
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture)
-        SDL_Log("Failed to create texture: %s", SDL_GetError());
+    mTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 
-    mTexture = texture;
-}
-
-UIImage::~UIImage() {
-    if (mTexture) {
-        SDL_DestroyTexture(mTexture);
-        mTexture = nullptr;
+    if (!mTexture) {
+        SDL_Log("Failed to create texture: %s", SDL_GetError());
     }
 }
 
-void UIImage::Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
-    if (!mTexture)
+UIImage::~UIImage()
+{
+    if (mTexture) {
+        SDL_DestroyTexture(mTexture);
+    }
+    mTexture = nullptr;
+}
+
+void UIImage::Draw(SDL_Renderer* renderer, const Vector2 &screenPos)
+{
+    if (!mTexture) {
         return;
+    }
+    SDL_Rect dstrect;
+    dstrect.x = static_cast<int>((mPosition + screenPos).x);
+    dstrect.y = static_cast<int>((mPosition + screenPos).y);
+    dstrect.w = static_cast<int>(mSize.x);
+    dstrect.h = static_cast<int>(mSize.y);
 
-    SDL_Rect imageQuad = {
-        static_cast<int>(mPosition.x + screenPos.x), static_cast<int>(mPosition.y + screenPos.y),
-        static_cast<int>(mSize.x), static_cast<int>(mSize.y)
-    };
-
-    SDL_RenderCopy(renderer, mTexture, NULL, &imageQuad);
+    SDL_RenderCopy(renderer, mTexture, nullptr, &dstrect);
 }
