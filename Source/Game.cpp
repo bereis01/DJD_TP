@@ -24,7 +24,9 @@ Game::Game(int windowWidth, int windowHeight)
       , mUpdatingActors(false)
       , mWindowWidth(windowWidth)
       , mWindowHeight(windowHeight)
-      , mCameraPos(Vector2::Zero) {
+      , mCameraPos(Vector2::Zero)
+      , mSelectedUnit(nullptr)
+      , mTargetUnitIndex(-1) {
 }
 
 bool Game::Initialize() {
@@ -58,17 +60,32 @@ bool Game::Initialize() {
     // Loads cursor
     mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
     mCursor->SetXY(20, 8);
+    SetGamePlayState(GamePlayState::Map);
 
-    mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
-    mKnight->SetXY(20, 8);
-    Stats s = Stats("Edel", 30, 14, 4, 8, 9, 5);
-    mKnight->SetStats(s);
-    mUnits.emplace_back(mKnight);
+    mTrueblade = new Unit(this, "../Assets/Sprites/Units/trueblade.png");
+    mTrueblade->SetXY(20, 8);
+    Stats s = Stats("Mia", 25, 9, 4, 12, 14, 5, 5);
+    Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
+    Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
+    mTrueblade->SetStats(s);
+    mTrueblade->AddWeapon(w1);
+    mTrueblade->AddWeapon(w2);
+    mTrueblade->SetEquippedWeapon(w1);
+    mUnits.emplace_back(mTrueblade);
+
+    Unit *u = new Unit(this, "../Assets/Sprites/Units/Knight.png");
+    u->SetXY(14, 14);
+    Stats ss = Stats("Enemy1", 25, 8, 4, 6, 6, 3, 0);
+    Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
+    u->SetStats(ss);
+    u->AddWeapon(w);
+    u->SetEquippedWeapon(w);
+    mUnits.emplace_back(u);
 
     // Loads background image
     mBackground = LoadTexture("../Assets/Levels/Level1.png");
 
-    mStatScreen = new StatScreen(this,"../Assets/Fonts/Arial.ttf");
+    LoadUIScreens();
 
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
@@ -150,6 +167,24 @@ int **Game::LoadLevel(const std::string &fileName, int width, int height) {
     return level;
 }
 
+void Game::LoadUIScreens()
+{
+    mStatScreen = new StatScreen(this,"../Assets/Fonts/Arial.ttf");
+    mActionScreen = new UIScreen(this, "../Assets/Fonts/Arial.ttf", true);
+    const Vector2 screenSize = Vector2(100, 150);
+    const Vector2 screenPos = Vector2(mWindowWidth - 150, 100);
+    Vector2 offset (0, 10);
+    mActionScreen->AddImage("../Assets/Other/stat_background.png", screenPos, screenSize, mRenderer);
+
+    mActionScreen->AddButton("Attack", screenPos + offset, Vector2(100, 30),
+    [this]() {SetupAttack();}, mRenderer);
+    mActionScreen->AddButton("Itens", screenPos + offset * 6, Vector2(100, 30),
+    nullptr, mRenderer);
+    mActionScreen->AddButton("Wait", screenPos + offset * 11, Vector2(100, 30),
+    [this]() {mSelectedUnit->Wait();}, mRenderer);
+
+}
+
 void Game::RunLoop() {
     while (mIsRunning) {
         ProcessInput();
@@ -169,7 +204,10 @@ void Game::ProcessInput() {
             case SDL_KEYDOWN:
                 // Handles key presses for actors
                 if (!mUIStack.empty()) {
-                    mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                    if (mUIStack.back()->IsInteractive()) {
+                        mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                        break;
+                    }
                 }
                 HandleKeyPressActors(event.key.keysym.sym, event.key.repeat == 0);
                 break;
@@ -391,6 +429,40 @@ class Unit* Game::GetUnitByPosition(int x, int y) {
         }
     }
     return nullptr;
+}
+
+void Game::SetUnitsInRange() {
+    int x = mSelectedUnit->GetX();
+    int y = mSelectedUnit->GetY();
+    int range = mSelectedUnit->GetEquippedWeapon()->range;
+    for (int i = 0; i <= range; i++) {
+        for (int j = 0 + i; j <= range; j++) {
+            if (i + j == 0)
+                continue;
+            class Unit *target1 = GetUnitByPosition(x + i, y + j);
+            class Unit *target2 = GetUnitByPosition(x + i, y - j);
+            class Unit *target3 = GetUnitByPosition(x - i, y + j);
+            class Unit *target4 = GetUnitByPosition(x - i, y - j);
+            if (target1 != nullptr)
+                mUnitsInRange.emplace_back(target1);
+            if (target2 != nullptr)
+                mUnitsInRange.emplace_back(target2);
+            if (target3 != nullptr)
+                mUnitsInRange.emplace_back(target3);
+            if (target4 != nullptr)
+                mUnitsInRange.emplace_back(target4);
+        }
+    }
+}
+
+void Game::SetupAttack() {
+    SetUnitsInRange();
+    if (!mUnitsInRange.empty()) {
+        mTargetUnitIndex = 0;
+        mCursor->SetPosition(mUnitsInRange[0]->GetPosition());
+    }
+    SetGamePlayState(GamePlayState::ChoosingTarget);
+    mUIStack.pop_back();
 }
 
 void Game::Shutdown() {

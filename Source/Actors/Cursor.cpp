@@ -28,8 +28,9 @@ void Cursor::OnUpdate(float deltaTime) {
 }
 
 
-void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
-    if (mState == CursorState::Free) {
+void Cursor::OnHandleKeyPress(const int key, const bool isPressed)
+{
+    if (mGame->GetGamePlayState() == Game::GamePlayState::Map) {
         if (key == SDLK_w)
             if (mPosition.y > 0)
                 mPosition.y -= Game::TILE_SIZE;
@@ -48,21 +49,102 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
 
         if (key == SDLK_RETURN) {
             class Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
-            if (unit == nullptr) {
+            if (unit == nullptr)
                 return;
-            } else {
-                mState = CursorState::Locked;
-                unit->ShowStats();
+            //mState = CursorState::Locked;
+            mGame->SetGamePlayState(Game::GamePlayState::UnitSelected);
+            mGame->SetSelectedUnit(unit);
+            unit->SetOldPosition(unit->GetPosition());
+        }
+
+        if (key == SDLK_SPACE) {
+            class Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
+            if (unit == nullptr)
+                return;
+            unit->ShowStats();
+            mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
+        }
+    } else if (mGame->GetGamePlayState() == Game::GamePlayState::UnitSelected) {
+        if (key == SDLK_w)
+            if (mPosition.y > 0)
+                mPosition.y -= Game::TILE_SIZE;
+
+        if (key == SDLK_s)
+            if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE)
+                mPosition.y += Game::TILE_SIZE;
+
+        if (key == SDLK_a)
+            if (mPosition.x > 0)
+                mPosition.x -= Game::TILE_SIZE;
+
+        if (key == SDLK_d)
+            if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE)
+                mPosition.x += Game::TILE_SIZE;
+
+        if (key == SDLK_RETURN) {
+            Unit *unit = mGame->GetSelectedUnit();
+            int movX = abs(unit->GetX() - GetX());
+            int movY = abs(unit->GetY() - GetY());
+            if ((movX + movY <= unit->GetMovement() &&
+                mGame->GetUnitByPosition(GetX(), GetY()) == nullptr) ||
+                (movX + movY == 0)) {
+                unit->SetXY(GetX(), GetY());
+                mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
+                mGame->PushUI(mGame->GetActionScreen());
             }
         }
-    } else if (mState == CursorState::Locked) {
+        if (key == SDLK_SPACE) {
+            class Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
+            if (unit == nullptr)
+                return;
+            unit->ShowStats();
+            mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
+        }
         if (key == SDLK_b) {
-            if (!mGame->GetUIStack().empty()) {
+            mGame->SetGamePlayState(Game::GamePlayState::Map);
+            mGame->SetSelectedUnit(nullptr);
+        }
+    } else if (mGame->GetGamePlayState() == Game::GamePlayState::ShowingStats) {
+        if (key == SDLK_b || key == SDLK_SPACE) {
+            if (mGame->GetSelectedUnit() != nullptr) {
+                mGame->SetGamePlayState(Game::GamePlayState::UnitSelected);
                 mGame->GetUIStack().pop_back();
-                if (mGame->GetUIStack().empty()) {
-                    mState = CursorState::Free;
-                }
+            } else {
+                mGame->SetGamePlayState(Game::GamePlayState::Map);
+                mGame->GetUIStack().pop_back();
             }
+        }
+    } else if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingTarget) {
+        if (mGame->GetTargetUnitIndex() != -1) {
+            if (key == SDLK_w || key == SDLK_d) {
+                int next_index = mGame->GetTargetUnitIndex() + 1;
+                if (next_index <= mGame->GetUnitsInRange().size()) {
+                    next_index = 0;
+                }
+                mGame->SetTargetUnitIndex(next_index);
+                mPosition = mGame->GetUnitsInRange()[next_index]->GetPosition();
+            }
+            if (key == SDLK_s || key == SDLK_a) {
+                int next_index = mGame->GetTargetUnitIndex() - 1;
+                if (next_index < 0) {
+                    next_index = mGame->GetUnitsInRange().size() - 1;
+                }
+                mGame->SetTargetUnitIndex(next_index);
+                mPosition = mGame->GetUnitsInRange()[next_index]->GetPosition();
+            }
+            if (key == SDLK_RETURN) {
+                mGame->GetSelectedUnit()->Attack(mGame->GetUnitsInRange()[mGame->GetTargetUnitIndex()]);
+                mGame->SetSelectedUnit(nullptr);
+                mGame->SetTargetUnitIndex(-1);
+                mGame->GetUnitsInRange().clear();
+                mGame->SetGamePlayState(Game::GamePlayState::Map);
+            }
+        }
+        if (key == SDLK_b) {
+            mGame->SetTargetUnitIndex(-1);
+            mGame->GetUnitsInRange().clear();
+            mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
+            mGame->PushUI(mGame->GetActionScreen());
         }
     }
 }

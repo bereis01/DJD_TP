@@ -28,7 +28,7 @@ public:
         Closing
     };
 
-	UIScreen(class Game* game, const std::string& fontName);
+	UIScreen(class Game* game, const std::string& fontName, bool isInteractive = false);
 	virtual ~UIScreen();
 
 	// UIScreen subclasses can override these
@@ -43,6 +43,7 @@ public:
     // Get state of UI screen
 	UIState GetState() const { return mState; }
     void SetState(UIState state) { mState = state; }
+	bool IsInteractive() const { return mInteractive; }
 
     // Game getter
     class Game* GetGame() { return mGame; }
@@ -51,6 +52,8 @@ public:
 	UIButton* AddButton(const std::string& name, const Vector2& pos, const Vector2& dims, std::function<void()> onClick, SDL_Renderer* renderer);
     UIText* AddText(const std::string& name, const Vector2& pos, const Vector2& dims, const int pointSize = 40, const int unsigned wrapLength = 1024);
     UIImage* AddImage(const std::string& imagePath, const Vector2& pos, const Vector2& dims, SDL_Renderer* renderer, const Vector3& color = Color::White);
+
+	void SetSelectedButtonIndex(int index);
 
 protected:
     // Sets the mouse mode to relative or not
@@ -63,6 +66,7 @@ protected:
 
 	// State
 	UIState mState;
+	bool mInteractive;
 
 	// List of buttons, texts, and images
     int mSelectedButtonIndex;

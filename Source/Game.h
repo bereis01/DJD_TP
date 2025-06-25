@@ -30,8 +30,10 @@ public:
 
     enum class GamePlayState
     {
-        Free,
+        Map,
+        ShowingStats,
         UnitSelected,
+        ChoosingAction,
         ChoosingTarget,
         EnemyTurn,
         LevelComplete,
@@ -82,6 +84,8 @@ public:
     void PushUI(class UIScreen* screen) { mUIStack.emplace_back(screen); }
     std::vector<class UIScreen*>& GetUIStack() { return mUIStack; }
     class StatScreen* GetStatScreen() { return mStatScreen; }
+    class UIScreen* GetActionScreen() { return mActionScreen; }
+    void LoadUIScreens();
 
     // Window functions
     int GetWindowWidth() const { return mWindowWidth; }
@@ -100,8 +104,20 @@ public:
 
     // Level functions
     int GetLevelData(const int x, const int y) const { return mLevelData[x][y]; }
-    std::vector<class Unit*> GetUnits() {return mUnits;};
+    std::vector<class Unit*> GetUnits() {return mUnits;}
+    void SetUnitsInRange();
+    std::vector<class Unit*> GetUnitsInRange() {return mUnitsInRange;}
     class Unit *GetUnitByPosition(int x, int y);
+
+    void SetGamePlayState(GamePlayState state) { mGamePlayState = state; }
+    GamePlayState GetGamePlayState() const { return mGamePlayState; }
+
+    void SetSelectedUnit(class Unit *unit) { mSelectedUnit = unit; }
+    Unit *GetSelectedUnit() const { return mSelectedUnit; }
+    void SetTargetUnitIndex(int i) { mTargetUnitIndex = i; }
+    int GetTargetUnitIndex() const { return mTargetUnitIndex; }
+    void SetupAttack();
+
 
 private:
     // Game processing functions
@@ -153,11 +169,17 @@ private:
     // Camera properties
     Vector2 mCameraPos;
 
+    // UI screens
+    class StatScreen *mStatScreen;
+    class UIScreen *mActionScreen;
+
     // Game-specific
     class Cursor *mCursor;
-    class Unit *mKnight;
+    class Unit *mTrueblade;
     std::vector<class Unit *> mUnits;
-    class StatScreen *mStatScreen;
+    std::vector<class Unit *> mUnitsInRange;
+    class Unit *mSelectedUnit;
+    int mTargetUnitIndex;
 
     // Level data
     int **mLevelData;
@@ -166,4 +188,5 @@ private:
     // Track level state
     GameScene mGameScene;
     GameScene mNextScene;
+    GamePlayState mGamePlayState;
 };

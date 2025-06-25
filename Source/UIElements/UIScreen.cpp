@@ -9,13 +9,15 @@
 #include "UIScreen.h"
 #include "../Game.h"
 #include "UIFont.h"
+#include "../Actors/Unit.h"
 
-UIScreen::UIScreen(Game* game, const std::string& fontName)
+UIScreen::UIScreen(Game* game, const std::string& fontName, bool isInteractive)
 	:mGame(game)
 	,mPos(0.f, 0.f)
 	,mSize(0.f, 0.f)
 	,mState(UIState::Active)
     ,mSelectedButtonIndex(-1)
+    ,mInteractive(isInteractive)
 {
     mFont = mGame->LoadFont(fontName);
 }
@@ -66,6 +68,34 @@ void UIScreen::ProcessInput(const uint8_t* keys)
 
 void UIScreen::HandleKeyPress(int key)
 {
+    if (!mInteractive)
+        return;
+    if (key == SDLK_w) {
+        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+        mSelectedButtonIndex--;
+        if (mSelectedButtonIndex < 0) {
+            mSelectedButtonIndex = static_cast<int>(mButtons.size()) - 1;
+        }
+        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+    } else if (key == SDLK_s) {
+        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+        mSelectedButtonIndex++;
+        if (mSelectedButtonIndex > static_cast<int>(mButtons.size()) - 1) {
+            mSelectedButtonIndex = 0;
+        }
+        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+    } else if (key == SDLK_RETURN) {
+        if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
+            mButtons[mSelectedButtonIndex]->OnClick();
+        }
+    } else if (key == SDLK_b) {
+        mGame->GetUIStack().pop_back();
+        if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingAction) {
+            mGame->SetGamePlayState(Game::GamePlayState::UnitSelected);
+            mGame->GetSelectedUnit()->SetPosition(mGame->GetSelectedUnit()->GetOldPosition());
+            SetSelectedButtonIndex(0);
+        }
+    }
 }
 
 void UIScreen::Close()
@@ -97,4 +127,11 @@ UIImage* UIScreen::AddImage(const std::string &imagePath, const Vector2 &pos, co
     auto *img = new UIImage(imagePath, renderer, pos, dims, color);
     mImages.emplace_back(img);
     return img;
+}
+
+void UIScreen::SetSelectedButtonIndex(int index)
+{
+    mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+    mSelectedButtonIndex = index;
+    mButtons[mSelectedButtonIndex]->SetHighlighted(true);
 }
