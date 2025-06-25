@@ -6,9 +6,27 @@
 
 class Game {
 public:
+    enum class GameScene {
+        MainMenu,
+        Level1,
+        Level2,
+        Level3,
+        Shop
+    };
+
+    enum class SceneManagerState {
+        None,
+        Entering,
+        Active,
+        Exiting,
+        Change
+    };
+
     static const int LEVEL_WIDTH = 30; // In tiles
     static const int LEVEL_HEIGHT = 30; // In tiles
     static const int TILE_SIZE = 32; // In pixels
+
+    static const int TRANSITION_TIME = 1; // Scene transition time in seconds
 
     Game(int windowWidth, int windowHeight);
 
@@ -56,6 +74,15 @@ public:
     // Texture functions
     SDL_Texture *LoadTexture(const std::string &texturePath);
 
+    // Scene management functions
+    void SetGameScene(GameScene scene, float transitionTime = TRANSITION_TIME, bool fastStart = false);
+
+    GameScene GetGameScene() const { return mGameScene; }
+
+    void ResetGameScene(float transitionTime = TRANSITION_TIME);
+
+    void UnloadScene();
+
 private:
     // Game processing functions
     void ProcessInput();
@@ -71,6 +98,11 @@ private:
 
     void BuildLevel(int **levelData, int width, int height);
 
+    // Scene management functions
+    void UpdateSceneManager(float deltaTime);
+
+    void ChangeScene();
+
     // All the actors in the game
     // Updated by the actor
     std::vector<class Actor *> mActors;
@@ -85,28 +117,35 @@ private:
     std::vector<class AABBColliderComponent *> mColliders;
 
     // SDL stuff
-    SDL_Window *mWindow;
-    SDL_Renderer *mRenderer;
+    SDL_Window *mWindow = nullptr;
+    SDL_Renderer *mRenderer = nullptr;
 
     // Window properties
     int mWindowWidth;
     int mWindowHeight;
 
     // Track elapsed time since game start
-    Uint32 mTicksCount;
+    Uint32 mTicksCount = 0;
 
     // Track if we're updating actors right now
-    bool mIsRunning;
-    bool mUpdatingActors;
+    bool mIsRunning = true;
+    bool mUpdatingActors = false;
 
     // Camera properties
-    Vector2 mCameraPos;
+    Vector2 mCameraPos = Vector2::Zero;
 
     // Game-specific
-    class Cursor *mCursor;
-    class Unit *mKnight;
+    class Cursor *mCursor = nullptr;
+    class Unit *mKnight = nullptr;
 
     // Level data
-    int **mLevelData;
-    SDL_Texture *mBackground;
+    int **mLevelData = nullptr;
+    SDL_Texture *mBackground = nullptr;
+
+    // Scene management
+    GameScene mGameScene = GameScene::MainMenu;
+    GameScene mNextScene = GameScene::MainMenu;
+
+    SceneManagerState mSceneManagerState = SceneManagerState::None;
+    float mSceneManagerTimer = 0.0f;
 };

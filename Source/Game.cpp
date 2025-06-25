@@ -14,15 +14,8 @@
 #include "Components/DrawComponents/DrawComponent.h"
 
 Game::Game(int windowWidth, int windowHeight)
-    : mWindow(nullptr)
-      , mRenderer(nullptr)
-      , mLevelData(nullptr)
-      , mTicksCount(0)
-      , mIsRunning(true)
-      , mUpdatingActors(false)
-      , mWindowWidth(windowWidth)
-      , mWindowHeight(windowHeight)
-      , mCameraPos(Vector2::Zero) {
+    : mWindowWidth(windowWidth)
+      , mWindowHeight(windowHeight) {
 }
 
 bool Game::Initialize() {
@@ -45,35 +38,13 @@ bool Game::Initialize() {
     // Initializes random number generator library
     Random::Init();
 
-    // Init all game actors
-    InitializeActors();
-
-    // Loads cursor
-    mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
-    mCursor->SetXY(20, 8);
-
-    mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
-    mKnight->SetXY(20, 8);
-
-    // Loads background image
-    mBackground = LoadTexture("../Assets/Levels/Level1.png");
-
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
 
+    // Starts the game
+    SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
+
     return true;
-}
-
-void Game::InitializeActors() {
-    // Loads first level
-    mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
-
-    // Checks if loading was successful and builds the level
-    if (mLevelData == nullptr) {
-        SDL_Log("Failed initializing level");
-        return;
-    }
-    // BuildLevel(mLevelData, LEVEL_WIDTH, LEVEL_HEIGHT);
 }
 
 void Game::BuildLevel(int **levelData, int width, int height) {
@@ -188,19 +159,24 @@ void Game::UpdateGame() {
 
     // Update camera position
     UpdateCamera();
+
+    // Updates the scene
+    UpdateSceneManager(deltaTime);
 }
 
 void Game::UpdateCamera() {
     // Makes the camera move as the cursor touches the edges
-    Vector2 pos = mCursor->GetPosition();
-    while (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
-        mCameraPos.x += TILE_SIZE;
-    while (pos.x < mCameraPos.x)
-        mCameraPos.x -= TILE_SIZE;
-    while (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
-        mCameraPos.y += TILE_SIZE;
-    while (pos.y < mCameraPos.y)
-        mCameraPos.y -= TILE_SIZE;
+    if (mCursor) {
+        Vector2 pos = mCursor->GetPosition();
+        while (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
+            mCameraPos.x += TILE_SIZE;
+        while (pos.x < mCameraPos.x)
+            mCameraPos.x -= TILE_SIZE;
+        while (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
+            mCameraPos.y += TILE_SIZE;
+        while (pos.y < mCameraPos.y)
+            mCameraPos.y -= TILE_SIZE;
+    }
 }
 
 void Game::UpdateActors(float deltaTime) {
@@ -306,6 +282,19 @@ void Game::GenerateOutput() {
         }
     }
 
+    // Cross-fade between scenes
+    if (mSceneManagerState == SceneManagerState::Exiting && mSceneManagerTimer <= TRANSITION_TIME) {
+        SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, (TRANSITION_TIME - mSceneManagerTimer) * 255);
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(mRenderer, &drawRect);
+    } else if (mSceneManagerState == SceneManagerState::Entering && mSceneManagerTimer <= TRANSITION_TIME) {
+        SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, mSceneManagerTimer * 255);
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(mRenderer, &drawRect);
+    }
+
     // Swap front buffer and back buffer
     SDL_RenderPresent(mRenderer);
 }
@@ -348,4 +337,89 @@ void Game::Shutdown() {
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::UpdateSceneManager(float deltaTime) {
+    // Timer for exiting the scene
+    if (mSceneManagerState == SceneManagerState::Exiting) {
+        mSceneManagerTimer -= deltaTime;
+        if (mSceneManagerTimer <= 0) {
+            mSceneManagerTimer = TRANSITION_TIME;
+            mSceneManagerState = SceneManagerState::Change;
+        }
+    }
+
+    // Effectively changes the scene
+    if (mSceneManagerState == SceneManagerState::Change) {
+        mSceneManagerState = SceneManagerState::Entering;
+        ChangeScene();
+    }
+
+    // Timer for entering a new scene
+    if (mSceneManagerState == SceneManagerState::Entering) {
+        mSceneManagerTimer -= deltaTime;
+        if (mSceneManagerTimer <= 0) {
+            mSceneManagerState = SceneManagerState::Active;
+        }
+    }
+}
+
+void Game::ChangeScene() {
+    // Unload current Scene
+    UnloadScene();
+
+    // Reset camera position
+    mCameraPos.Set(0.0f, 0.0f);
+
+    // Scene Manager FSM: using if/else instead of switch
+    if (mNextScene == GameScene::Level1) {
+        // Loads first level
+        mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
+
+        // Checks if loading was successful and builds the level
+        if (mLevelData == nullptr) {
+            SDL_Log("Failed initializing level");
+            return;
+        }
+        // BuildLevel(mLevelData, LEVEL_WIDTH, LEVEL_HEIGHT);
+
+        // Loads cursor
+        mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
+        mCursor->SetXY(20, 8);
+
+        mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
+        mKnight->SetXY(20, 8);
+
+        // Loads background image
+        mBackground = LoadTexture("../Assets/Levels/Level1.png");
+    }
+
+    // Set new scene
+    mGameScene = mNextScene;
+}
+
+void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
+    // Sanity checks
+    if (scene != GameScene::MainMenu && scene != GameScene::Level1 && scene != GameScene::Level2 && scene !=
+        GameScene::Level3 && scene != GameScene::Shop) {
+        SDL_Log("Failed to set game scene!");
+        return;
+    }
+
+    // Sets the next scene
+    mNextScene = scene;
+    mSceneManagerState = fastStart ? SceneManagerState::Change : SceneManagerState::Exiting;
+    mSceneManagerTimer = transitionTime;
+}
+
+void Game::ResetGameScene(float transitionTime) {
+    // Sets the game to the current scene
+    SetGameScene(mGameScene, transitionTime);
+}
+
+void Game::UnloadScene() {
+    // Delete actors
+    while (!mActors.empty()) {
+        delete mActors.back();
+    }
 }
