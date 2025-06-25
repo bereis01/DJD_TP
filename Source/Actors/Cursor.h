@@ -3,9 +3,6 @@
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
 
-// OBS: Mudei tudo isso aqui só para manter a interface padronizada.
-// Mas implementei as funções de get das coordenadas baseadas em tiles para você :)
-
 class Cursor : public Actor {
 public:
     enum class CursorState {

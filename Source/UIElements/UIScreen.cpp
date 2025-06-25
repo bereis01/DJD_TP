@@ -1,6 +1,5 @@
 #include "UIScreen.h"
 #include "../Game.h"
-#include "UIFont.h"
 
 UIScreen::UIScreen(Game *game, const std::string &fontName)
     : mGame(game)
@@ -87,11 +86,10 @@ UIButton *UIScreen::AddButton(const std::string &name, const Vector2 &pos, const
     return button;
 }
 
-UIImage *UIScreen::AddImage(SDL_Renderer *renderer, const std::string &imagePath, const Vector2 &pos,
-                            const Vector2 &dims,
+UIImage *UIScreen::AddImage(const std::string &imagePath, const Vector2 &pos, const Vector2 &dims,
                             const Vector3 &color) {
     // Creates the image and stores it in the respective attribute
-    UIImage *image = new UIImage(renderer, imagePath, pos, dims, color);
+    UIImage *image = new UIImage(mGame->GetRenderer(), imagePath, pos, dims, color);
     mImages.emplace_back(image);
     return image;
 }

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <SDL_ttf.h>
 #include <SDL_image.h>
 #include "Utils/CSV.h"
 #include "Utils/Random.h"
@@ -12,6 +13,8 @@
 #include "Actors/Cursor.h"
 #include "Actors/Unit.h"
 #include "Components/DrawComponents/DrawComponent.h"
+#include "UIElements/UIScreen.h"
+#include "UIElements/StatScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindowWidth(windowWidth)
@@ -32,6 +35,12 @@ bool Game::Initialize() {
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!mRenderer) {
         SDL_Log("Failed to create renderer: %s", SDL_GetError());
+        return false;
+    }
+
+    // Initialize SDL true type font stuff
+    if (TTF_Init() != 0) {
+        SDL_Log("Failed to initialize SDL_ttf");
         return false;
     }
 
@@ -125,11 +134,18 @@ void Game::ProcessInput() {
             case SDL_QUIT:
                 Quit();
                 break;
-            case SDL_KEYDOWN:
+            case SDL_KEYDOWN: {
                 // Handles key presses for actors
                 for (auto actor: mActors)
                     actor->HandleKeyPress(event.key.keysym.sym, event.key.repeat == 0);
+
+                // Handle key press for UI screens
+                if (!mUIStack.empty()) {
+                    mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                }
+
                 break;
+            }
             default:
                 break;
         }
@@ -154,17 +170,40 @@ void Game::UpdateGame() {
     // Updates time count
     mTicksCount = SDL_GetTicks();
 
+    // Updates UI elements
+    UpdateUI(deltaTime);
+
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
     // Update camera position
-    UpdateCamera();
+    UpdateCamera(deltaTime);
 
     // Updates the scene
     UpdateSceneManager(deltaTime);
 }
 
-void Game::UpdateCamera() {
+void Game::UpdateUI(float deltaTime) {
+    // Updates UI screens
+    for (auto ui: mUIStack) {
+        if (ui->GetState() == UIScreen::UIState::Active) {
+            ui->Update(deltaTime);
+        }
+    }
+
+    // Delete any UIElements that are closed
+    auto iter = mUIStack.begin();
+    while (iter != mUIStack.end()) {
+        if ((*iter)->GetState() == UIScreen::UIState::Closing) {
+            delete *iter;
+            iter = mUIStack.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
+}
+
+void Game::UpdateCamera(float deltaTime) {
     // Makes the camera move as the cursor touches the edges
     if (mCursor) {
         Vector2 pos = mCursor->GetPosition();
@@ -282,6 +321,11 @@ void Game::GenerateOutput() {
         }
     }
 
+    // Draws all UI screens
+    for (auto ui: mUIStack) {
+        ui->Draw(mRenderer);
+    }
+
     // Cross-fade between scenes
     if (mSceneManagerState == SceneManagerState::Exiting && mSceneManagerTimer <= TRANSITION_TIME) {
         SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
@@ -318,22 +362,42 @@ SDL_Texture *Game::LoadTexture(const std::string &texturePath) {
     return texture;
 }
 
-void Game::Shutdown() {
-    // Delete actors
-    while (!mActors.empty()) {
-        delete mActors.back();
+UIFont *Game::LoadFont(const std::string &fileName) {
+    // Checks if font is already loaded
+    // Just returns it if so
+    auto it = mFonts.find(fileName);
+    if (it != mFonts.end())
+        return it->second;
+
+    // Loads the font
+    UIFont *font = new UIFont(mRenderer);
+    bool result = font->Load(fileName);
+    if (!result) {
+        font->Unload();
+        delete font;
+        return nullptr;
     }
 
-    // Delete level data (deallocates matrix)
-    if (mLevelData != nullptr) {
-        for (int i = 0; i < LEVEL_HEIGHT; ++i) {
-            if (mLevelData[i] != nullptr)
-                delete[] mLevelData[i];
-        }
+    // Stores and returns it
+    mFonts.emplace(fileName, font);
+    return font;
+}
+
+void Game::Shutdown() {
+    // Unload current Scene
+    UnloadScene();
+
+    // Deletes loaded fonts
+    for (auto font: mFonts) {
+        font.second->Unload();
+        delete font.second;
     }
-    delete[] mLevelData;
+    mFonts.clear();
 
     // Closes SDL stuff
+    TTF_Quit();
+    IMG_Quit();
+
     SDL_DestroyRenderer(mRenderer);
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
@@ -389,6 +453,12 @@ void Game::ChangeScene() {
 
         mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
         mKnight->SetXY(20, 8);
+        Stats s = Stats("Edel", 30, 14, 4, 8, 9, 5);
+        mKnight->SetStats(s);
+        mUnits.emplace_back(mKnight);
+
+        // Loads HUD
+        mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
 
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");
@@ -422,4 +492,35 @@ void Game::UnloadScene() {
     while (!mActors.empty()) {
         delete mActors.back();
     }
+
+    // Delete UI screens
+    for (auto ui: mUIStack) {
+        delete ui;
+    }
+    mUIStack.clear();
+
+    // Delete background texture
+    if (mBackground) {
+        SDL_DestroyTexture(mBackground);
+        mBackground = nullptr;
+    }
+
+    // Delete level data (deallocates matrix)
+    if (mLevelData) {
+        for (int i = 0; i < LEVEL_HEIGHT; ++i) {
+            if (mLevelData[i] != nullptr)
+                delete[] mLevelData[i];
+        }
+        delete[] mLevelData;
+        mLevelData = nullptr;
+    }
+}
+
+Unit *Game::GetUnitByPosition(int x, int y) {
+    for (auto un: mUnits) {
+        if (un->GetX() == x && un->GetY() == y) {
+            return un;
+        }
+    }
+    return nullptr;
 }

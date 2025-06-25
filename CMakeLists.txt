@@ -8,6 +8,8 @@ project(${PROJECT_NAME})
 
 find_package(SDL2 2.32.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 add_executable(${PROJECT_NAME}
         Source/Utils/Math.cpp
@@ -38,6 +40,20 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Cursor.h
         Source/Actors/Unit.cpp
         Source/Actors/Unit.h
+        Source/UIElements/UIScreen.cpp
+        Source/UIElements/UIScreen.h
+        Source/UIElements/UIFont.cpp
+        Source/UIElements/UIFont.h
+        Source/UIElements/UIButton.cpp
+        Source/UIElements/UIButton.h
+        Source/UIElements/UIText.cpp
+        Source/UIElements/UIText.h
+        Source/UIElements/UIElement.cpp
+        Source/UIElements/UIElement.h
+        Source/UIElements/UIImage.cpp
+        Source/UIElements/UIImage.h
+        Source/UIElements/StatScreen.cpp
+        Source/UIElements/StatScreen.h
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)

@@ -1,7 +1,8 @@
 #include "Cursor.h"
 #include "../Game.h"
+#include "Unit.h"
+#include "../UIElements/StatScreen.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
-#include "../Components/ColliderComponents/AABBColliderComponent.h"
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
 
 Cursor::Cursor(Game *game, const std::string &texturePath)
@@ -44,10 +45,23 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE)
                 mPosition.x += Game::TILE_SIZE;
 
-        if (key == SDLK_RETURN)
-            mState = CursorState::Locked;
+        if (key == SDLK_RETURN) {
+            Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
+            if (unit == nullptr) {
+                return;
+            } else {
+                mState = CursorState::Locked;
+                unit->ShowStats();
+            }
+        }
     } else if (mState == CursorState::Locked) {
-        if (key == SDLK_RETURN)
-            mState = CursorState::Free;
+        if (key == SDLK_b) {
+            if (!mGame->GetUIStack().empty()) {
+                mGame->GetUIStack().pop_back();
+                if (mGame->GetUIStack().empty()) {
+                    mState = CursorState::Free;
+                }
+            }
+        }
     }
 }

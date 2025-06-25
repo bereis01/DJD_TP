@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <SDL.h>
-#include "../Math.h"
+#include "../Utils/Math.h"
 #include "UIElement.h"
 
 class UIText : public UIElement {

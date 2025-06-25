@@ -4,7 +4,7 @@
 #include "UIFont.h"
 #include "UIText.h"
 #include "UIElement.h"
-#include "../Math.h"
+#include "../Utils/Math.h"
 
 class UIButton : public UIElement {
 public:

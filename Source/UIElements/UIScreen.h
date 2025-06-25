@@ -1,9 +1,7 @@
 #pragma once
-#include <cstdint>
 #include <string>
 #include <vector>
-#include <list>
-#include "../Math.h"
+#include "../Utils/Math.h"
 #include "UIText.h"
 #include "UIButton.h"
 #include "UIImage.h"
@@ -35,6 +33,9 @@ public:
     // Get state of UI screen
     UIState GetState() const { return mState; }
 
+    // Set state of UI screen
+    void SetState(UIState state) { mState = state; }
+
     // Game getter
     class Game *GetGame() { return mGame; }
 
@@ -42,16 +43,16 @@ public:
     UIButton *AddButton(const std::string &name, const Vector2 &pos, const Vector2 &dims,
                         std::function<void()> onClick);
 
-    UIText *AddText(const std::string &name, const Vector2 &pos, const Vector2 &dims, const int pointSize = 40,
-                    const int unsigned wrapLength = 1024, const Vector3 &color = Color::White);
+    UIText *AddText(const std::string &name, const Vector2 &pos, const Vector2 &dims, int pointSize = 40,
+                    int unsigned wrapLength = 1024, const Vector3 &color = Color::White);
 
-    UIImage *AddImage(SDL_Renderer *renderer, const std::string &imagePath, const Vector2 &pos, const Vector2 &dims,
+    UIImage *AddImage(const std::string &imagePath, const Vector2 &pos, const Vector2 &dims,
                       const Vector3 &color = Color::White);
 
 protected:
     // Sets the mouse mode to relative or not
-    class Game *mGame;
-    class UIFont *mFont;
+    Game *mGame;
+    UIFont *mFont;
 
     // Configure positions
     Vector2 mPos;

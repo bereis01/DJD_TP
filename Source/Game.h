@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include "Utils/Math.h"
 
 class Game {
@@ -71,8 +72,10 @@ public:
     // Level functions
     int GetLevelData(const int x, const int y) const { return mLevelData[x][y]; }
 
-    // Texture functions
+    // Loading functions
     SDL_Texture *LoadTexture(const std::string &texturePath);
+
+    class UIFont *LoadFont(const std::string &fileName);
 
     // Scene management functions
     void SetGameScene(GameScene scene, float transitionTime = TRANSITION_TIME, bool fastStart = false);
@@ -83,15 +86,33 @@ public:
 
     void UnloadScene();
 
+    // UI functions
+    void PushUI(class UIScreen *screen) { mUIStack.emplace_back(screen); }
+    std::vector<UIScreen *> &GetUIStack() { return mUIStack; }
+
+    // Renderer functions
+    SDL_Renderer *GetRenderer() { return mRenderer; }
+
+    // Game-specific
+    std::vector<class Unit *> GetUnits() { return mUnits; };
+
+    Unit *GetUnitByPosition(int x, int y);
+
+    class StatScreen *GetStatScreen() { return mStatScreen; }
+
 private:
     // Game processing functions
     void ProcessInput();
 
     void UpdateGame();
 
-    void UpdateCamera();
-
     void GenerateOutput();
+
+    // Camera functions
+    void UpdateCamera(float deltaTime);
+
+    // UI functions
+    void UpdateUI(float deltaTime);
 
     // Load the level from a CSV file as a 2D array
     int **LoadLevel(const std::string &fileName, int width, int height);
@@ -116,6 +137,10 @@ private:
     // Updated by the component
     std::vector<class AABBColliderComponent *> mColliders;
 
+    // All the UI elements
+    std::vector<class UIScreen *> mUIStack;
+    std::unordered_map<std::string, class UIFont *> mFonts;
+
     // SDL stuff
     SDL_Window *mWindow = nullptr;
     SDL_Renderer *mRenderer = nullptr;
@@ -136,7 +161,9 @@ private:
 
     // Game-specific
     class Cursor *mCursor = nullptr;
-    class Unit *mKnight = nullptr;
+    Unit *mKnight = nullptr;
+    std::vector<Unit *> mUnits;
+    class StatScreen *mStatScreen;
 
     // Level data
     int **mLevelData = nullptr;
