@@ -7,7 +7,7 @@
 class UIText : public UIElement {
 public:
     UIText(const std::string &text, class UIFont *font, int pointSize = 40, unsigned wrapLength = 1024,
-           const Vector2 &pos = Vector2::Zero, const Vector2 &size = Vector2(80.f, 20.0f),
+           const Vector2 &pos = Vector2::Zero, const Vector2 &size = Vector2(80.0f, 20.0f),
            const Vector3 &color = Color::White);
 
     ~UIText();

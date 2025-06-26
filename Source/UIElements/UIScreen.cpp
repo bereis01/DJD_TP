@@ -100,7 +100,7 @@ UIButton *UIScreen::AddButton(const std::string &name, const Vector2 &pos, const
                               std::function<void()> onClick) {
     // Creates a new button and stores it in the respective attribute
     UIButton *button = new UIButton(name, mFont, onClick, pos, dims, Vector3(30, 30, 30), 40, 1024, Vector2::Zero,
-                                    Vector2(260, 20));
+                                    Vector2(80, 20));
     mButtons.emplace_back(button);
 
     // Initializes the index if list is being first populated

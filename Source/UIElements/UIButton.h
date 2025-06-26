@@ -12,7 +12,7 @@ public:
              const Vector2 &pos, const Vector2 &size, const Vector3 &color = Vector3(30, 30, 30),
              int pointSize = 40, unsigned wrapLength = 1024,
              const Vector2 &textPos = Vector2::Zero,
-             const Vector2 &textSize = Vector2(140.f, 20.0f),
+             const Vector2 &textSize = Vector2(80.0f, 20.0f),
              const Vector3 &textColor = Color::White);
 
     ~UIButton();
