@@ -23,6 +23,17 @@ public:
         Change
     };
 
+    enum class GamePlayState {
+        Map,
+        ShowingStats,
+        MovingUnit,
+        ChoosingAction,
+        ChoosingTarget,
+        EnemyTurn,
+        LevelComplete,
+        Shopping
+    };
+
     static const int LEVEL_WIDTH = 30; // In tiles
     static const int LEVEL_HEIGHT = 30; // In tiles
     static const int TILE_SIZE = 32; // In pixels
@@ -47,19 +58,19 @@ public:
 
     void AddActor(class Actor *actor);
 
-    void RemoveActor(class Actor *actor);
+    void RemoveActor(Actor *actor);
 
     // Draw functions
     void AddDrawable(class DrawComponent *drawable);
 
-    void RemoveDrawable(class DrawComponent *drawable);
+    void RemoveDrawable(DrawComponent *drawable);
 
     // Collider functions
     void AddCollider(class AABBColliderComponent *collider);
 
-    void RemoveCollider(class AABBColliderComponent *collider);
+    void RemoveCollider(AABBColliderComponent *collider);
 
-    std::vector<class AABBColliderComponent *> &GetColliders() { return mColliders; }
+    std::vector<AABBColliderComponent *> &GetColliders() { return mColliders; }
 
     // Camera functions
     Vector2 &GetCameraPos() { return mCameraPos; };
@@ -90,6 +101,11 @@ public:
     void PushUI(class UIScreen *screen) { mUIStack.emplace_back(screen); }
     std::vector<UIScreen *> &GetUIStack() { return mUIStack; }
 
+    UIScreen *GetActionScreen() { return mActionScreen; }
+    class StatScreen *GetStatScreen() { return mStatScreen; }
+
+    void LoadHUDScreens();
+
     // Renderer functions
     SDL_Renderer *GetRenderer() { return mRenderer; }
 
@@ -98,7 +114,23 @@ public:
 
     Unit *GetUnitByPosition(int x, int y);
 
-    class StatScreen *GetStatScreen() { return mStatScreen; }
+
+    // TODO: Maybe move to cursor?
+    void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
+    Unit *GetSelectedUnit() const { return mSelectedUnit; }
+
+    void SetTargetUnitIndex(int i) { mTargetUnitIndex = i; }
+    int GetTargetUnitIndex() const { return mTargetUnitIndex; }
+
+    void SetUnitsInRange();
+
+    std::vector<class Unit *> GetUnitsInRange() { return mUnitsInRange; }
+
+    void SetupAttack();
+
+    // Game state management
+    void SetGamePlayState(GamePlayState state) { mGamePlayState = state; }
+    GamePlayState GetGamePlayState() const { return mGamePlayState; }
 
 private:
     // Game processing functions
@@ -126,20 +158,20 @@ private:
 
     // All the actors in the game
     // Updated by the actor
-    std::vector<class Actor *> mActors;
+    std::vector<Actor *> mActors;
     std::vector<class Actor *> mPendingActors;
 
     // All the draw components
     // Updated by the component
-    std::vector<class DrawComponent *> mDrawables;
+    std::vector<DrawComponent *> mDrawables;
 
     // All the collision components
     // Updated by the component
-    std::vector<class AABBColliderComponent *> mColliders;
+    std::vector<AABBColliderComponent *> mColliders;
 
     // All the UI elements
-    std::vector<class UIScreen *> mUIStack;
-    std::unordered_map<std::string, class UIFont *> mFonts;
+    std::vector<UIScreen *> mUIStack;
+    std::unordered_map<std::string, UIFont *> mFonts;
 
     // SDL stuff
     SDL_Window *mWindow = nullptr;
@@ -159,11 +191,24 @@ private:
     // Camera properties
     Vector2 mCameraPos = Vector2::Zero;
 
+    // Game state
+    GamePlayState mGamePlayState;
+
+    // TODO move to constructor
     // Game-specific
     class Cursor *mCursor = nullptr;
+    Unit *mTrueblade = nullptr;
     Unit *mKnight = nullptr;
     std::vector<Unit *> mUnits;
-    class StatScreen *mStatScreen;
+    StatScreen *mStatScreen;
+    std::vector<Unit *> mUnitsInRange;
+    int mTargetUnitIndex;
+
+    // TODO: Maybe move to cursor?
+    class Unit *mSelectedUnit;
+
+    // TODO: Create class for this one
+    UIScreen *mActionScreen;
 
     // Level data
     int **mLevelData = nullptr;

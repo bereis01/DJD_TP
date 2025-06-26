@@ -3,8 +3,8 @@
 #include <fstream>
 #include <map>
 #include <vector>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "Utils/CSV.h"
 #include "Utils/Random.h"
 #include "Game.h"
@@ -17,8 +17,17 @@
 #include "UIElements/StatScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
-    : mWindowWidth(windowWidth)
-      , mWindowHeight(windowHeight) {
+    : mWindow(nullptr)
+      , mRenderer(nullptr)
+      , mLevelData(nullptr)
+      , mTicksCount(0)
+      , mIsRunning(true)
+      , mUpdatingActors(false)
+      , mWindowWidth(windowWidth)
+      , mWindowHeight(windowHeight)
+      , mCameraPos(Vector2::Zero)
+      , mSelectedUnit(nullptr)
+      , mTargetUnitIndex(-1) {
 }
 
 bool Game::Initialize() {
@@ -135,14 +144,17 @@ void Game::ProcessInput() {
                 Quit();
                 break;
             case SDL_KEYDOWN: {
+                // Handle key press for UI screens
+                if (!mUIStack.empty()) {
+                    if (mUIStack.back()->IsInteractive()) {
+                        mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                        break;
+                    }
+                }
+
                 // Handles key presses for actors
                 for (auto actor: mActors)
                     actor->HandleKeyPress(event.key.keysym.sym, event.key.repeat == 0);
-
-                // Handle key press for UI screens
-                if (!mUIStack.empty()) {
-                    mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
-                }
 
                 break;
             }
@@ -445,23 +457,44 @@ void Game::ChangeScene() {
             SDL_Log("Failed initializing level");
             return;
         }
-        // BuildLevel(mLevelData, LEVEL_WIDTH, LEVEL_HEIGHT);
 
         // Loads cursor
         mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
         mCursor->SetXY(20, 8);
 
-        mKnight = new Unit(this, "../Assets/Sprites/Units/Knight.png");
-        mKnight->SetXY(20, 8);
-        Stats s = Stats("Edel", 30, 14, 4, 8, 9, 5);
-        mKnight->SetStats(s);
-        mUnits.emplace_back(mKnight);
+        // Loads units (with stats and weapons)
+        mTrueblade = new Unit(this, "../Assets/Sprites/Units/TrueBlade.png");
+        mTrueblade->SetXY(20, 8);
+        Stats s = Stats("Mia", 25, 9, 4, 12, 14, 5, 5);
+        Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
+        Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
+        mTrueblade->SetStats(s);
+        mTrueblade->AddWeapon(w1);
+        mTrueblade->AddWeapon(w2);
+        mTrueblade->SetEquippedWeapon(w1);
+        mUnits.emplace_back(mTrueblade);
+
+        // Loads enemies
+        Unit *u = new Unit(this, "../Assets/Sprites/Units/Knight.png");
+        u->SetXY(14, 14);
+        Stats ss = Stats("Enemy1", 25, 8, 4, 6, 6, 3, 0);
+        Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        u->SetStats(ss);
+        u->AddWeapon(w);
+        u->SetEquippedWeapon(w);
+        mUnits.emplace_back(u);
 
         // Loads HUD
         mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
 
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");
+
+        // Sets game state
+        SetGamePlayState(GamePlayState::Map);
+
+        // Loads HUD
+        LoadHUDScreens();
     }
 
     // Set new scene
@@ -523,4 +556,50 @@ Unit *Game::GetUnitByPosition(int x, int y) {
         }
     }
     return nullptr;
+}
+
+void Game::LoadHUDScreens() {
+    mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
+    mActionScreen = new UIScreen(this, "../Assets/Fonts/Arial.ttf", true);
+    const Vector2 screenSize = Vector2(100, 150);
+    const Vector2 screenPos = Vector2(mWindowWidth - 150, 100);
+    Vector2 offset(0, 10);
+    mActionScreen->AddImage("../Assets/UI/StatBackground.png", screenPos, screenSize);
+    mActionScreen->AddButton("Attack", screenPos + offset, Vector2(100, 30), [this]() { SetupAttack(); });
+    mActionScreen->AddButton("Items", screenPos + offset * 6, Vector2(100, 30), nullptr);
+    mActionScreen->AddButton("Wait", screenPos + offset * 11, Vector2(100, 30), [this]() { mSelectedUnit->Wait(); });
+}
+
+void Game::SetUnitsInRange() {
+    int x = mSelectedUnit->GetX();
+    int y = mSelectedUnit->GetY();
+    int range = mSelectedUnit->GetEquippedWeapon()->range;
+    for (int i = 0; i <= range; i++) {
+        for (int j = 0 + i; j <= range; j++) {
+            if (i + j == 0)
+                continue;
+            Unit *target1 = GetUnitByPosition(x + i, y + j);
+            Unit *target2 = GetUnitByPosition(x + i, y - j);
+            Unit *target3 = GetUnitByPosition(x - i, y + j);
+            Unit *target4 = GetUnitByPosition(x - i, y - j);
+            if (target1 != nullptr)
+                mUnitsInRange.emplace_back(target1);
+            if (target2 != nullptr)
+                mUnitsInRange.emplace_back(target2);
+            if (target3 != nullptr)
+                mUnitsInRange.emplace_back(target3);
+            if (target4 != nullptr)
+                mUnitsInRange.emplace_back(target4);
+        }
+    }
+}
+
+void Game::SetupAttack() {
+    SetUnitsInRange();
+    if (!mUnitsInRange.empty()) {
+        mTargetUnitIndex = 0;
+        mCursor->SetPosition(mUnitsInRange[0]->GetPosition());
+    }
+    SetGamePlayState(GamePlayState::ChoosingTarget);
+    mUIStack.pop_back();
 }

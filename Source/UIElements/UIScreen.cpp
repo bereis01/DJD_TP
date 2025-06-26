@@ -1,14 +1,16 @@
 #include "UIScreen.h"
 #include "../Game.h"
+#include "../Actors/Unit.h"
 
-UIScreen::UIScreen(Game *game, const std::string &fontName)
+UIScreen::UIScreen(Game *game, const std::string &fontName, bool isInteractive)
     : mGame(game)
       , mPos(0.f, 0.f)
       , mSize(0.f, 0.f)
       , mState(UIState::Active)
-      , mSelectedButtonIndex(-1) {
+      , mSelectedButtonIndex(-1)
+      , mInteractive(isInteractive) {
     // Adds the screen to the game's screen list
-    mGame->PushUI(this);
+    // mGame->PushUI(this);
 
     // Loads the font to be used
     mFont = mGame->LoadFont(fontName);
@@ -35,26 +37,50 @@ void UIScreen::Update(float deltaTime) {
 }
 
 void UIScreen::Draw(SDL_Renderer *renderer) {
-    // Draws texts
-    for (auto text: mTexts)
-        text->Draw(renderer, mPos);
+    // Draws images
+    for (auto image: mImages)
+        image->Draw(renderer, mPos);
 
     // Draws buttons
     for (auto button: mButtons)
         button->Draw(renderer, mPos);
 
-    // Draws images
-    for (auto image: mImages)
-        image->Draw(renderer, mPos);
+    // Draws texts
+    for (auto text: mTexts)
+        text->Draw(renderer, mPos);
 }
 
 void UIScreen::ProcessInput(const uint8_t *keys) {
 }
 
 void UIScreen::HandleKeyPress(int key) {
-    switch (key) {
-        default:
-            break;
+    if (!mInteractive)
+        return;
+    if (key == SDLK_w) {
+        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+        mSelectedButtonIndex--;
+        if (mSelectedButtonIndex < 0) {
+            mSelectedButtonIndex = static_cast<int>(mButtons.size()) - 1;
+        }
+        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+    } else if (key == SDLK_s) {
+        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+        mSelectedButtonIndex++;
+        if (mSelectedButtonIndex > static_cast<int>(mButtons.size()) - 1) {
+            mSelectedButtonIndex = 0;
+        }
+        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+    } else if (key == SDLK_RETURN) {
+        if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
+            mButtons[mSelectedButtonIndex]->OnClick();
+        }
+    } else if (key == SDLK_b) {
+        mGame->GetUIStack().pop_back();
+        if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingAction) {
+            mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
+            mGame->GetSelectedUnit()->SetPosition(mGame->GetSelectedUnit()->GetOldPosition());
+            SetSelectedButtonIndex(0);
+        }
     }
 }
 
@@ -92,4 +118,10 @@ UIImage *UIScreen::AddImage(const std::string &imagePath, const Vector2 &pos, co
     UIImage *image = new UIImage(mGame->GetRenderer(), imagePath, pos, dims, color);
     mImages.emplace_back(image);
     return image;
+}
+
+void UIScreen::SetSelectedButtonIndex(int index) {
+    mButtons[mSelectedButtonIndex]->SetHighlighted(false);
+    mSelectedButtonIndex = index;
+    mButtons[mSelectedButtonIndex]->SetHighlighted(true);
 }

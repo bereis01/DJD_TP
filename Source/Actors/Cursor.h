@@ -14,7 +14,7 @@ public:
 
     void OnUpdate(float deltaTime) override;
 
-    void OnHandleKeyPress(const int key, const bool isPressed) override;
+    void OnHandleKeyPress(int key, bool isPressed) override;
 
     // Manipulation based on coordinates
     void SetXY(int x, int y) { mPosition = Vector2(y * Game::TILE_SIZE, x * Game::TILE_SIZE); };

@@ -14,14 +14,14 @@ public:
         Closing
     };
 
-    UIScreen(class Game *game, const std::string &fontName);
+    UIScreen(class Game *game, const std::string &fontName, bool isInteractive = false);
 
     virtual ~UIScreen();
 
     // UIScreen subclasses can override these
     virtual void Update(float deltaTime);
 
-    virtual void Draw(class SDL_Renderer *renderer);
+    virtual void Draw(SDL_Renderer *renderer);
 
     virtual void ProcessInput(const uint8_t *keys);
 
@@ -49,6 +49,11 @@ public:
     UIImage *AddImage(const std::string &imagePath, const Vector2 &pos, const Vector2 &dims,
                       const Vector3 &color = Color::White);
 
+    // TODO Understand later
+    void SetSelectedButtonIndex(int index);
+
+    bool IsInteractive() const { return mInteractive; }
+
 protected:
     // Sets the mouse mode to relative or not
     Game *mGame;
@@ -60,6 +65,7 @@ protected:
 
     // State
     UIState mState;
+    bool mInteractive;
 
     // List of buttons, texts, and images
     int mSelectedButtonIndex;
