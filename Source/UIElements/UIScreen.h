@@ -41,7 +41,7 @@ public:
 
     // Add a button to this screen
     UIButton *AddButton(const std::string &name, const Vector2 &pos, const Vector2 &dims,
-                        std::function<void()> onClick);
+                        std::function<void()> onClick, const Vector2 &textSize);
 
     UIText *AddText(const std::string &name, const Vector2 &pos, const Vector2 &dims, int pointSize = 40,
                     int unsigned wrapLength = 1024, const Vector3 &color = Color::White);

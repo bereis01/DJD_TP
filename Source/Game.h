@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+
+#include "UIElements/ActionScreen.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -101,7 +103,7 @@ public:
     void PushUI(class UIScreen *screen) { mUIStack.emplace_back(screen); }
     std::vector<UIScreen *> &GetUIStack() { return mUIStack; }
 
-    UIScreen *GetActionScreen() { return mActionScreen; }
+    ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
 
     void LoadHUDScreens();
@@ -201,14 +203,12 @@ private:
     Unit *mKnight = nullptr;
     std::vector<Unit *> mUnits;
     StatScreen *mStatScreen;
+    class ActionScreen *mActionScreen;
     std::vector<Unit *> mUnitsInRange;
     int mTargetUnitIndex;
 
     // TODO: Maybe move to cursor?
     class Unit *mSelectedUnit;
-
-    // TODO: Create class for this one
-    UIScreen *mActionScreen;
 
     // Level data
     int **mLevelData = nullptr;

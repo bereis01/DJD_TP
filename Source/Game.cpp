@@ -15,6 +15,7 @@
 #include "Components/DrawComponents/DrawComponent.h"
 #include "UIElements/UIScreen.h"
 #include "UIElements/StatScreen.h"
+#include "UIElements/ActionScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -585,15 +586,8 @@ Unit *Game::GetUnitByPosition(int x, int y) {
 }
 
 void Game::LoadHUDScreens() {
-    mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
-    mActionScreen = new UIScreen(this, "../Assets/Fonts/Arial.ttf", true);
-    const Vector2 screenSize = Vector2(100, 150);
-    const Vector2 screenPos = Vector2(mWindowWidth - 150, 100);
-    Vector2 offset(0, 10);
-    mActionScreen->AddImage("../Assets/UI/StatBackground.png", screenPos, screenSize);
-    mActionScreen->AddButton("Attack", screenPos + offset, Vector2(100, 30), [this]() { SetupAttack(); });
-    mActionScreen->AddButton("Items", screenPos + offset * 6, Vector2(100, 30), nullptr);
-    mActionScreen->AddButton("Wait", screenPos + offset * 11, Vector2(100, 30), [this]() { mSelectedUnit->Wait(); });
+    mStatScreen = new StatScreen(this, "../Assets/Fonts/Daydream.ttf");
+    mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
 }
 
 void Game::SetUnitsInRange() {

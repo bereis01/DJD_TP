@@ -56,6 +56,8 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/StatScreen.h
         Source/Components/DrawComponents/DrawAOEComponent.cpp
         Source/Components/DrawComponents/DrawAOEComponent.h
+        Source/UIElements/ActionScreen.cpp
+        Source/UIElements/ActionScreen.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)

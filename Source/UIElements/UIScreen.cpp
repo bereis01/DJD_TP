@@ -97,10 +97,10 @@ UIText *UIScreen::AddText(const std::string &name, const Vector2 &pos, const Vec
 }
 
 UIButton *UIScreen::AddButton(const std::string &name, const Vector2 &pos, const Vector2 &dims,
-                              std::function<void()> onClick) {
+                              std::function<void()> onClick, const Vector2 &textSize) {
     // Creates a new button and stores it in the respective attribute
     UIButton *button = new UIButton(name, mFont, onClick, pos, dims, Vector3(30, 30, 30), 40, 1024, Vector2::Zero,
-                                    Vector2(80, 20));
+                                    textSize);
     mButtons.emplace_back(button);
 
     // Initializes the index if list is being first populated

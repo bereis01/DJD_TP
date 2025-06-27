@@ -5,21 +5,21 @@
 class StatScreen : public UIScreen {
 public:
     const int POINT_SIZE = 48;
-    const int WORD_HEIGHT = 36.0f;
-    const int WORD_OFFSET = 12.0f;
-    const int CHAR_WIDTH = 16.0f;
+    const int WORD_HEIGHT = 20.0f;
+    const int WORD_OFFSET = 5.0f;
+    const int CHAR_WIDTH = 10.0f;
     const Vector2 SCREEN_POS = Vector2(80, 80);
-    const Vector2 SCREEN_SIZE = Vector2(450, 450);
+    const Vector2 SCREEN_SIZE = Vector2(320, 180);
     const Vector2 NAME_POS = Vector2(100, 100);
-    const Vector2 HP_POS = Vector2(300, 100);
-    const Vector2 STR_POS = Vector2(100, 200);
-    const Vector2 MAG_POS = Vector2(300, 200);
-    const Vector2 SKL_POS = Vector2(100, 300);
-    const Vector2 SPD_POS = Vector2(300, 300);
-    const Vector2 DEF_POS = Vector2(100, 400);
-    const Vector2 RES_POS = Vector2(300, 400);
+    const Vector2 HP_POS = Vector2(250, 100);
+    const Vector2 STR_POS = Vector2(100, 140);
+    const Vector2 MAG_POS = Vector2(250, 140);
+    const Vector2 SKL_POS = Vector2(100, 180);
+    const Vector2 SPD_POS = Vector2(250, 180);
+    const Vector2 DEF_POS = Vector2(100, 220);
+    const Vector2 RES_POS = Vector2(250, 220);
 
-    StatScreen(class Game *game, const std::string &fontName);
+    StatScreen(Game *game, const std::string &fontName);
 
     ~StatScreen();
 

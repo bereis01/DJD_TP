@@ -37,7 +37,7 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
     mRes = AddText("5", RES_POS + Vector2(CHAR_WIDTH * 11 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
                    POINT_SIZE);
 
-    AddImage("../Assets/UI/StatBackground.png", SCREEN_POS, SCREEN_SIZE);
+    AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
 }
 
 StatScreen::~StatScreen() {
