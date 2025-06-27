@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
+#include "../Components/DrawComponents/DrawAOEComponent.h"
 
 class Stats {
 public:
@@ -71,4 +72,8 @@ private:
     bool mAvailable;
     Weapon *mEquippedWeapon;
     std::vector<Weapon *> mWeapons;
+
+    // Draw components for AOE fields
+    DrawAOEComponent *mMovementAOE;
+    DrawAOEComponent *mAttackAOE;
 };

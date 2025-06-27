@@ -338,6 +338,32 @@ void Game::GenerateOutput() {
         ui->Draw(mRenderer);
     }
 
+    // Draws gray grid lines if moving a unit
+    if (mGamePlayState == GamePlayState::MovingUnit) {
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 50);
+        for (int x = 0; x <= mWindowWidth;
+             x += TILE_SIZE) {
+            SDL_RenderDrawLine(mRenderer, x, 0, x, mWindowHeight);
+        }
+        for (int y = 0; y <= mWindowHeight;
+             y += TILE_SIZE) {
+            SDL_RenderDrawLine(mRenderer, 0, y, mWindowWidth, y);
+        }
+    }
+
+    // Draws red grid lines if moving a unit
+    if (mGamePlayState == GamePlayState::ChoosingTarget) {
+        SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 50);
+        for (int x = 0; x <= mWindowWidth;
+             x += TILE_SIZE) {
+            SDL_RenderDrawLine(mRenderer, x, 0, x, mWindowHeight);
+        }
+        for (int y = 0; y <= mWindowHeight;
+             y += TILE_SIZE) {
+            SDL_RenderDrawLine(mRenderer, 0, y, mWindowWidth, y);
+        }
+    }
+
     // Cross-fade between scenes
     if (mSceneManagerState == SceneManagerState::Exiting && mSceneManagerTimer <= TRANSITION_TIME) {
         SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};

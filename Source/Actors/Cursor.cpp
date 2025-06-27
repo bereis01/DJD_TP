@@ -7,11 +7,12 @@
 
 Cursor::Cursor(Game *game, const std::string &texturePath)
     : Actor(game) {
-    // Creates all necessary components
+    // Draws the colored square where the cursor is
     mDrawPolygonComponent = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
     mDrawPolygonComponent->SetColor(Vector3(255, 0, 0));
-    mDrawPolygonComponent->SetAlpha(100);
+    mDrawPolygonComponent->SetAlpha(50);
 
+    // Draws the cursor sprite
     new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
 }
 
