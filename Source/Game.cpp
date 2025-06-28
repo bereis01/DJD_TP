@@ -11,7 +11,8 @@
 #include "Actors/Actor.h"
 #include "Actors/Tile.h"
 #include "Actors/Cursor.h"
-#include "Actors/Unit.h"
+#include "Actors/Ally.h"
+#include "Actors/Enemy.h"
 #include "Components/DrawComponents/DrawComponent.h"
 #include "UIElements/UIScreen.h"
 #include "UIElements/StatScreen.h"
@@ -206,6 +207,42 @@ void Game::UpdateGame() {
 
     // Updates the scene
     UpdateSceneManager(deltaTime);
+
+    // Updates the turn
+    UpdateTurn(deltaTime);
+}
+
+void Game::UpdateTurn(float deltaTime) {
+    if (mGamePlayState != GamePlayState::EnemyTurn) {
+        // Checks if all units have been used
+        for (auto unit: mUnits)
+            if (unit->IsAvailable())
+                return;
+
+        // If no units are available, change to the enemy turn
+        SetGamePlayState(GamePlayState::EnemyTurn);
+        mTurnScreen->ChangeTurn();
+        mCurrentEnemyIndex = mEnemies.size() - 1;
+    } else {
+        // Traverses the enemies, activating each one
+        if (mCurrentEnemyIndex >= 0) {
+            if (mEnemies[mCurrentEnemyIndex]->GetState() == Enemy::EnemyState::None)
+                mEnemies[mCurrentEnemyIndex]->SetState(Enemy::EnemyState::Moving);
+            else if (mEnemies[mCurrentEnemyIndex]->GetState() == Enemy::EnemyState::Finished) {
+                mEnemies[mCurrentEnemyIndex]->SetState(Enemy::EnemyState::None);
+                mCurrentEnemyIndex--;
+            }
+        }
+        // When all have been activated, returns the turn to the player
+        else {
+            // Resets availability of units
+            for (auto unit: mUnits)
+                unit->SetAvailable(true);
+
+            SetGamePlayState(GamePlayState::Map);
+            mTurnScreen->ChangeTurn();
+        }
+    }
 }
 
 void Game::UpdateUI(float deltaTime) {
@@ -502,7 +539,7 @@ void Game::ChangeScene() {
         mCursor->SetXY(20, 8);
 
         // Loads units (with stats and weapons)
-        mTrueblade = new Unit(this, "../Assets/Sprites/Units/TrueBlade.png");
+        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png");
         mTrueblade->SetXY(20, 8);
         Stats s = Stats("Mia", 25, 9, 4, 12, 14, 5, 5);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
@@ -514,14 +551,32 @@ void Game::ChangeScene() {
         mUnits.emplace_back(mTrueblade);
 
         // Loads enemies
-        Unit *u = new Unit(this, "../Assets/Sprites/Units/Knight.png");
-        u->SetXY(14, 14);
+        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy->SetXY(14, 14);
         Stats ss = Stats("Enemy1", 25, 8, 4, 6, 6, 3, 0);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        u->SetStats(ss);
-        u->AddWeapon(w);
-        u->SetEquippedWeapon(w);
-        mUnits.emplace_back(u);
+        enemy->SetStats(ss);
+        enemy->AddWeapon(w);
+        enemy->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy);
+
+        enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy->SetXY(15, 13);
+        ss = Stats("Enemy2", 25, 8, 4, 6, 6, 3, 0);
+        w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        enemy->SetStats(ss);
+        enemy->AddWeapon(w);
+        enemy->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy);
+
+        enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy->SetXY(15, 15);
+        ss = Stats("Enemy3", 25, 8, 4, 6, 6, 3, 0);
+        w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        enemy->SetStats(ss);
+        enemy->AddWeapon(w);
+        enemy->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy);
 
         // Loads HUD
         mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");

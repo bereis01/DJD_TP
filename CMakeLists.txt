@@ -60,6 +60,10 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/ActionScreen.h
         Source/UIElements/TurnScreen.cpp
         Source/UIElements/TurnScreen.h
+        Source/Actors/Enemy.cpp
+        Source/Actors/Enemy.h
+        Source/Actors/Ally.cpp
+        Source/Actors/Ally.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)

@@ -51,7 +51,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
 
             // If there is a unit, selects it (to move it)
-            if (unit != nullptr) {
+            if (unit != nullptr && unit->IsAvailable()) {
                 mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
                 mGame->SetSelectedUnit(unit);
                 unit->SetOldPosition(unit->GetPosition());

@@ -1,8 +1,6 @@
 #pragma once
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
-#include "../Components/DrawComponents/DrawAOEComponent.h"
-#include "../Components/DrawComponents/DrawPolygonComponent.h"
 
 class Stats {
 public:
@@ -40,6 +38,7 @@ public:
     int GetX() { return static_cast<int>(mPosition.y / Game::TILE_SIZE); }
     int GetY() { return static_cast<int>(mPosition.x / Game::TILE_SIZE); }
 
+    // Stats manipulation
     void SetStats(Stats stats);
 
     Stats GetStats() { return mStats; }
@@ -48,12 +47,15 @@ public:
     void SetOldPosition(Vector2 oldPosition) { mOldPosition = oldPosition; }
     Vector2 GetOldPosition() { return mOldPosition; }
 
+    // Update function
     void OnUpdate(float deltaTime) override;
 
+    // Weapon manipulation
     void AddWeapon(Weapon *weapon) { mWeapons.push_back(weapon); }
     void SetEquippedWeapon(Weapon *weapon) { mEquippedWeapon = weapon; }
     Weapon *GetEquippedWeapon() { return mEquippedWeapon; }
 
+    // In-game actions
     void ShowStats();
 
     void Attack(Unit *target);
@@ -64,18 +66,24 @@ public:
 
     void Wait();
 
-private:
+    // Turn management
+    bool IsAvailable() { return mAvailable; }
+    void SetAvailable(bool available) { mAvailable = available; }
+
+protected:
+    // Sprite
     DrawSpriteComponent *mDrawComponent;
+
+    // Stats
     Stats mStats;
     int mDmgTaken;
     int mMovement;
     Vector2 mOldPosition;
-    bool mAvailable;
+
+    // Weapon
     Weapon *mEquippedWeapon;
     std::vector<Weapon *> mWeapons;
 
-    // Draw components for AOE fields
-    DrawAOEComponent *mMovementAOE;
-    DrawAOEComponent *mAttackAOE;
-    DrawPolygonComponent *mTypeIndicator;
+    // Turn management
+    bool mAvailable = true;
 };

@@ -159,6 +159,9 @@ private:
 
     void ChangeScene();
 
+    // Turn management
+    void UpdateTurn(float deltaTime);
+
     // All the actors in the game
     // Updated by the actor
     std::vector<Actor *> mActors;
@@ -200,11 +203,14 @@ private:
     // TODO move to constructor
     // Game-specific
     class Cursor *mCursor = nullptr;
-    Unit *mTrueblade = nullptr;
+    class Ally *mTrueblade = nullptr;
     Unit *mKnight = nullptr;
     std::vector<Unit *> mUnits;
     std::vector<Unit *> mUnitsInRange;
     int mTargetUnitIndex;
+
+    std::vector<class Enemy *> mEnemies;
+    int mCurrentEnemyIndex;
 
     // TODO: Maybe move to cursor?
     class Unit *mSelectedUnit;
@@ -224,5 +230,4 @@ private:
     StatScreen *mStatScreen;
     ActionScreen *mActionScreen;
     TurnScreen *mTurnScreen;
-
 };
