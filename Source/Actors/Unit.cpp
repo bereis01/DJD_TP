@@ -35,6 +35,11 @@ Unit::Unit(Game *game, const std::string &texturePath, int mov)
     mMovementAOE->SetColor(Vector3(0, 0.0f, 255.0f));
     mAttackAOE = new DrawAOEComponent(this, Vector2::Zero, 0, 200);
     mAttackAOE->SetColor(Vector3(255.0f, 0.0f, 0.0f));
+
+    // Draws the colored square where the unit is
+    mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
+    mTypeIndicator->SetColor(Vector3(0, 255, 0));
+    mTypeIndicator->SetAlpha(50);
 }
 
 void Unit::OnUpdate(float deltaTime) {

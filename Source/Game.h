@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "UIElements/ActionScreen.h"
+#include "UIElements/TurnScreen.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -202,8 +203,6 @@ private:
     Unit *mTrueblade = nullptr;
     Unit *mKnight = nullptr;
     std::vector<Unit *> mUnits;
-    StatScreen *mStatScreen;
-    class ActionScreen *mActionScreen;
     std::vector<Unit *> mUnitsInRange;
     int mTargetUnitIndex;
 
@@ -220,4 +219,10 @@ private:
 
     SceneManagerState mSceneManagerState = SceneManagerState::None;
     float mSceneManagerTimer = 0.0f;
+
+    // HUD
+    StatScreen *mStatScreen;
+    ActionScreen *mActionScreen;
+    TurnScreen *mTurnScreen;
+
 };

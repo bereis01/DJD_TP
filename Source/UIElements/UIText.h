@@ -14,6 +14,8 @@ public:
 
     void SetText(const std::string &name);
 
+    void SetText(const std::string &name, const Vector2 &pos, const Vector2 &size);
+
     void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) override;
 
 protected:

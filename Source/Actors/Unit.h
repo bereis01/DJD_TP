@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 #include "../Components/DrawComponents/DrawAOEComponent.h"
+#include "../Components/DrawComponents/DrawPolygonComponent.h"
 
 class Stats {
 public:
@@ -76,4 +77,5 @@ private:
     // Draw components for AOE fields
     DrawAOEComponent *mMovementAOE;
     DrawAOEComponent *mAttackAOE;
+    DrawPolygonComponent *mTypeIndicator;
 };

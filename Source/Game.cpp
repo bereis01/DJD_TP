@@ -145,17 +145,29 @@ void Game::ProcessInput() {
                 Quit();
                 break;
             case SDL_KEYDOWN: {
+                int key = event.key.keysym.sym;
+                bool isPressed = event.key.repeat == 0;
+
+                // Changes turn if player has pressed E
+                if (key == SDLK_e) {
+                    if (mGamePlayState == GamePlayState::EnemyTurn)
+                        SetGamePlayState(GamePlayState::Map);
+                    else
+                        SetGamePlayState(GamePlayState::EnemyTurn);
+                    mTurnScreen->ChangeTurn();
+                }
+
                 // Handle key press for UI screens
                 if (!mUIStack.empty()) {
                     if (mUIStack.back()->IsInteractive()) {
-                        mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+                        mUIStack.back()->HandleKeyPress(key);
                         break;
                     }
                 }
 
                 // Handles key presses for actors
                 for (auto actor: mActors)
-                    actor->HandleKeyPress(event.key.keysym.sym, event.key.repeat == 0);
+                    actor->HandleKeyPress(key, isPressed);
 
                 break;
             }
@@ -521,7 +533,9 @@ void Game::ChangeScene() {
         SetGamePlayState(GamePlayState::Map);
 
         // Loads HUD
-        LoadHUDScreens();
+        mStatScreen = new StatScreen(this, "../Assets/Fonts/Daydream.ttf");
+        mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
+        mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Daydream.ttf");
     }
 
     // Set new scene
@@ -583,11 +597,6 @@ Unit *Game::GetUnitByPosition(int x, int y) {
         }
     }
     return nullptr;
-}
-
-void Game::LoadHUDScreens() {
-    mStatScreen = new StatScreen(this, "../Assets/Fonts/Daydream.ttf");
-    mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
 }
 
 void Game::SetUnitsInRange() {

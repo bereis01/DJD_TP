@@ -27,6 +27,22 @@ void UIText::SetText(const std::string &text) {
     mTextTexture = mFont->RenderText(mText, mColor, mPointSize, mWrapLength);
 }
 
+void UIText::SetText(const std::string &text, const Vector2 &pos, const Vector2 &size) {
+    // Cleans texture if allocated
+    if (mTextTexture != nullptr) {
+        SDL_DestroyTexture(mTextTexture);
+        mTextTexture = nullptr;
+    }
+
+    // Sets the text and initializes the corresponding texture
+    mText = text;
+    mTextTexture = mFont->RenderText(mText, mColor, mPointSize, mWrapLength);
+
+    // Updates size and position
+    mPosition = pos;
+    mSize = size;
+}
+
 void UIText::Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
     // Draws the text texture in the given relative position
     SDL_Rect titleQuad = {
