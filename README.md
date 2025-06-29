@@ -21,7 +21,7 @@
 
 O jogo em si é um RPG estratégico top-down em um universo bidimensional (grid), em que o jogador possui um conjunto de unidades e deve, a cada fase, eliminar todos os oponentes presentes em campo. A progressão é feita em turnos, alternados entre o jogador e a máquina. Em seu turno, o jogador é capaz de movimentar e atacar com cada uma de suas unidades, sendo o mesmo válido para o inimigo. O jogo acaba quando um exército elimina completamente o outro, condição na qual se torna vitorioso. No momento, apenas as mecânicas fundamentais do jogo estão implementadas em uma única fase. Porém, em etapas futuras do desenvolvimento, pretende-se adicionar mais níveis, assim como mecânicas de progressão para as unidades.
 
-A implementação foi feita inteiramente na linguagem de programação C++, com o auxílio da bibliteca "Simple Directmedia Layer" (SDL).Todo o código-fonte está disponível de maneira aberta neste repositório. Todos os assets utilizados, como músicas e sprites, foram extraídos de fontes livres, com destaque para a plataforma <a href="https://itch.io/">Itch.io</a>. Como já mencionado, a ambientação segue uma temática de fantasia medieval, a qual é capturada pelos seus cenários, personagens, inimigos e animações, assumindo perfil artístico simples, com cores contrastantes e animadas, assim como um perfil musical envolvente e imersivo.
+A implementação foi feita inteiramente na linguagem de programação C++, com o auxílio da biblioteca "Simple Directmedia Layer" (SDL).Todo o código-fonte está disponível de maneira aberta neste repositório. Todos os assets utilizados, como músicas e sprites, foram extraídos de fontes livres, com destaque para a plataforma <a href="https://itch.io/">Itch.io</a>. Como já mencionado, a ambientação segue uma temática de fantasia medieval, a qual é capturada pelos seus cenários, personagens, inimigos e animações, assumindo perfil artístico simples, com cores contrastantes e animadas, assim como um perfil musical envolvente e imersivo.
 
 Action Menu                |  Unit Movement
 :-------------------------:|:-------------------------:
@@ -44,7 +44,7 @@ Aymr ainda é um projeto em desenvolvimento. No momento, apenas as mecânicas ma
 <!-- CONTACT -->
 # Contato
 Bernardo Reis de Almeida (bera01@ufmg.br)
-- Responsável por: movimentação de câmera e de cursor, efeitos de troca de cena, controle automático dos inimigos, instanciaçâo do mapa;
+- Responsável por: movimentação de câmera e de cursor, efeitos de troca de cena, controle automático dos inimigos, instanciação do mapa;
 
 Matheus Farnese Lacerda Senna (melkor@ufmg.br)
 - Responsável por: controle (movimentação/ataque) das unidades aliadas, design do mapa, escolha dos sprites, menus e telas de HUD;
