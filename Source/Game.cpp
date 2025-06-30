@@ -211,6 +211,16 @@ void Game::UpdateGame() {
 
     // Updates the turn
     UpdateTurn(deltaTime);
+
+    // Checks victory/defeat
+    CheckVictory();
+}
+
+void Game::CheckVictory() {
+    if (mEnemies.size() == 0)
+        SetGamePlayState(GamePlayState::LevelComplete);
+    if (mUnits.size() == 0)
+        SetGamePlayState(GamePlayState::LevelFailed);
 }
 
 void Game::UpdateTurn(float deltaTime) {
@@ -428,6 +438,34 @@ void Game::GenerateOutput() {
         SDL_RenderFillRect(mRenderer, &drawRect);
     }
 
+    // Victory screen
+    if (mGamePlayState == GamePlayState::LevelComplete) {
+        // Victory text
+        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Daydream.ttf");
+        VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
+        mUIStack.emplace_back(VictoryText);
+
+        // Blue background
+        SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
+        SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 0.5 * 255);
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(mRenderer, &drawRect);
+    }
+
+    // Fail screen
+    if (mGamePlayState == GamePlayState::LevelFailed) {
+        // Defeat text
+        auto DefeatText = new UIScreen(this, "../Assets/Fonts/Daydream.ttf");
+        DefeatText->AddText("DEFEAT", Vector2(250, 270), Vector2(300, 100));
+        mUIStack.emplace_back(DefeatText);
+
+        // Red background
+        SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
+        SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 0.5 * 255);
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(mRenderer, &drawRect);
+    }
+
     // Swap front buffer and back buffer
     SDL_RenderPresent(mRenderer);
 }
@@ -571,13 +609,22 @@ void Game::ChangeScene() {
         mEnemies.emplace_back(enemy2);
 
         Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
-        enemy3->SetXY(19, 8);
+        enemy3->SetXY(13, 15);
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
         enemy3->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy3);
+
+        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy4->SetXY(13, 13);
+        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
+        w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        enemy4->SetStats(ss);
+        enemy4->AddWeapon(w);
+        enemy4->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy4);
 
         // Loads HUD
         mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
@@ -648,17 +695,38 @@ void Game::UnloadScene() {
 }
 
 Unit *Game::GetUnitByPosition(int x, int y) {
+    // Searches the ally vector
     for (auto un: mUnits) {
         if (un->GetX() == x && un->GetY() == y) {
             return un;
         }
     }
+
+    // Searches the enemy vector
     for (auto un: mEnemies) {
         if (un->GetX() == x && un->GetY() == y) {
             return un;
         }
     }
+
     return nullptr;
+}
+
+Ally *Game::GetAllyByPosition(int x, int y) {
+    // Searches the ally vector
+    for (auto un: mUnits) {
+        if (un->GetX() == x && un->GetY() == y) {
+            return un;
+        }
+    }
+
+    return nullptr;
+}
+
+void Game::RemoveAlly(Ally *ally) {
+    // Searches the enemy vector for enemies
+    auto iter = std::find(mUnits.begin(), mUnits.end(), ally);
+    mUnits.erase(iter);
 }
 
 void Game::RemoveEnemy(Enemy *enemy) {

@@ -36,7 +36,8 @@ public:
         ConfirmingAttack,
         EnemyTurn,
         LevelComplete,
-        Shopping
+        LevelFailed,
+        Shopping,
     };
 
     static const int LEVEL_WIDTH = 30; // In tiles
@@ -118,19 +119,29 @@ public:
 
     // Game-specific
     std::vector<class Ally *> GetUnits() { return mUnits; }
+
     class Unit *GetUnitByPosition(int x, int y);
 
-    // TODO: Maybe move to cursor?
+    Ally *GetAllyByPosition(int x, int y);
+
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
     Unit *GetSelectedUnit() const { return mSelectedUnit; }
 
     void SetTargetUnitIndex(int i) { mTargetUnitIndex = i; }
     int GetTargetUnitIndex() const { return mTargetUnitIndex; }
 
+    void RemoveAlly(class Ally *ally);
+
     void SetEnemiesInRange();
+
     std::vector<class Enemy *> &GetEnemiesInRange() { return mEnemiesInRange; }
+
     void RemoveEnemy(class Enemy *enemy);
+
     void SetupAttack();
+
+    // Victory/Defeat
+    void CheckVictory();
 
     // Game state management
     void SetGamePlayState(GamePlayState state) { mGamePlayState = state; }

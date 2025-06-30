@@ -14,8 +14,8 @@ public:
         Finished
     };
 
-    const float MOVEMENT_TIMER = 1.0f;
-    const float ATTACK_TIMER = 1.0f;
+    const float MOVEMENT_TIMER = 0.5f;
+    const float ATTACK_TIMER = 0.5f;
     const float WAIT_TIMER = 0.0f;
 
     Enemy(Game *game, const std::string &texturePath, int mov = 5);

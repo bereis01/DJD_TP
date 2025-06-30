@@ -14,6 +14,10 @@ Ally::Ally(Game *game, const std::string &texturePath, int mov)
     mTypeIndicator->SetAlpha(50);
 }
 
+Ally::~Ally() {
+    mGame->RemoveAlly(this);
+}
+
 void Ally::OnUpdate(float deltaTime) {
     // Updates AOE fields
     // Shows Movement AOE if player is moving the unit

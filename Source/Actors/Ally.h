@@ -7,6 +7,8 @@ class Ally : public Unit {
 public:
     Ally(Game *game, const std::string &texturePath, int mov = 5);
 
+    ~Ally();
+
     void OnUpdate(float deltaTime);
 
 private:

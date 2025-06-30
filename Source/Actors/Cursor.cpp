@@ -50,7 +50,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
         // Enter selection
         if (key == SDLK_RETURN) {
             // Checks to see if there is a unit on the position
-            Unit *unit = mGame->GetUnitByPosition(GetX(), GetY());
+            Unit *unit = mGame->GetAllyByPosition(GetX(), GetY());
 
             // If there is a unit, selects it (to move it)
             if (unit != nullptr && unit->IsAvailable()) {

@@ -74,13 +74,15 @@ void Unit::Attack(class Unit *target, bool isCounter) {
         }
     }
     if (!isCounter) {
-        target->Attack(this, true);
+        //target->Attack(this, true);
     }
+
+    mAvailable = false;
 }
 
 void Unit::UseItem() {
     mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
-    // mAvailable = false;
+    mAvailable = false;
     mGame->GetUIStack().pop_back();
     mGame->SetGamePlayState(Game::GamePlayState::Map);
     mGame->SetSelectedUnit(nullptr);

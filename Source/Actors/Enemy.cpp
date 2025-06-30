@@ -50,16 +50,33 @@ void Enemy::OnUpdate(float deltaTime) {
             if (mEquippedWeapon) // Does not move if in attack range
                 if (distance <= mEquippedWeapon->range)
                     distance = 0;
+            // Alternates moving between X and Y for the value of the distance
             while (distance > 0) {
-                if (distance % 2 == 0)
-                    if ((closestPos.x - selfX) > 0)
-                        selfX += 1;
-                    else
-                        selfX -= 1;
-                else if ((closestPos.y - selfY) > 0)
-                    selfY += 1;
-                else
-                    selfY -= 1;
+                if (distance % 2 == 0) {
+                    if ((closestPos.x - selfX) > 0) {
+                        // Only goes to the direction if there is no unit and if it is valid
+                        if (mGame->GetUnitByPosition(selfX + 1, selfY) == nullptr && mGame->GetLevelData(
+                                selfX + 1, selfY) != 0)
+                            selfX += 1;
+                    } else {
+                        // Only goes to the direction if there is no unit and if it is valid
+                        if (mGame->GetUnitByPosition(selfX - 1, selfY) == nullptr && mGame->GetLevelData(
+                                selfX - 1, selfY) != 0)
+                            selfX -= 1;
+                    }
+                } else {
+                    if ((closestPos.y - selfY) > 0) {
+                        // Only goes to the direction if there is no unit and if it is valid
+                        if (mGame->GetUnitByPosition(selfX, selfY + 1) == nullptr && mGame->GetLevelData(
+                                selfX, selfY + 1) != 0)
+                            selfY += 1;
+                    } else {
+                        // Only goes to the direction if there is no unit and if it is valid
+                        if (mGame->GetUnitByPosition(selfX, selfY - 1) == nullptr && mGame->GetLevelData(
+                                selfX, selfY - 1) != 0)
+                            selfY -= 1;
+                    }
+                }
                 distance--;
             }
             SetXY(selfX, selfY);
