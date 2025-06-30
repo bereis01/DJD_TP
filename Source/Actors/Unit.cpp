@@ -32,9 +32,6 @@ Unit::Unit(Game *game, const std::string &texturePath, int mov)
     mEquippedWeapon = nullptr;
 }
 
-void Unit::OnUpdate(float deltaTime) {
-}
-
 void Unit::SetStats(Stats stats) {
     mStats.name = stats.name;
     mStats.hp = stats.hp;

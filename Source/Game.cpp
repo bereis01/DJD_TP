@@ -561,23 +561,23 @@ void Game::ChangeScene() {
         enemy->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy);
 
-        enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
-        enemy->SetXY(15, 13);
+        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy2->SetXY(15, 13);
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        enemy->SetStats(ss);
-        enemy->AddWeapon(w);
-        enemy->SetEquippedWeapon(w);
-        mEnemies.emplace_back(enemy);
+        enemy2->SetStats(ss);
+        enemy2->AddWeapon(w);
+        enemy2->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy2);
 
-        enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
-        enemy->SetXY(19, 8);
+        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        enemy3->SetXY(19, 8);
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        enemy->SetStats(ss);
-        enemy->AddWeapon(w);
-        enemy->SetEquippedWeapon(w);
-        mEnemies.emplace_back(enemy);
+        enemy3->SetStats(ss);
+        enemy3->AddWeapon(w);
+        enemy3->SetEquippedWeapon(w);
+        mEnemies.emplace_back(enemy3);
 
         // Loads HUD
         mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
@@ -661,15 +661,11 @@ Unit *Game::GetUnitByPosition(int x, int y) {
     return nullptr;
 }
 
-void Game::RemoveEnemy(Enemy* enemy) {
+void Game::RemoveEnemy(Enemy *enemy) {
+    // Searches the enemy vector for enemies
     auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
-    if (iter != mEnemies.end()) {
-        // Swap to end of vector and pop off (avoid erase copies)
-        std::iter_swap(iter, mEnemies.end() - 1);
-        mEnemies.pop_back();
-    }
+    mEnemies.erase(iter);
 }
-
 
 void Game::SetEnemiesInRange() {
     mEnemiesInRange.clear();
@@ -683,32 +679,31 @@ void Game::SetEnemiesInRange() {
 
             int x = unitX + offset;
             int y = unitY + invOffset;
-            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX + invOffset;
             y = unitY - offset;
-            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX - offset;
             y = unitY - invOffset;
-            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX - invOffset;
             y = unitY + offset;
-            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
-
         }
     }
 }

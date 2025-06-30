@@ -1,5 +1,6 @@
 #pragma once
 #include "Unit.h"
+#include "Ally.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
 
@@ -18,7 +19,8 @@ public:
     const float WAIT_TIMER = 0.0f;
 
     Enemy(Game *game, const std::string &texturePath, int mov = 5);
-    ~Enemy() override;
+
+    ~Enemy();
 
     // Update functions
     void OnUpdate(float deltaTime) override;
@@ -33,7 +35,7 @@ private:
 
     // State
     EnemyState mState = EnemyState::None;
-    Unit *mClosestUnit = nullptr;
+    Ally *mClosestUnit = nullptr;
 
     // Timers
     float mMovementTimer = MOVEMENT_TIMER;

@@ -4,7 +4,8 @@
 
 class Stats {
 public:
-    Stats(std::string name = "x", int hp = 0, int ch = 0, int str = 0, int mag = 0, int skl = 0, int spd = 0, int def = 0,
+    Stats(std::string name = "x", int hp = 0, int ch = 0, int str = 0, int mag = 0, int skl = 0, int spd = 0,
+          int def = 0,
           int res = 0);
 
     std::string name;
@@ -41,15 +42,13 @@ public:
 
     // Stats manipulation
     void SetStats(Stats stats);
+
     Stats GetStats() { return mStats; }
-    void SetCurrentHp(int hp) {mStats.currHp = hp; }
+    void SetCurrentHp(int hp) { mStats.currHp = hp; }
     void SetMovement(int mov) { mMovement = mov; }
     int GetMovement() { return mMovement; }
     void SetOldPosition(Vector2 oldPosition) { mOldPosition = oldPosition; }
     Vector2 GetOldPosition() { return mOldPosition; }
-
-    // Update function
-    void OnUpdate(float deltaTime) override;
 
     // Weapon manipulation
     void AddWeapon(Weapon *weapon) { mWeapons.push_back(weapon); }
@@ -60,8 +59,11 @@ public:
     void ShowStats();
 
     void Attack(Unit *target, bool isCounter = false);
+
     void UseItem();
+
     void Wait();
+
     void Die();
 
     // Turn management

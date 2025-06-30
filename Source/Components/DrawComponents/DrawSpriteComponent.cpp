@@ -12,7 +12,7 @@ DrawSpriteComponent::DrawSpriteComponent(Actor *owner, const std::string &textur
 }
 
 DrawSpriteComponent::~DrawSpriteComponent() {
-    DrawComponent::~DrawComponent();
+    //DrawComponent::~DrawComponent();
 
     // Destroys the texture
     if (mSpriteSheetSurface) {

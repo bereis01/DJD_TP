@@ -117,8 +117,8 @@ public:
     SDL_Renderer *GetRenderer() { return mRenderer; }
 
     // Game-specific
-    std::vector<class Unit *> GetUnits() { return mUnits; }
-    Unit *GetUnitByPosition(int x, int y);
+    std::vector<class Ally *> GetUnits() { return mUnits; }
+    class Unit *GetUnitByPosition(int x, int y);
 
     // TODO: Maybe move to cursor?
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
@@ -206,7 +206,7 @@ private:
     class Cursor *mCursor = nullptr;
     class Ally *mTrueblade = nullptr;
     Unit *mKnight = nullptr;
-    std::vector<Unit *> mUnits;
+    std::vector<Ally *> mUnits;
     std::vector<Enemy *> mEnemiesInRange;
     int mTargetUnitIndex;
 

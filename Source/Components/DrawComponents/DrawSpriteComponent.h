@@ -8,7 +8,7 @@ public:
     DrawSpriteComponent(Actor *owner, const std::string &texturePath, int width = 0, int height = 0,
                         int drawOrder = 100);
 
-    ~DrawSpriteComponent() override;
+    ~DrawSpriteComponent();
 
     void Draw(SDL_Renderer *renderer) override;
 
