@@ -2,9 +2,10 @@
 #include "../Game.h"
 #include "../UIElements/StatScreen.h"
 
-Stats::Stats(std::string n, int h, int st, int m, int sk, int sp, int d, int r) {
+Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d, int r) {
     name = n;
     hp = h;
+    currHp = ch;
     str = st;
     mag = m;
     skl = sk;
@@ -37,6 +38,7 @@ void Unit::OnUpdate(float deltaTime) {
 void Unit::SetStats(Stats stats) {
     mStats.name = stats.name;
     mStats.hp = stats.hp;
+    mStats.currHp = stats.currHp;
     mStats.str = stats.str;
     mStats.mag = stats.mag;
     mStats.skl = stats.skl;
@@ -46,14 +48,17 @@ void Unit::SetStats(Stats stats) {
 }
 
 void Unit::ShowStats() {
-    mGame->GetStatScreen()->SetDisplayStats(mStats, mDmgTaken);
+    mGame->GetStatScreen()->SetDisplayStats(mStats);
     mGame->PushUI(reinterpret_cast<struct UIScreen *>(mGame->GetStatScreen()));
 }
 
-void Unit::Attack(class Unit *target) {
+void Unit::Attack(class Unit *target, bool isCounter) {
     Stats target_stats = target->GetStats();
     int chance_to_hit = (mEquippedWeapon->hit + mStats.skl * 2) - (target_stats.spd * 2);
+    int crit_chance = mEquippedWeapon->criticalChance + mStats.spd - target_stats.skl;
+    crit_chance = std::max(crit_chance, 0);
     int true_hit = (rand() % 101) + (rand() % 101);
+    int to_crit = rand() % 101;
     if (chance_to_hit * 2 > true_hit) {
         int damage = 0;
         if (mEquippedWeapon->magic) {
@@ -61,19 +66,32 @@ void Unit::Attack(class Unit *target) {
         } else {
             damage = mStats.str + mEquippedWeapon->might - target_stats.def;
         }
-        target->TakeDamage(std::max(damage, 0));
+        damage = std::max(damage, 0);
+        if (crit_chance > to_crit) {
+            damage = damage * 3;
+        }
+        target->SetCurrentHp(target_stats.currHp - damage);
+        if (target_stats.currHp - damage <= 0) {
+            target->Die();
+            return;
+        }
+    }
+    if (!isCounter) {
+        target->Attack(this, true);
     }
 }
 
-void Unit::TakeDamage(int damage) {
-    mDmgTaken += damage;
-    if (mDmgTaken >= mStats.hp) {
-        Die();
-    }
+void Unit::UseItem() {
+    mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
+    // mAvailable = false;
+    mGame->GetUIStack().pop_back();
+    mGame->SetGamePlayState(Game::GamePlayState::Map);
+    mGame->SetSelectedUnit(nullptr);
+    mGame->GetActionScreen()->SetSelectedButtonIndex(0);
 }
 
 void Unit::Die() {
-    //SetState(ActorState::Destroy);
+    SetState(ActorState::Destroy);
 }
 
 void Unit::Wait() {

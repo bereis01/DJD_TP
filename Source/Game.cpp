@@ -17,6 +17,7 @@
 #include "UIElements/UIScreen.h"
 #include "UIElements/StatScreen.h"
 #include "UIElements/ActionScreen.h"
+#include "UIElements/AttackScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -269,11 +270,11 @@ void Game::UpdateCamera(float deltaTime) {
     // Makes the camera move as the cursor touches the edges
     if (mCursor) {
         Vector2 pos = mCursor->GetPosition();
-        while (pos.x - mCameraPos.x > (mWindowWidth - TILE_SIZE))
+        while (pos.x - mCameraPos.x > (mWindowWidth - 2 * TILE_SIZE))
             mCameraPos.x += TILE_SIZE;
         while (pos.x < mCameraPos.x)
             mCameraPos.x -= TILE_SIZE;
-        while (pos.y - mCameraPos.y > (mWindowHeight - TILE_SIZE))
+        while (pos.y - mCameraPos.y > (mWindowHeight - 2 * TILE_SIZE))
             mCameraPos.y += TILE_SIZE;
         while (pos.y < mCameraPos.y)
             mCameraPos.y -= TILE_SIZE;
@@ -541,7 +542,7 @@ void Game::ChangeScene() {
         // Loads units (with stats and weapons)
         mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png");
         mTrueblade->SetXY(20, 8);
-        Stats s = Stats("Mia", 25, 9, 4, 12, 14, 5, 5);
+        Stats s = Stats("Mia", 25, 25, 9, 4, 12, 14, 5, 5);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
         mTrueblade->SetStats(s);
@@ -553,7 +554,7 @@ void Game::ChangeScene() {
         // Loads enemies
         Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
         enemy->SetXY(14, 14);
-        Stats ss = Stats("Enemy1", 25, 8, 4, 6, 6, 3, 0);
+        Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
@@ -562,7 +563,7 @@ void Game::ChangeScene() {
 
         enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
         enemy->SetXY(15, 13);
-        ss = Stats("Enemy2", 25, 8, 4, 6, 6, 3, 0);
+        ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
@@ -570,8 +571,8 @@ void Game::ChangeScene() {
         mEnemies.emplace_back(enemy);
 
         enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
-        enemy->SetXY(15, 15);
-        ss = Stats("Enemy3", 25, 8, 4, 6, 6, 3, 0);
+        enemy->SetXY(19, 8);
+        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
@@ -591,6 +592,7 @@ void Game::ChangeScene() {
         mStatScreen = new StatScreen(this, "../Assets/Fonts/Daydream.ttf");
         mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
         mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Daydream.ttf");
+        mAttackScreen = new AttackScreen(this, "../Assets/Fonts/Daydream.ttf");
     }
 
     // Set new scene
@@ -651,38 +653,71 @@ Unit *Game::GetUnitByPosition(int x, int y) {
             return un;
         }
     }
+    for (auto un: mEnemies) {
+        if (un->GetX() == x && un->GetY() == y) {
+            return un;
+        }
+    }
     return nullptr;
 }
 
-void Game::SetUnitsInRange() {
-    int x = mSelectedUnit->GetX();
-    int y = mSelectedUnit->GetY();
+void Game::RemoveEnemy(Enemy* enemy) {
+    auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
+    if (iter != mEnemies.end()) {
+        // Swap to end of vector and pop off (avoid erase copies)
+        std::iter_swap(iter, mEnemies.end() - 1);
+        mEnemies.pop_back();
+    }
+}
+
+
+void Game::SetEnemiesInRange() {
+    mEnemiesInRange.clear();
+    int unitX = mCursor->GetX();
+    int unitY = mCursor->GetY();
     int range = mSelectedUnit->GetEquippedWeapon()->range;
-    for (int i = 0; i <= range; i++) {
-        for (int j = 0 + i; j <= range; j++) {
-            if (i + j == 0)
-                continue;
-            Unit *target1 = GetUnitByPosition(x + i, y + j);
-            Unit *target2 = GetUnitByPosition(x + i, y - j);
-            Unit *target3 = GetUnitByPosition(x - i, y + j);
-            Unit *target4 = GetUnitByPosition(x - i, y - j);
-            if (target1 != nullptr)
-                mUnitsInRange.emplace_back(target1);
-            if (target2 != nullptr)
-                mUnitsInRange.emplace_back(target2);
-            if (target3 != nullptr)
-                mUnitsInRange.emplace_back(target3);
-            if (target4 != nullptr)
-                mUnitsInRange.emplace_back(target4);
+    Enemy *target;
+    for (int radius = 1; radius <= range; radius++) {
+        for (int offset = 0; offset < radius; offset++) {
+            int invOffset = radius - offset;
+
+            int x = unitX + offset;
+            int y = unitY + invOffset;
+            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            if (target != nullptr) {
+                mEnemiesInRange.push_back(target);
+            }
+
+            x = unitX + invOffset;
+            y = unitY - offset;
+            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            if (target != nullptr) {
+                mEnemiesInRange.push_back(target);
+            }
+
+            x = unitX - offset;
+            y = unitY - invOffset;
+            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            if (target != nullptr) {
+                mEnemiesInRange.push_back(target);
+            }
+
+            x = unitX - invOffset;
+            y = unitY + offset;
+            target = static_cast<Enemy*>(GetUnitByPosition(x, y));
+            if (target != nullptr) {
+                mEnemiesInRange.push_back(target);
+            }
+
         }
     }
 }
 
 void Game::SetupAttack() {
-    SetUnitsInRange();
-    if (!mUnitsInRange.empty()) {
+    SetEnemiesInRange();
+    if (!mEnemiesInRange.empty()) {
         mTargetUnitIndex = 0;
-        mCursor->SetPosition(mUnitsInRange[0]->GetPosition());
+        mCursor->SetPosition(mEnemiesInRange[0]->GetPosition());
     }
     SetGamePlayState(GamePlayState::ChoosingTarget);
     mUIStack.pop_back();

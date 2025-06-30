@@ -1,4 +1,6 @@
 #include "Cursor.h"
+
+#include "Enemy.h"
 #include "../Game.h"
 #include "Unit.h"
 #include "../UIElements/StatScreen.h"
@@ -130,7 +132,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
     } else if (mGame->GetGamePlayState() == Game::GamePlayState::ShowingStats) {
         // Deselects on B or Space
         if (key == SDLK_b || key == SDLK_SPACE) {
-            mGame->GetUIStack().pop_back();
+            mGame->PopUI();
             if (mGame->GetSelectedUnit() != nullptr)
                 mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
             else
@@ -142,33 +144,45 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
         if (mGame->GetTargetUnitIndex() != -1) {
             if (key == SDLK_w || key == SDLK_d) {
                 int next_index = mGame->GetTargetUnitIndex() + 1;
-                if (next_index <= mGame->GetUnitsInRange().size()) {
+                if (next_index >= mGame->GetEnemiesInRange().size()) {
                     next_index = 0;
                 }
                 mGame->SetTargetUnitIndex(next_index);
-                mPosition = mGame->GetUnitsInRange()[next_index]->GetPosition();
+                mPosition = mGame->GetEnemiesInRange()[next_index]->GetPosition();
             }
             if (key == SDLK_s || key == SDLK_a) {
                 int next_index = mGame->GetTargetUnitIndex() - 1;
                 if (next_index < 0) {
-                    next_index = mGame->GetUnitsInRange().size() - 1;
+                    next_index = mGame->GetEnemiesInRange().size() - 1;
                 }
                 mGame->SetTargetUnitIndex(next_index);
-                mPosition = mGame->GetUnitsInRange()[next_index]->GetPosition();
+                mPosition = mGame->GetEnemiesInRange()[next_index]->GetPosition();
             }
             if (key == SDLK_RETURN) {
-                mGame->GetSelectedUnit()->Attack(mGame->GetUnitsInRange()[mGame->GetTargetUnitIndex()]);
-                mGame->SetSelectedUnit(nullptr);
-                mGame->SetTargetUnitIndex(-1);
-                mGame->GetUnitsInRange().clear();
-                mGame->SetGamePlayState(Game::GamePlayState::Map);
+                auto unit = mGame->GetSelectedUnit();
+                auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+                mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
+                    unit->GetEquippedWeapon(), enemy->GetEquippedWeapon());
+                mGame->PushUI(mGame->GetAttackScreen());
+                mGame->SetGamePlayState(Game::GamePlayState::ConfirmingAttack);
             }
         }
         if (key == SDLK_b) {
             mGame->SetTargetUnitIndex(-1);
-            mGame->GetUnitsInRange().clear();
             mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
             mGame->PushUI(mGame->GetActionScreen());
+        }
+    } else if (mGame->GetGamePlayState() == Game::GamePlayState::ConfirmingAttack) {
+        if (key == SDLK_RETURN) {
+            mGame->PopUI();
+            mGame->GetSelectedUnit()->Attack(mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()]);
+            mGame->SetSelectedUnit(nullptr);
+            mGame->SetTargetUnitIndex(-1);
+            mGame->SetGamePlayState(Game::GamePlayState::Map);
+        }
+        if (key == SDLK_b) {
+            mGame->PopUI();
+            mGame->SetGamePlayState(Game::GamePlayState::ChoosingTarget);
         }
     }
 }

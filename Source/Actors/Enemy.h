@@ -18,6 +18,7 @@ public:
     const float WAIT_TIMER = 0.0f;
 
     Enemy(Game *game, const std::string &texturePath, int mov = 5);
+    ~Enemy() override;
 
     // Update functions
     void OnUpdate(float deltaTime) override;

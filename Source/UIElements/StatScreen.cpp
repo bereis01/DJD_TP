@@ -43,10 +43,10 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
 StatScreen::~StatScreen() {
 }
 
-void StatScreen::SetDisplayStats(class Stats stats, int dmgTaken) {
+void StatScreen::SetDisplayStats(class Stats stats) {
     SetName(stats.name);
     std::string max_hp = std::to_string(stats.hp);
-    std::string curr_hp = std::to_string(stats.hp - dmgTaken);
+    std::string curr_hp = std::to_string(stats.currHp);
     std::string hp_str = curr_hp + "/" + max_hp;
     SetHp(hp_str);
     SetStr(std::to_string(stats.str));

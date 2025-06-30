@@ -23,7 +23,7 @@ public:
 
     ~StatScreen();
 
-    void SetDisplayStats(class Stats stats, int dmgTaken);
+    void SetDisplayStats(class Stats stats);
 
     void SetName(const std::string &name);
 

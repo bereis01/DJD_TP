@@ -75,7 +75,7 @@ void UIScreen::HandleKeyPress(int key) {
             mButtons[mSelectedButtonIndex]->OnClick();
         }
     } else if (key == SDLK_b) {
-        mGame->GetUIStack().pop_back();
+        mGame->PopUI();
         if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingAction) {
             mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
             mGame->GetSelectedUnit()->SetPosition(mGame->GetSelectedUnit()->GetOldPosition());

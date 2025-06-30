@@ -6,10 +6,27 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJECT_NAME "djd-tp")
 project(${PROJECT_NAME})
 
-find_package(SDL2 2.32.2 EXACT REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+# Use pkg-config to find SDL2 and its extensions
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(SDL2 REQUIRED sdl2)
+pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
+pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
+pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
+
+include_directories(
+        ${SDL2_INCLUDE_DIRS}
+        ${SDL2_IMAGE_INCLUDE_DIRS}
+        ${SDL2_TTF_INCLUDE_DIRS}
+        ${SDL2_MIXER_INCLUDE_DIRS}
+)
+
+link_directories(
+        ${SDL2_LIBRARY_DIRS}
+        ${SDL2_IMAGE_LIBRARY_DIRS}
+        ${SDL2_TTF_LIBRARY_DIRS}
+        ${SDL2_MIXER_LIBRARY_DIRS}
+)
 
 add_executable(${PROJECT_NAME}
         Source/Utils/Math.cpp
@@ -54,6 +71,8 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/UIImage.h
         Source/UIElements/StatScreen.cpp
         Source/UIElements/StatScreen.h
+        Source/UIElements/AttackScreen.cpp
+        Source/UIElements/AttackScreen.h
         Source/Components/DrawComponents/DrawAOEComponent.cpp
         Source/Components/DrawComponents/DrawAOEComponent.h
         Source/UIElements/ActionScreen.cpp
@@ -66,4 +85,9 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Ally.h
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)
+target_link_libraries(${PROJECT_NAME}
+        ${SDL2_LIBRARIES}
+        ${SDL2_IMAGE_LIBRARIES}
+        ${SDL2_TTF_LIBRARIES}
+        ${SDL2_MIXER_LIBRARIES}
+)

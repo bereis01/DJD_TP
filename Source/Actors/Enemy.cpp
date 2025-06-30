@@ -10,6 +10,11 @@ Enemy::Enemy(Game *game, const std::string &texturePath, int mov)
     mTypeIndicator->SetAlpha(50);
 }
 
+
+Enemy::~Enemy() {
+    mGame->RemoveEnemy(this);
+}
+
 void Enemy::OnUpdate(float deltaTime) {
     // Returns if not enemy turn
     if (mGame->GetGamePlayState() != Game::GamePlayState::EnemyTurn) {

@@ -4,11 +4,12 @@
 
 class Stats {
 public:
-    Stats(std::string name = "x", int hp = 0, int str = 0, int mag = 0, int skl = 0, int spd = 0, int def = 0,
+    Stats(std::string name = "x", int hp = 0, int ch = 0, int str = 0, int mag = 0, int skl = 0, int spd = 0, int def = 0,
           int res = 0);
 
     std::string name;
     int hp;
+    int currHp;
     int str;
     int mag;
     int skl;
@@ -40,8 +41,8 @@ public:
 
     // Stats manipulation
     void SetStats(Stats stats);
-
     Stats GetStats() { return mStats; }
+    void SetCurrentHp(int hp) {mStats.currHp = hp; }
     void SetMovement(int mov) { mMovement = mov; }
     int GetMovement() { return mMovement; }
     void SetOldPosition(Vector2 oldPosition) { mOldPosition = oldPosition; }
@@ -58,13 +59,10 @@ public:
     // In-game actions
     void ShowStats();
 
-    void Attack(Unit *target);
-
-    void TakeDamage(int dmg);
-
-    void Die();
-
+    void Attack(Unit *target, bool isCounter = false);
+    void UseItem();
     void Wait();
+    void Die();
 
     // Turn management
     bool IsAvailable() { return mAvailable; }

@@ -6,6 +6,7 @@
 
 #include "UIElements/ActionScreen.h"
 #include "UIElements/TurnScreen.h"
+#include "UIElements/AttackScreen.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -32,6 +33,7 @@ public:
         MovingUnit,
         ChoosingAction,
         ChoosingTarget,
+        ConfirmingAttack,
         EnemyTurn,
         LevelComplete,
         Shopping
@@ -102,10 +104,12 @@ public:
 
     // UI functions
     void PushUI(class UIScreen *screen) { mUIStack.emplace_back(screen); }
+    void PopUI() { mUIStack.pop_back(); }
     std::vector<UIScreen *> &GetUIStack() { return mUIStack; }
 
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
+    class AttackScreen *GetAttackScreen() { return mAttackScreen; }
 
     void LoadHUDScreens();
 
@@ -113,10 +117,8 @@ public:
     SDL_Renderer *GetRenderer() { return mRenderer; }
 
     // Game-specific
-    std::vector<class Unit *> GetUnits() { return mUnits; };
-
+    std::vector<class Unit *> GetUnits() { return mUnits; }
     Unit *GetUnitByPosition(int x, int y);
-
 
     // TODO: Maybe move to cursor?
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
@@ -125,10 +127,9 @@ public:
     void SetTargetUnitIndex(int i) { mTargetUnitIndex = i; }
     int GetTargetUnitIndex() const { return mTargetUnitIndex; }
 
-    void SetUnitsInRange();
-
-    std::vector<class Unit *> GetUnitsInRange() { return mUnitsInRange; }
-
+    void SetEnemiesInRange();
+    std::vector<class Enemy *> &GetEnemiesInRange() { return mEnemiesInRange; }
+    void RemoveEnemy(class Enemy *enemy);
     void SetupAttack();
 
     // Game state management
@@ -206,10 +207,10 @@ private:
     class Ally *mTrueblade = nullptr;
     Unit *mKnight = nullptr;
     std::vector<Unit *> mUnits;
-    std::vector<Unit *> mUnitsInRange;
+    std::vector<Enemy *> mEnemiesInRange;
     int mTargetUnitIndex;
 
-    std::vector<class Enemy *> mEnemies;
+    std::vector<Enemy *> mEnemies;
     int mCurrentEnemyIndex;
 
     // TODO: Maybe move to cursor?
@@ -230,4 +231,5 @@ private:
     StatScreen *mStatScreen;
     ActionScreen *mActionScreen;
     TurnScreen *mTurnScreen;
+    AttackScreen *mAttackScreen;
 };
