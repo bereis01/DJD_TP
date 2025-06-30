@@ -41,6 +41,14 @@ Aymr ainda é um projeto em desenvolvimento. No momento, apenas as mecânicas ma
 - Movimentação e ataque automáticos das unidades inimigas;
 - Condição de vitória/derrota na eliminação completa de um dos exércitos;
 
+<!-- CONTROLS -->
+# Controles
+- A progressão do jogo é feita em turnos. Em seu turno, o jogador pode selecionar sua unidade, mover ela e, em seguida, escolher uma dentre três ações: atacar (botão ```ATTACK```), recuperar vida de sua unidade (botão ```ITEM```) ou não fazer nada (botão ```WAIT```);
+- O turno do inimigo é automático. Cada unidade inimiga se movimenta e, caso exista alguma unidade aliada perto o suficiente, realiza um ataque;
+- Para selecionar uma unidade que se deseje movimentar, pressionar a tecla ```ENTER```;
+- Pressionar a tecla ```SPACE``` sobre qualquer unidade, aliada ou inimiga, exibirá uma janela com suas informações (vida atual, ...);
+- Pressionar a tecla ```B``` após selecionar uma unidade para movimento cancela a ação;
+
 <!-- CONTACT -->
 # Contato
 Bernardo Reis de Almeida (bera01@ufmg.br)
