@@ -46,5 +46,5 @@ Aymr ainda é um projeto em desenvolvimento. No momento, apenas as mecânicas ma
 Bernardo Reis de Almeida (bera01@ufmg.br)
 - Responsável por: movimentação de câmera e de cursor, efeitos de troca de cena, controle automático dos inimigos, instanciação do mapa;
 
-Matheus Farnese Lacerda Senna (melkor@ufmg.br)
+Matheus Farnese Lacerda Senna (matheus.farnese.senna@gmail.com)
 - Responsável por: controle (movimentação/ataque) das unidades aliadas, design do mapa, escolha dos sprites, menus e telas de HUD;
