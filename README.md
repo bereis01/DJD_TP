@@ -33,7 +33,7 @@ Stats Menu                 |  Game Field
 
 Attack Menu                |  Victory Screen
 :-------------------------:|:-------------------------:
-![](./Docs/attack_screen.png)  |  ![](./Docs/victory_screen.png)
+![](./Docs/attack_screen.jpeg)  |  ![](./Docs/victory_screen.png)
 
 <!-- FUNCTIONALITIES -->
 # Funcionalidades
