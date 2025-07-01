@@ -11,7 +11,8 @@ public:
         Moving,
         Attacking,
         Waiting,
-        Finished
+        Finished,
+        Dead
     };
 
     const float MOVEMENT_TIMER = 0.5f;
@@ -26,15 +27,15 @@ public:
     void OnUpdate(float deltaTime) override;
 
     // State manipulation
-    void SetState(EnemyState state) { mState = state; }
-    EnemyState GetState() { return mState; }
+    void SetEnemyState(EnemyState state) { mEnemyState = state; }
+    EnemyState GetEnemyState() { return mEnemyState; }
 
 private:
     // Draw type indicator
     DrawPolygonComponent *mTypeIndicator;
 
     // State
-    EnemyState mState = EnemyState::None;
+    EnemyState mEnemyState = EnemyState::None;
     Ally *mClosestUnit = nullptr;
 
     // Timers

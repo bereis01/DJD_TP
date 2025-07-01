@@ -30,7 +30,7 @@ AttackScreen::AttackScreen(class Game *game, const std::string &fontName)
 AttackScreen::~AttackScreen() {
 }
 
-void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon, class Weapon *enemyWeapon) {
+void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon, class Weapon *enemyWeapon, int range) {
     // Calculations for unit
     int damage = 0;
     if (unitWeapon->magic) {
@@ -56,7 +56,7 @@ void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats
 
     // Calculations for enemy
     damage = 0;
-    if (unitWeapon->magic) {
+    if (enemyWeapon->magic) {
         damage = enemyStats.mag + enemyWeapon->might - unitStats.res;
     } else {
         damage = enemyStats.str + enemyWeapon->might - unitStats.def;
@@ -73,9 +73,15 @@ void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats
     SetEnemyName(enemyStats.name);
     SetEnemyWeapon(enemyWeapon->name);
     SetEnemyHp(std::to_string(enemyStats.currHp));
-    SetEnemyDmg(std::to_string(damage));
-    SetEnemyHit(std::to_string(chance_to_hit));
-    SetEnemyCrit(std::to_string(crit_chance));
+    if (enemyWeapon->range < range) {
+        SetEnemyDmg("--");
+        SetEnemyHit("--");
+        SetEnemyCrit("--");
+    } else {
+        SetEnemyDmg(std::to_string(damage));
+        SetEnemyHit(std::to_string(chance_to_hit));
+        SetEnemyCrit(std::to_string(crit_chance));
+    }
 
 }
 

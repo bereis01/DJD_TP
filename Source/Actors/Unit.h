@@ -33,7 +33,7 @@ public:
 
 class Unit : public Actor {
 public:
-    Unit(Game *game, const std::string &texturePath, int mov = 5);
+    Unit(Game *game, const std::string &texturePath, int mov = 5, bool isEnemy = true);
 
     // Manipulation based on coordinates
     void SetXY(int x, int y) { mPosition = Vector2(y * Game::TILE_SIZE, x * Game::TILE_SIZE); };
@@ -68,6 +68,7 @@ public:
 
     // Turn management
     bool IsAvailable() { return mAvailable; }
+    bool IsEnemy() { return mIsEnemy; }
     void SetAvailable(bool available) { mAvailable = available; }
 
 protected:
@@ -84,6 +85,10 @@ protected:
     Weapon *mEquippedWeapon;
     std::vector<Weapon *> mWeapons;
 
+    // Itens
+    int mVulneraryCount;
+
     // Turn management
     bool mAvailable = true;
+    bool mIsEnemy = true;
 };

@@ -24,5 +24,5 @@ public:
 private:
     DrawPolygonComponent *mDrawPolygonComponent;
 
-    CursorState mState = CursorState::Free;
+    CursorState mCursorState = CursorState::Free;
 };

@@ -23,13 +23,15 @@ Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
     magic = m;
 }
 
-Unit::Unit(Game *game, const std::string &texturePath, int mov)
+Unit::Unit(Game *game, const std::string &texturePath, int mov, bool isEnemy)
     : Actor(game) {
     mDrawComponent = new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
     mDmgTaken = 0;
     mMovement = mov;
+    mIsEnemy = isEnemy;
     mAvailable = true;
     mEquippedWeapon = nullptr;
+    mVulneraryCount = 2;
 }
 
 void Unit::SetStats(Stats stats) {
@@ -69,24 +71,36 @@ void Unit::Attack(class Unit *target, bool isCounter) {
         }
         target->SetCurrentHp(target_stats.currHp - damage);
         if (target_stats.currHp - damage <= 0) {
+            if (mGame->GetGamePlayState() == Game::GamePlayState::EnemyTurn && target->IsEnemy()) {
+                return;
+            }
             target->Die();
+            mAvailable = false;
             return;
         }
     }
     if (!isCounter) {
-        //target->Attack(this, true);
+        int unitX = GetX();
+        int unitY = GetY();
+        int targetX = target->GetX();
+        int targetY = target->GetY();
+        if (abs(unitX - targetX) + abs(unitY - targetY) <= target->GetEquippedWeapon()->range) {
+            target->Attack(this, true);
+        }
     }
-
     mAvailable = false;
 }
 
 void Unit::UseItem() {
-    mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
-    mAvailable = false;
-    mGame->GetUIStack().pop_back();
-    mGame->SetGamePlayState(Game::GamePlayState::Map);
-    mGame->SetSelectedUnit(nullptr);
-    mGame->GetActionScreen()->SetSelectedButtonIndex(0);
+    if (mVulneraryCount > 0 && mStats.currHp < mStats.hp) {
+        mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
+        mVulneraryCount--;
+        mAvailable = false;
+        mGame->GetUIStack().pop_back();
+        mGame->SetGamePlayState(Game::GamePlayState::Map);
+        mGame->SetSelectedUnit(nullptr);
+        mGame->GetActionScreen()->SetSelectedButtonIndex(0);
+    }
 }
 
 void Unit::Die() {

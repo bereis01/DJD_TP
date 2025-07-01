@@ -237,10 +237,14 @@ void Game::UpdateTurn(float deltaTime) {
     } else {
         // Traverses the enemies, activating each one
         if (mCurrentEnemyIndex >= 0) {
-            if (mEnemies[mCurrentEnemyIndex]->GetState() == Enemy::EnemyState::None)
-                mEnemies[mCurrentEnemyIndex]->SetState(Enemy::EnemyState::Moving);
-            else if (mEnemies[mCurrentEnemyIndex]->GetState() == Enemy::EnemyState::Finished) {
-                mEnemies[mCurrentEnemyIndex]->SetState(Enemy::EnemyState::None);
+            if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::None)
+                mEnemies[mCurrentEnemyIndex]->SetEnemyState(Enemy::EnemyState::Moving);
+            else if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::Finished) {
+                mEnemies[mCurrentEnemyIndex]->SetEnemyState(Enemy::EnemyState::None);
+                mCurrentEnemyIndex--;
+            } else if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::Dead) {
+                mEnemies[mCurrentEnemyIndex]->SetEnemyState(Enemy::EnemyState::None);
+                mEnemies[mCurrentEnemyIndex]->SetState(ActorState::Destroy);
                 mCurrentEnemyIndex--;
             }
         }
@@ -578,9 +582,9 @@ void Game::ChangeScene() {
         mCursor->SetXY(20, 8);
 
         // Loads units (with stats and weapons)
-        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png");
+        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png", 6);
         mTrueblade->SetXY(20, 8);
-        Stats s = Stats("Mia", 25, 25, 9, 4, 12, 14, 5, 5);
+        Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
         mTrueblade->SetStats(s);
@@ -589,8 +593,19 @@ void Game::ChangeScene() {
         mTrueblade->SetEquippedWeapon(w1);
         mUnits.emplace_back(mTrueblade);
 
+        mSorceress = new Ally(this, "../Assets/Sprites/Units/Sage.png", 5);
+        mSorceress->SetXY(21, 8);
+        s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9);
+        w1 = new Weapon("Thunder", 80, 5, 10, 2, true);
+        w2 = new Weapon("Fire", 90, 6, 0, 2, true);
+        mSorceress->SetStats(s);
+        mSorceress->AddWeapon(w1);
+        mSorceress->AddWeapon(w2);
+        mSorceress->SetEquippedWeapon(w1);
+        mUnits.emplace_back(mSorceress);
+
         // Loads enemies
-        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
         enemy->SetXY(14, 14);
         Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
@@ -599,7 +614,7 @@ void Game::ChangeScene() {
         enemy->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy);
 
-        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
         enemy2->SetXY(15, 13);
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
@@ -608,7 +623,7 @@ void Game::ChangeScene() {
         enemy2->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy2);
 
-        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
         enemy3->SetXY(13, 15);
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
@@ -617,9 +632,9 @@ void Game::ChangeScene() {
         enemy3->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy3);
 
-        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png");
+        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
         enemy4->SetXY(13, 13);
-        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
+        ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
@@ -723,6 +738,17 @@ Ally *Game::GetAllyByPosition(int x, int y) {
     return nullptr;
 }
 
+Enemy *Game::GetEnemyByPosition(int x, int y) {
+    // Searches the enemy vector
+    for (auto en: mEnemies) {
+        if (en->GetX() == x && en->GetY() == y) {
+            return en;
+        }
+    }
+
+    return nullptr;
+}
+
 void Game::RemoveAlly(Ally *ally) {
     // Searches the enemy vector for enemies
     auto iter = std::find(mUnits.begin(), mUnits.end(), ally);
@@ -747,28 +773,28 @@ void Game::SetEnemiesInRange() {
 
             int x = unitX + offset;
             int y = unitY + invOffset;
-            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
+            target = GetEnemyByPosition(x, y);
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX + invOffset;
             y = unitY - offset;
-            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
+            target = GetEnemyByPosition(x, y);
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX - offset;
             y = unitY - invOffset;
-            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
+            target = GetEnemyByPosition(x, y);
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }
 
             x = unitX - invOffset;
             y = unitY + offset;
-            target = static_cast<Enemy *>(GetUnitByPosition(x, y));
+            target = GetEnemyByPosition(x, y);
             if (target != nullptr) {
                 mEnemiesInRange.push_back(target);
             }

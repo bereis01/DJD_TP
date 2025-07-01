@@ -22,7 +22,7 @@ void Enemy::OnUpdate(float deltaTime) {
     }
 
     // State machine to control actions
-    if (mState == EnemyState::Moving) {
+    if (mEnemyState == EnemyState::Moving) {
         if (mMovementTimer <= 0) {
             // Gets the closest unit and its position
             int selfX = GetX();
@@ -85,10 +85,10 @@ void Enemy::OnUpdate(float deltaTime) {
             mMovementTimer = MOVEMENT_TIMER;
 
             // Changes state
-            mState = EnemyState::Attacking;
+            mEnemyState = EnemyState::Attacking;
         } else
             mMovementTimer -= deltaTime;
-    } else if (mState == EnemyState::Attacking) {
+    } else if (mEnemyState == EnemyState::Attacking) {
         if (mAttackTimer <= 0) {
             // If a closest unit was found
             if (mClosestUnit != nullptr) {
@@ -105,16 +105,20 @@ void Enemy::OnUpdate(float deltaTime) {
             mAttackTimer = ATTACK_TIMER;
 
             // Changes state
-            mState = EnemyState::Waiting;
+            if (GetStats().currHp <= 0) {
+                mEnemyState = EnemyState::Dead;
+            } else {
+                mEnemyState = EnemyState::Waiting;
+            }
         } else
             mAttackTimer -= deltaTime;
-    } else if (mState == EnemyState::Waiting) {
+    } else if (mEnemyState == EnemyState::Waiting) {
         if (mWaitTimer <= 0) {
             // Restart timer
             mWaitTimer = WAIT_TIMER;
 
             // Changes state
-            mState = EnemyState::Finished;
+            mEnemyState = EnemyState::Finished;
         } else
             mWaitTimer -= deltaTime;
     }

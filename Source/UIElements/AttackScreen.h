@@ -25,7 +25,7 @@ public:
 
     ~AttackScreen();
 
-    void SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon, class Weapon *enemyWeapon);
+    void SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon, class Weapon *enemyWeapon, int range);
 
     void SetName(const std::string &name);
     void SetEnemyName(const std::string &name);

@@ -20,12 +20,12 @@ Cursor::Cursor(Game *game, const std::string &texturePath)
 
 void Cursor::OnUpdate(float deltaTime) {
     // Sets the cursor indicator to the appropriate color according to tile selected
-    if (mState == CursorState::Free) {
+    if (mCursorState == CursorState::Free) {
         if (mGame->GetLevelData(GetX(), GetY()) == 0)
             mDrawPolygonComponent->SetColor(Vector3(255, 0, 0));
         else
             mDrawPolygonComponent->SetColor(Vector3(0, 255, 0));
-    } else if (mState == CursorState::Locked)
+    } else if (mCursorState == CursorState::Locked)
         mDrawPolygonComponent->SetColor(Vector3(255, 255, 0));
 }
 
@@ -97,9 +97,10 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             int movX = abs(unit->GetX() - GetX());
             int movY = abs(unit->GetY() - GetY());
 
-            // Checks if distance is under the permitted and if there is no unit there
+            // Checks if distance is under the permitted, if there is no unit there and if it can go there
             if ((movX + movY <= unit->GetMovement() &&
-                 mGame->GetUnitByPosition(GetX(), GetY()) == nullptr) ||
+                 mGame->GetUnitByPosition(GetX(), GetY()) == nullptr &&
+                 mGame->GetLevelData(GetX(), GetY()) != 0) ||
                 (movX + movY == 0)) {
                 // Just moves it (TODO maybe animate later?)
                 unit->SetXY(GetX(), GetY());
@@ -161,8 +162,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             if (key == SDLK_RETURN) {
                 auto unit = mGame->GetSelectedUnit();
                 auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+                int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
                 mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
-                    unit->GetEquippedWeapon(), enemy->GetEquippedWeapon());
+                    unit->GetEquippedWeapon(), enemy->GetEquippedWeapon(), range);
                 mGame->PushUI(mGame->GetAttackScreen());
                 mGame->SetGamePlayState(Game::GamePlayState::ConfirmingAttack);
             }

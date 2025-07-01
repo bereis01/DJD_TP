@@ -121,8 +121,8 @@ public:
     std::vector<class Ally *> GetUnits() { return mUnits; }
 
     class Unit *GetUnitByPosition(int x, int y);
-
-    Ally *GetAllyByPosition(int x, int y);
+    class Ally *GetAllyByPosition(int x, int y);
+    class Enemy *GetEnemyByPosition(int x, int y);
 
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
     Unit *GetSelectedUnit() const { return mSelectedUnit; }
@@ -216,7 +216,7 @@ private:
     // Game-specific
     class Cursor *mCursor = nullptr;
     class Ally *mTrueblade = nullptr;
-    Unit *mKnight = nullptr;
+    class Ally *mSorceress = nullptr;
     std::vector<Ally *> mUnits;
     std::vector<Enemy *> mEnemiesInRange;
     int mTargetUnitIndex;
