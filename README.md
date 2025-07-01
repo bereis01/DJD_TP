@@ -31,6 +31,10 @@ Stats Menu                 |  Game Field
 :-------------------------:|:-------------------------:
 ![](./Docs/stats.png)  |  ![](./Docs/base.png)
 
+Attack Menu                |  Victory Screen
+:-------------------------:|:-------------------------:
+![](./Docs/attack_screen.png)  |  ![](./Docs/victory_screen.png)
+
 <!-- FUNCTIONALITIES -->
 # Funcionalidades
 Aymr ainda é um projeto em desenvolvimento. No momento, apenas as mecânicas mais fundamentais estão implementadas. O estado atual do jogo não reflete o produto final e está totalmente sujeito a mudanças. A seguir, tem-se uma lista das principais features existentes e passíveis de serem testadas:
@@ -43,18 +47,18 @@ Aymr ainda é um projeto em desenvolvimento. No momento, apenas as mecânicas ma
 
 <!-- CONTROLS -->
 # Controles
-- Para a movimentação do cursor, utilize ```A```, ```W```, ```S``` e ```D```;
-- A progressão do jogo é feita em turnos. Em seu turno, o jogador pode selecionar sua unidade, movê-la e, em seguida, escolher uma dentre três ações: atacar (botão ```ATTACK```), recuperar 10 de vida da sua unidade (botão ```ITEM```) (no momento, os usos de itens estão limitados a 2, mas será implementado um inventário na versão final) ou não fazer nada (botão ```WAIT```);
+- Para a movimentação do cursor, utilize ```W```, ```A```, ```S``` e ```D```;
+- A progressão do jogo é feita em turnos. Em seu turno, o jogador pode selecionar sua unidade, movê-la e, em seguida, escolher uma dentre três ações: atacar (botão ```ATTACK```), recuperar 10 de vida da sua unidade (botão ```ITEM```) (no momento, os usos de itens estão limitados a 2) ou não fazer nada (botão ```WAIT```);
 - O turno do inimigo é automático. Cada unidade inimiga se movimenta e, caso exista alguma unidade aliada perto o suficiente, realiza um ataque;
-- Para confirmar ações, pressione a tecla ```ENTER```, e.g.: selecionar uma unidade para movê-la, selecionar o destino da movimentação, escolher a ação, etc;
-- Antes de confirmar um ataque, uma tela irá aparecer indicando a vida atual de cada unidade, o dano a ser aplicado, a chance de acerto (hit) e a chance de critical (que multiplica o dano por 3). Para confirmar o ataque, aperte ```ENTER``` novamente e o ataque será realizado, gastando a ação da unidade no turno;
+- Para confirmar ações, pressione a tecla ```ENTER``` (e.g.: selecionar uma unidade para movê-la, selecionar o destino da movimentação, escolher a ação, etc);
+- Antes de confirmar um ataque, uma tela irá aparecer indicando a vida atual de cada unidade, o dano a ser aplicado, a chance de acerto (hit) e a chance de acerto crítico (que multiplica o dano por 3). Para confirmar o ataque, aperte ```ENTER``` novamente e o ataque será realizado, gastando a ação da unidade no turno;
 - Pressionar a tecla ```SPACE``` sobre qualquer unidade, aliada ou inimiga, exibirá uma janela com suas informações (vida atual, parâmetros, etc);
-- A tecla ```B``` é a tecla de "back": pressioná-la irá retornar para o estado anterior (e.g.: precionar ```B``` durante a escolha da ação, irá retornar para o estado onde escolhe-se o destino da movimentação da unidade);
+- A tecla ```B``` é a tecla de "back": pressioná-la irá retornar o jogo para o estado anterior (e.g.: pressionar ```B``` durante a escolha da ação irá retornar para o estado em que se escolhe o destino da movimentação da unidade);
 
-<!-- Mechanics -->
+<!-- MECHANICS -->
 # Mecânicas
-- A ideia do jogo é ser um rpg tático, então a ação só é confirmada quando o jogador pressionar ```ENTER``` na tela de ataque. Ou seja, pode-se analisar os atributos das unidades e o resultado do combate (i.e., qual a chance de acertar o ataque e o dano aplicado, caso acerte) livremente antes de realizar a ação.
-- Ainda não foi implementado as indicações visuais do dano aplicado a cada ataque, então para ver o resultado do combate, utilize ```SPACE``` na unidade para analisar o estado dela após o combate. É mostrado, dentre outras coisas, a vida atual dela.
+- A ideia do jogo é ser um RPG tático, então a ação só é confirmada quando o jogador pressionar ```ENTER``` na tela de ataque. Ou seja, é possível analisar os atributos das unidades e o resultado do combate (i.e., qual a chance de acertar e o ataque em caso de acerto) livremente antes de realizar a ação.
+- Ainda não foram implementadas as indicações visuais do dano aplicado a cada ataque, então, para ver o resultado do combate, utilize ```SPACE``` na unidade para analisar o seu estado. É mostrado, dentre outras coisas, a vida atual dela.
 - Há uma mecânica de contra-ataque. Observa-se que, na tela de ataque, estão escritos, no fundo azul, os parâmetros (dano, acurácia, etc) da unidade do jogador. Já no fundo vermelho, estão escritos os parâmetros do inimigo. De fato, caso o ataque não mate o inimigo, ele irá contra-atacar a unidade do jogador. O mesmo é válido para as unidades do jogador, que podem contra-atacar as unidades inimigas durante o turno do inimigo. Os inimigos do playtest foram implementados com armas corpo a corpo e, portanto, a maga (personagem de cabelo vermelho) pode atacá-los a 2 de distância e não sofrer contra-ataque, pois está atacando à distância. Isso é indicado na tela de ataque por "--" nos parâmetros relativos ao inimigo.
 
 <!-- CONTACT -->
