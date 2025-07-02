@@ -2,8 +2,8 @@
 #include "Unit.h"
 #include "../Game.h"
 
-Enemy::Enemy(Game *game, const std::string &texturePath, int mov)
-    : Unit(game, texturePath, mov) {
+Enemy::Enemy(Game *game, const std::string &texturePath, Stats stats)
+    : Unit(game, texturePath, stats) {
     // Draws the colored square where the enemy is
     mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
     mTypeIndicator->SetColor(Vector3(255, 0, 0));
@@ -45,8 +45,8 @@ void Enemy::OnUpdate(float deltaTime) {
             // Moves the enemy towards the closest unit
             // Assumes that the arena is convex
             int distance = Math::Abs(closestPos.x - selfX) + Math::Abs(closestPos.y - selfY);
-            if (distance > mMovement) // Trims the distance to movement stat
-                distance = mMovement;
+            if (distance > mStats.mov) // Trims the distance to movement stat
+                distance = mStats.mov;
             if (mEquippedWeapon) // Does not move if in attack range
                 if (distance <= mEquippedWeapon->range)
                     distance = 0;

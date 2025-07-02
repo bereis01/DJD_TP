@@ -19,7 +19,7 @@ public:
     const float ATTACK_TIMER = 0.5f;
     const float WAIT_TIMER = 0.0f;
 
-    Enemy(Game *game, const std::string &texturePath, int mov = 5);
+    Enemy(Game *game, const std::string &texturePath, Stats stats);
 
     ~Enemy();
 

@@ -582,22 +582,22 @@ void Game::ChangeScene() {
         mCursor->SetXY(20, 8);
 
         // Loads units (with stats and weapons)
-        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png", 6);
-        mTrueblade->SetXY(20, 8);
-        Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5);
+        Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5, 6);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
+        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png", s);
+        mTrueblade->SetXY(20, 8);
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);
         mTrueblade->AddWeapon(w2);
         mTrueblade->SetEquippedWeapon(w1);
         mUnits.emplace_back(mTrueblade);
 
-        mSorceress = new Ally(this, "../Assets/Sprites/Units/Sage.png", 5);
-        mSorceress->SetXY(21, 8);
-        s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9);
+        s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
         w1 = new Weapon("Thunder", 80, 5, 10, 2, true);
         w2 = new Weapon("Fire", 90, 6, 0, 2, true);
+        mSorceress = new Ally(this, "../Assets/Sprites/Units/Sage.png", s);
+        mSorceress->SetXY(21, 8);
         mSorceress->SetStats(s);
         mSorceress->AddWeapon(w1);
         mSorceress->AddWeapon(w2);
@@ -605,37 +605,37 @@ void Game::ChangeScene() {
         mUnits.emplace_back(mSorceress);
 
         // Loads enemies
-        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
-        enemy->SetXY(14, 14);
-        Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0);
+        Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        enemy->SetXY(19, 8);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
         enemy->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy);
 
-        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
-        enemy2->SetXY(15, 13);
-        ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0);
+        ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        enemy2->SetXY(15, 13);
         enemy2->SetStats(ss);
         enemy2->AddWeapon(w);
         enemy2->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy2);
 
-        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
-        enemy3->SetXY(13, 15);
-        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0);
+        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        enemy3->SetXY(13, 15);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
         enemy3->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy3);
 
-        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", 4);
-        enemy4->SetXY(13, 13);
-        ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0);
+        ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        enemy4->SetXY(13, 13);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
         enemy4->SetEquippedWeapon(w);

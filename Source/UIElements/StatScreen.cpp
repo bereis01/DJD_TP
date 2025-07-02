@@ -5,12 +5,16 @@
 
 StatScreen::StatScreen(class Game *game, const std::string &fontName)
     : UIScreen(game, fontName) {
-    AddText("Unit:", NAME_POS, Vector2(CHAR_WIDTH * 5, WORD_HEIGHT), POINT_SIZE);
-    mName = AddText("Edel", NAME_POS + Vector2(CHAR_WIDTH * 5 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 4, WORD_HEIGHT),
+    // AddText("Unit:", NAME_POS, Vector2(CHAR_WIDTH * 5, WORD_HEIGHT), POINT_SIZE);
+    mName = AddText("Edel", NAME_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT),
                     POINT_SIZE);
 
     AddText("HP:", HP_POS, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
     mHp = AddText("25/25", HP_POS + Vector2(CHAR_WIDTH * 3 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 5, WORD_HEIGHT),
+                  POINT_SIZE);
+
+    AddText("Movement:", MOV_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
+    mMove = AddText("5", MOV_POS + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 1, WORD_HEIGHT),
                   POINT_SIZE);
 
     AddText("Strength:", STR_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
@@ -37,29 +41,57 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
     mRes = AddText("5", RES_POS + Vector2(CHAR_WIDTH * 11 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
                    POINT_SIZE);
 
+    mWpn = AddText("Aymr", WEAPON_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT),
+                   POINT_SIZE);
+
+    AddText("Might:", MT_POS, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
+    mMt = AddText("5", MT_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                   POINT_SIZE);
+
+    AddText("Hit:", HIT_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
+    mHit = AddText("5", HIT_POS + Vector2(CHAR_WIDTH * 4 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                   POINT_SIZE);
+
+    AddText("Critical:", CRIT_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
+    mCrit = AddText("5", CRIT_POS + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                   POINT_SIZE);
+
+    AddText("Range:", RNG_POS, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
+    mRng = AddText("5", RNG_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                   POINT_SIZE);
+
     AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
 }
 
 StatScreen::~StatScreen() {
 }
 
-void StatScreen::SetDisplayStats(class Stats stats) {
+void StatScreen::SetDisplayStats(class Unit *unit) {
+    Stats stats = unit->GetStats();
+    Weapon *weapon = unit->GetEquippedWeapon();
     SetName(stats.name);
     std::string max_hp = std::to_string(stats.hp);
     std::string curr_hp = std::to_string(stats.currHp);
     std::string hp_str = curr_hp + "/" + max_hp;
     SetHp(hp_str);
+    SetMove(std::to_string(stats.mov));
     SetStr(std::to_string(stats.str));
     SetMag(std::to_string(stats.mag));
     SetSkl(std::to_string(stats.skl));
     SetSpd(std::to_string(stats.spd));
     SetDef(std::to_string(stats.def));
     SetRes(std::to_string(stats.res));
+    SetWeaponName(weapon->name);
+    SetMight(std::to_string(weapon->might));
+    SetHit(std::to_string(weapon->hit));
+    SetCrit(std::to_string(weapon->criticalChance));
+    SetRange(std::to_string(weapon->range));
 }
 
 void StatScreen::SetName(const std::string &name) {
     mName->SetText(name);
     int len = name.length() * CHAR_WIDTH;
+    mName->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, NAME_POS.y));
     mName->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
@@ -67,6 +99,12 @@ void StatScreen::SetHp(const std::string &hp) {
     mHp->SetText(hp);
     int len = hp.length() * CHAR_WIDTH;
     mHp->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetMove(const std::string &mov) {
+    mMove->SetText(mov);
+    int len = mov.length() * CHAR_WIDTH;
+    mMove->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
 void StatScreen::SetStr(const std::string &str) {
@@ -104,4 +142,35 @@ void StatScreen::SetRes(const std::string &res) {
     mRes->SetText(res);
     int len = res.length() * CHAR_WIDTH;
     mRes->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetWeaponName(const std::string &name) {
+    mWpn->SetText(name);
+    int len = name.length() * CHAR_WIDTH;
+    mWpn->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, WEAPON_POS.y));
+    mWpn->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetMight(const std::string &mt) {
+    mMt->SetText(mt);
+    int len = mt.length() * CHAR_WIDTH;
+    mMt->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetHit(const std::string &hit) {
+    mHit->SetText(hit);
+    int len = hit.length() * CHAR_WIDTH;
+    mHit->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetCrit(const std::string &crit) {
+    mCrit->SetText(crit);
+    int len = crit.length() * CHAR_WIDTH;
+    mCrit->SetSize(Vector2(len, WORD_HEIGHT));
+}
+
+void StatScreen::SetRange(const std::string &rng) {
+    mRng->SetText(rng);
+    int len = rng.length() * CHAR_WIDTH;
+    mRng->SetSize(Vector2(len, WORD_HEIGHT));
 }

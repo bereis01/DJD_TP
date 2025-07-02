@@ -6,7 +6,7 @@ class Stats {
 public:
     Stats(std::string name = "x", int hp = 0, int ch = 0, int str = 0, int mag = 0, int skl = 0, int spd = 0,
           int def = 0,
-          int res = 0);
+          int res = 0, int mv = 0);
 
     std::string name;
     int hp;
@@ -17,6 +17,7 @@ public:
     int spd;
     int def;
     int res;
+    int mov;
 };
 
 class Weapon {
@@ -33,7 +34,7 @@ public:
 
 class Unit : public Actor {
 public:
-    Unit(Game *game, const std::string &texturePath, int mov = 5, bool isEnemy = true);
+    Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy = true);
 
     // Manipulation based on coordinates
     void SetXY(int x, int y) { mPosition = Vector2(y * Game::TILE_SIZE, x * Game::TILE_SIZE); };
@@ -45,8 +46,8 @@ public:
 
     Stats GetStats() { return mStats; }
     void SetCurrentHp(int hp) { mStats.currHp = hp; }
-    void SetMovement(int mov) { mMovement = mov; }
-    int GetMovement() { return mMovement; }
+    void SetMovement(int mov) { mStats.mov = mov; }
+    int GetMovement() { return mStats.mov; }
     void SetOldPosition(Vector2 oldPosition) { mOldPosition = oldPosition; }
     Vector2 GetOldPosition() { return mOldPosition; }
 
@@ -78,7 +79,7 @@ protected:
     // Stats
     Stats mStats;
     int mDmgTaken;
-    int mMovement;
+    // int mMovement;
     Vector2 mOldPosition;
 
     // Weapon

@@ -7,19 +7,20 @@ public:
     const int POINT_SIZE = 48;
     const int WORD_HEIGHT = 20.0f;
     const int CHAR_WIDTH = 10.0f;
-    const int STATS_OFFSET = 88.0f;
+    const Vector2 STATS_VERTICAL_OFFSET = Vector2(0, 38.0f);
+    const Vector2 STATS_HORIZONTAL_OFFSET = Vector2(88.0f, 0);
     const Vector2 SCREEN_POS = Vector2(500, 50);
     const Vector2 SCREEN_SIZE = Vector2(241, 280);
 
-    const Vector2 NAME_POS = Vector2(100, 10);
-    const Vector2 WEAPON_POS = Vector2(100, 42);
-    const Vector2 ENEMY_NAME_POS= Vector2(100, 230);
-    const Vector2 ENEMY_WEAPON_POS = Vector2(100, 252);
+    const Vector2 NAME_POS = Vector2(100, 10) + SCREEN_POS;
+    const Vector2 WEAPON_POS = Vector2(100, 42) + SCREEN_POS;
+    const Vector2 ENEMY_NAME_POS= Vector2(100, 220) + SCREEN_POS;
+    const Vector2 ENEMY_WEAPON_POS = Vector2(100, 252) + SCREEN_POS;
 
-    const Vector2 HP_POS = Vector2(110, 80);
-    const Vector2 DMG_POS = Vector2(110, 118);
-    const Vector2 HIT_POS = Vector2(110, 156);
-    const Vector2 CRIT_POS = Vector2(110, 190);
+    const Vector2 HP_POS = Vector2(110, 75) + SCREEN_POS;
+    const Vector2 DMG_POS = Vector2(110, 75) + SCREEN_POS + STATS_VERTICAL_OFFSET;
+    const Vector2 HIT_POS = Vector2(110, 75) + SCREEN_POS + STATS_VERTICAL_OFFSET * 2;
+    const Vector2 CRIT_POS = Vector2(110, 75) + SCREEN_POS + STATS_VERTICAL_OFFSET * 3;
 
     AttackScreen(Game *game, const std::string &fontName);
 

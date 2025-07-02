@@ -5,24 +5,24 @@
 
 AttackScreen::AttackScreen(class Game *game, const std::string &fontName)
     : UIScreen(game, fontName, false) {
-    AddText("HP", SCREEN_POS + HP_POS, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
-    AddText("Dmg", SCREEN_POS + DMG_POS, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
-    AddText("Hit", SCREEN_POS + HIT_POS, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
-    AddText("Crit", SCREEN_POS + CRIT_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
+    AddText("HP", HP_POS, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
+    AddText("Dmg", DMG_POS, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
+    AddText("Hit", HIT_POS, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
+    AddText("Crit", CRIT_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
 
-    mName = AddText("Jill", SCREEN_POS + NAME_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
-    mEnName = AddText("Fighter", SCREEN_POS + ENEMY_NAME_POS, Vector2(CHAR_WIDTH * 7, WORD_HEIGHT), POINT_SIZE);
-    mWeapon = AddText("Silver axe", SCREEN_POS + WEAPON_POS, Vector2(CHAR_WIDTH * 10, WORD_HEIGHT), POINT_SIZE);
-    mEnWeapon = AddText("Steel axe", SCREEN_POS + ENEMY_WEAPON_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
+    mName = AddText("Jill", NAME_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
+    mEnName = AddText("Fighter", ENEMY_NAME_POS, Vector2(CHAR_WIDTH * 7, WORD_HEIGHT), POINT_SIZE);
+    mWeapon = AddText("Silver axe", WEAPON_POS, Vector2(CHAR_WIDTH * 10, WORD_HEIGHT), POINT_SIZE);
+    mEnWeapon = AddText("Steel axe", ENEMY_WEAPON_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
 
-    mHp = AddText("25", SCREEN_POS + HP_POS + Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
-    mEnHp = AddText("25", SCREEN_POS + HP_POS - Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
-    mDmg = AddText("12", SCREEN_POS + DMG_POS + Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
-    mEnDmg = AddText("6", SCREEN_POS + DMG_POS - Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
-    mHit = AddText("100", SCREEN_POS + HIT_POS + Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
-    mEnHit = AddText("90", SCREEN_POS + HIT_POS - Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
-    mCrit = AddText("5", SCREEN_POS + CRIT_POS + Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
-    mEnCrit = AddText("0", SCREEN_POS + CRIT_POS - Vector2(STATS_OFFSET, 0), Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
+    mHp = AddText("25", HP_POS + STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
+    mEnHp = AddText("25", HP_POS - STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
+    mDmg = AddText("12", DMG_POS + STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
+    mEnDmg = AddText("6", DMG_POS - STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
+    mHit = AddText("100", HIT_POS + STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 3, WORD_HEIGHT), POINT_SIZE);
+    mEnHit = AddText("90", HIT_POS - STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 2, WORD_HEIGHT), POINT_SIZE);
+    mCrit = AddText("5", CRIT_POS + STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
+    mEnCrit = AddText("0", CRIT_POS - STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
 
     AddImage("../Assets/UI/AttackScreenBackground.png", SCREEN_POS, SCREEN_SIZE);
 }
@@ -88,24 +88,28 @@ void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats
 void AttackScreen::SetName(const std::string &name) {
     mName->SetText(name);
     int len = name.length() * CHAR_WIDTH;
+    mName->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, NAME_POS.y));
     mName->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
 void AttackScreen::SetEnemyName(const std::string &name) {
     mEnName->SetText(name);
     int len = name.length() * CHAR_WIDTH;
+    mEnName->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, ENEMY_NAME_POS.y));
     mEnName->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
 void AttackScreen::SetWeapon(const std::string& wpn) {
     mWeapon->SetText(wpn);
     int len = wpn.length() * CHAR_WIDTH;
+    mWeapon->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, WEAPON_POS.y));
     mWeapon->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
 void AttackScreen::SetEnemyWeapon(const std::string& wpn) {
     mEnWeapon->SetText(wpn);
     int len = wpn.length() * CHAR_WIDTH;
+    mEnWeapon->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, ENEMY_WEAPON_POS.y));
     mEnWeapon->SetSize(Vector2(len, WORD_HEIGHT));
 }
 

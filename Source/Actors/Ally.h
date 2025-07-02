@@ -5,7 +5,7 @@
 
 class Ally : public Unit {
 public:
-    Ally(Game *game, const std::string &texturePath, int mov = 5);
+    Ally(Game *game, const std::string &texturePath, Stats stats);
 
     ~Ally();
 

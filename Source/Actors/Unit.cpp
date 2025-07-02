@@ -2,7 +2,7 @@
 #include "../Game.h"
 #include "../UIElements/StatScreen.h"
 
-Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d, int r) {
+Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d, int r, int mv) {
     name = n;
     hp = h;
     currHp = ch;
@@ -12,6 +12,7 @@ Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d,
     spd = sp;
     def = d;
     res = r;
+    mov = mv;
 }
 
 Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
@@ -23,11 +24,11 @@ Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
     magic = m;
 }
 
-Unit::Unit(Game *game, const std::string &texturePath, int mov, bool isEnemy)
+Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy)
     : Actor(game) {
     mDrawComponent = new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
     mDmgTaken = 0;
-    mMovement = mov;
+    mStats = stats;
     mIsEnemy = isEnemy;
     mAvailable = true;
     mEquippedWeapon = nullptr;
@@ -44,11 +45,12 @@ void Unit::SetStats(Stats stats) {
     mStats.spd = stats.spd;
     mStats.def = stats.def;
     mStats.res = stats.res;
+    mStats.mov = stats.mov;
 }
 
 void Unit::ShowStats() {
-    mGame->GetStatScreen()->SetDisplayStats(mStats);
-    mGame->PushUI(reinterpret_cast<struct UIScreen *>(mGame->GetStatScreen()));
+    mGame->GetStatScreen()->SetDisplayStats(this);
+    mGame->PushUI(mGame->GetStatScreen());
 }
 
 void Unit::Attack(class Unit *target, bool isCounter) {
