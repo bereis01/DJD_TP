@@ -53,8 +53,9 @@ public:
 
     // Weapon manipulation
     void AddWeapon(Weapon *weapon) { mWeapons.push_back(weapon); }
-    void SetEquippedWeapon(Weapon *weapon) { mEquippedWeapon = weapon; }
-    Weapon *GetEquippedWeapon() { return mEquippedWeapon; }
+    void EquipWeapon(Weapon *weapon);
+    Weapon *GetEquippedWeapon() { return mWeapons.front();}
+    std::vector<Weapon *> GetAllWeapons() { return mWeapons;}
 
     // In-game actions
     void ShowStats();
@@ -82,8 +83,7 @@ protected:
     // int mMovement;
     Vector2 mOldPosition;
 
-    // Weapon
-    Weapon *mEquippedWeapon;
+    // Weapons
     std::vector<Weapon *> mWeapons;
 
     // Itens

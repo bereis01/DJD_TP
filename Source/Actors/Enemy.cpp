@@ -47,8 +47,8 @@ void Enemy::OnUpdate(float deltaTime) {
             int distance = Math::Abs(closestPos.x - selfX) + Math::Abs(closestPos.y - selfY);
             if (distance > mStats.mov) // Trims the distance to movement stat
                 distance = mStats.mov;
-            if (mEquippedWeapon) // Does not move if in attack range
-                if (distance <= mEquippedWeapon->range)
+            if (GetEquippedWeapon()) // Does not move if in attack range
+                if (distance <= GetEquippedWeapon()->range)
                     distance = 0;
             // Alternates moving between X and Y for the value of the distance
             while (distance > 0) {
@@ -96,8 +96,8 @@ void Enemy::OnUpdate(float deltaTime) {
                 int distance = Math::Abs(mClosestUnit->GetX() - GetX()) + Math::Abs(mClosestUnit->GetY() - GetY());
 
                 // If it is in attack distance, attacks it
-                if (mEquippedWeapon)
-                    if (distance <= mEquippedWeapon->range)
+                if (GetEquippedWeapon())
+                    if (distance <= GetEquippedWeapon()->range)
                         Attack(mClosestUnit);
             }
 

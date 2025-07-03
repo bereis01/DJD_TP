@@ -54,34 +54,6 @@ void UIScreen::ProcessInput(const uint8_t *keys) {
 }
 
 void UIScreen::HandleKeyPress(int key) {
-    if (!mInteractive)
-        return;
-    if (key == SDLK_w) {
-        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
-        mSelectedButtonIndex--;
-        if (mSelectedButtonIndex < 0) {
-            mSelectedButtonIndex = static_cast<int>(mButtons.size()) - 1;
-        }
-        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
-    } else if (key == SDLK_s) {
-        mButtons[mSelectedButtonIndex]->SetHighlighted(false);
-        mSelectedButtonIndex++;
-        if (mSelectedButtonIndex > static_cast<int>(mButtons.size()) - 1) {
-            mSelectedButtonIndex = 0;
-        }
-        mButtons[mSelectedButtonIndex]->SetHighlighted(true);
-    } else if (key == SDLK_RETURN) {
-        if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
-            mButtons[mSelectedButtonIndex]->OnClick();
-        }
-    } else if (key == SDLK_b) {
-        mGame->PopUI();
-        if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingAction) {
-            mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
-            mGame->GetSelectedUnit()->SetPosition(mGame->GetSelectedUnit()->GetOldPosition());
-            SetSelectedButtonIndex(0);
-        }
-    }
 }
 
 void UIScreen::Close() {

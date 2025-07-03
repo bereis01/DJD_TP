@@ -7,6 +7,7 @@
 #include "UIElements/ActionScreen.h"
 #include "UIElements/TurnScreen.h"
 #include "UIElements/AttackScreen.h"
+#include "UIElements/ItemScreen.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -34,6 +35,7 @@ public:
         ChoosingAction,
         ChoosingTarget,
         ConfirmingAttack,
+        OnInventory,
         EnemyTurn,
         LevelComplete,
         LevelFailed,
@@ -111,6 +113,7 @@ public:
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
     class AttackScreen *GetAttackScreen() { return mAttackScreen; }
+    void ShowItens();
 
     void LoadHUDScreens();
 
@@ -243,4 +246,5 @@ private:
     ActionScreen *mActionScreen;
     TurnScreen *mTurnScreen;
     AttackScreen *mAttackScreen;
+    ItemScreen *mItemScreen;
 };

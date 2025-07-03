@@ -31,7 +31,6 @@ Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy
     mStats = stats;
     mIsEnemy = isEnemy;
     mAvailable = true;
-    mEquippedWeapon = nullptr;
     mVulneraryCount = 2;
 }
 
@@ -55,17 +54,17 @@ void Unit::ShowStats() {
 
 void Unit::Attack(class Unit *target, bool isCounter) {
     Stats target_stats = target->GetStats();
-    int chance_to_hit = (mEquippedWeapon->hit + mStats.skl * 2) - (target_stats.spd * 2);
-    int crit_chance = mEquippedWeapon->criticalChance + mStats.spd - target_stats.skl;
+    int chance_to_hit = (GetEquippedWeapon()->hit + mStats.skl * 2) - (target_stats.spd * 2);
+    int crit_chance = GetEquippedWeapon()->criticalChance + mStats.spd - target_stats.skl;
     crit_chance = std::max(crit_chance, 0);
     int true_hit = (rand() % 101) + (rand() % 101);
     int to_crit = rand() % 101;
     if (chance_to_hit * 2 > true_hit) {
         int damage = 0;
-        if (mEquippedWeapon->magic) {
-            damage = mStats.mag + mEquippedWeapon->might - target_stats.res;
+        if (GetEquippedWeapon()->magic) {
+            damage = mStats.mag + GetEquippedWeapon()->might - target_stats.res;
         } else {
-            damage = mStats.str + mEquippedWeapon->might - target_stats.def;
+            damage = mStats.str + GetEquippedWeapon()->might - target_stats.def;
         }
         damage = std::max(damage, 0);
         if (crit_chance > to_crit) {
@@ -91,6 +90,10 @@ void Unit::Attack(class Unit *target, bool isCounter) {
         }
     }
     mAvailable = false;
+}
+
+void Unit::EquipWeapon(Weapon *weapon) {
+    
 }
 
 void Unit::UseItem() {

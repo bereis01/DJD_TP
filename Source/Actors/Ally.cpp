@@ -31,6 +31,6 @@ void Ally::OnUpdate(float deltaTime) {
     else
         mAttackAOE->SetEnabled(false);
     // Updates the attack range with the weapon stats
-    if (mEquippedWeapon)
-        mAttackAOE->SetRadius(mEquippedWeapon->range);
+    if (GetEquippedWeapon())
+        mAttackAOE->SetRadius(GetEquippedWeapon()->range);
 }

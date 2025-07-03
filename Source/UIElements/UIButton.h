@@ -18,12 +18,13 @@ public:
     ~UIButton();
 
     // Set the name of the button
-    void SetText(const std::string &text);
+    void SetText(const std::string &text) {mText.SetText(text);};
 
     void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) override;
 
     void SetHighlighted(bool sel) { mHighlighted = sel; }
     bool GetHighlighted() const { return mHighlighted; }
+    void SetFunction(std::function<void()> onClick) {mOnClick = onClick;}
 
     // Returns true if the point is within the button's bounds
     bool ContainsPoint(const Vector2 &pt) const;

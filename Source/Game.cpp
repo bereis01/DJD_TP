@@ -590,7 +590,7 @@ void Game::ChangeScene() {
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);
         mTrueblade->AddWeapon(w2);
-        mTrueblade->SetEquippedWeapon(w1);
+        //mTrueblade->SetEquippedWeapon(w1);
         mUnits.emplace_back(mTrueblade);
 
         s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
@@ -601,7 +601,7 @@ void Game::ChangeScene() {
         mSorceress->SetStats(s);
         mSorceress->AddWeapon(w1);
         mSorceress->AddWeapon(w2);
-        mSorceress->SetEquippedWeapon(w1);
+        //mSorceress->SetEquippedWeapon(w1);
         mUnits.emplace_back(mSorceress);
 
         // Loads enemies
@@ -611,7 +611,7 @@ void Game::ChangeScene() {
         enemy->SetXY(19, 8);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
-        enemy->SetEquippedWeapon(w);
+        //enemy->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy);
 
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -620,7 +620,7 @@ void Game::ChangeScene() {
         enemy2->SetXY(15, 13);
         enemy2->SetStats(ss);
         enemy2->AddWeapon(w);
-        enemy2->SetEquippedWeapon(w);
+        //enemy2->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy2);
 
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -629,7 +629,7 @@ void Game::ChangeScene() {
         enemy3->SetXY(13, 15);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
-        enemy3->SetEquippedWeapon(w);
+        //enemy3->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy3);
 
         ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -638,7 +638,7 @@ void Game::ChangeScene() {
         enemy4->SetXY(13, 13);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
-        enemy4->SetEquippedWeapon(w);
+        //enemy4->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy4);
 
         // Loads HUD
@@ -655,6 +655,7 @@ void Game::ChangeScene() {
         mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
         mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Daydream.ttf");
         mAttackScreen = new AttackScreen(this, "../Assets/Fonts/Daydream.ttf");
+        mItemScreen = new ItemScreen(this, "../Assets/Fonts/Daydream.ttf");
     }
 
     // Set new scene
@@ -810,4 +811,11 @@ void Game::SetupAttack() {
     }
     SetGamePlayState(GamePlayState::ChoosingTarget);
     mUIStack.pop_back();
+}
+
+void Game::ShowItens() {
+    PopUI();
+    PushUI(mItemScreen);
+    SetGamePlayState(GamePlayState::OnInventory);
+    mItemScreen->SetupDisplay(mSelectedUnit);
 }
