@@ -38,6 +38,7 @@ void ActionScreen::HandleKeyPress(int key) {
     } else if (key == SDLK_RETURN) {
         if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
             mButtons[mSelectedButtonIndex]->OnClick();
+            SetSelectedButtonIndex(0);
         }
     } else if (key == SDLK_b) {
         mGame->PopUI();

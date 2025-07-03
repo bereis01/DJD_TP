@@ -23,7 +23,7 @@ void UIButton::Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
     };
 
     if (mHighlighted) {
-        SDL_SetRenderDrawColor(renderer, 200, 100, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
         SDL_RenderFillRect(renderer, &titleQuad);
     }
 

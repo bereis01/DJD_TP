@@ -18,7 +18,8 @@ public:
     ~UIButton();
 
     // Set the name of the button
-    void SetText(const std::string &text) {mText.SetText(text);};
+    void SetText(const std::string &text) {mText.SetText(text);}
+    void SetTextSize(Vector2 size) {mText.SetSize(size);}
 
     void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) override;
 

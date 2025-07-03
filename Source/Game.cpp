@@ -585,11 +585,14 @@ void Game::ChangeScene() {
         Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5, 6);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
+        Weapon *w3 = new Weapon("Silver sword", 90, 13, 0, 1);
         mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png", s);
         mTrueblade->SetXY(20, 8);
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);
         mTrueblade->AddWeapon(w2);
+        mTrueblade->AddWeapon(w3);
+        mTrueblade->AddItem("Healing potion");
         //mTrueblade->SetEquippedWeapon(w1);
         mUnits.emplace_back(mTrueblade);
 
@@ -764,8 +767,8 @@ void Game::RemoveEnemy(Enemy *enemy) {
 
 void Game::SetEnemiesInRange() {
     mEnemiesInRange.clear();
-    int unitX = mCursor->GetX();
-    int unitY = mCursor->GetY();
+    int unitX = mSelectedUnit->GetX();
+    int unitY = mSelectedUnit->GetY();
     int range = mSelectedUnit->GetEquippedWeapon()->range;
     Enemy *target;
     for (int radius = 1; radius <= range; radius++) {
@@ -814,8 +817,12 @@ void Game::SetupAttack() {
 }
 
 void Game::ShowItens() {
-    PopUI();
-    PushUI(mItemScreen);
-    SetGamePlayState(GamePlayState::OnInventory);
-    mItemScreen->SetupDisplay(mSelectedUnit);
+    if (mGamePlayState == GamePlayState::ChoosingAction) {
+        PopUI();
+        PushUI(mItemScreen);
+        SetGamePlayState(GamePlayState::OnInventory);
+        mItemScreen->SetupDisplay(mSelectedUnit);
+    } else {
+        mItemScreen->SetupDisplay(mSelectedUnit);
+    }
 }

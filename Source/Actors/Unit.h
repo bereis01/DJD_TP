@@ -1,4 +1,6 @@
 #pragma once
+#include <random>
+
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 
@@ -53,16 +55,19 @@ public:
 
     // Weapon manipulation
     void AddWeapon(Weapon *weapon) { mWeapons.push_back(weapon); }
-    void EquipWeapon(Weapon *weapon);
+    void EquipWeapon(int pos);
     Weapon *GetEquippedWeapon() { return mWeapons.front();}
     std::vector<Weapon *> GetAllWeapons() { return mWeapons;}
+
+    // Item manipulation
+    void AddItem(const std::string& item) { mItens.push_back(item); }
+    std::vector<std::string> GetAllItens() { return mItens;}
+    void UseItem(const std::string& item);
 
     // In-game actions
     void ShowStats();
 
     void Attack(Unit *target, bool isCounter = false);
-
-    void UseItem();
 
     void Wait();
 
@@ -83,11 +88,9 @@ protected:
     // int mMovement;
     Vector2 mOldPosition;
 
-    // Weapons
+    // Weapons and itens
     std::vector<Weapon *> mWeapons;
-
-    // Itens
-    int mVulneraryCount;
+    std::vector<std::string> mItens;
 
     // Turn management
     bool mAvailable = true;

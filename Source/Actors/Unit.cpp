@@ -31,7 +31,6 @@ Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy
     mStats = stats;
     mIsEnemy = isEnemy;
     mAvailable = true;
-    mVulneraryCount = 2;
 }
 
 void Unit::SetStats(Stats stats) {
@@ -92,14 +91,25 @@ void Unit::Attack(class Unit *target, bool isCounter) {
     mAvailable = false;
 }
 
-void Unit::EquipWeapon(Weapon *weapon) {
-    
+void Unit::EquipWeapon(int pos) {
+    Weapon *target = mWeapons[pos];
+    auto it = std::find(mWeapons.begin(), mWeapons.end(), target);
+
+    // Check if found and not already the first element
+    if (it != mWeapons.end() && it != mWeapons.begin()) {
+        std::swap(*it, mWeapons.front());
+    }
+    mGame->ShowItens();
+    mGame->GetActionScreen()->SetSelectedButtonIndex(0);
 }
 
-void Unit::UseItem() {
-    if (mVulneraryCount > 0 && mStats.currHp < mStats.hp) {
-        mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
-        mVulneraryCount--;
+void Unit::UseItem(const std::string& item) {
+    if (mStats.currHp < mStats.hp) {
+        if (item == "Healing potion") {
+            mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
+        } else if (item == "Healing gem") {
+            mStats.currHp = std::min(mStats.currHp + 20, mStats.hp);
+        }
         mAvailable = false;
         mGame->GetUIStack().pop_back();
         mGame->SetGamePlayState(Game::GamePlayState::Map);
