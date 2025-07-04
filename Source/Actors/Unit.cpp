@@ -33,6 +33,12 @@ Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy
     mAvailable = true;
 }
 
+Unit::~Unit() {
+    // Deallocates weapons
+    for (auto weapon : mWeapons)
+        delete weapon;
+}
+
 void Unit::SetStats(Stats stats) {
     mStats.name = stats.name;
     mStats.hp = stats.hp;
