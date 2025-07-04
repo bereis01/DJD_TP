@@ -9,9 +9,6 @@ UIScreen::UIScreen(Game *game, const std::string &fontName, bool isInteractive)
       , mState(UIState::Active)
       , mSelectedButtonIndex(-1)
       , mInteractive(isInteractive) {
-    // Adds the screen to the game's screen list
-    // mGame->PushUI(this);
-
     // Loads the font to be used
     mFont = mGame->LoadFont(fontName);
 }

@@ -25,8 +25,6 @@ public:
 
     ItemScreen(Game *game, const std::string &fontName);
 
-    ~ItemScreen();
-
     void HandleKeyPress(int key) override;
 
     void SetupDisplay(class Unit *unit);

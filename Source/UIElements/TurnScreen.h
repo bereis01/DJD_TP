@@ -11,8 +11,6 @@ public:
 
     TurnScreen(Game *game, const std::string &fontName);
 
-    ~TurnScreen();
-
     void ChangeTurn();
 
     UIText *mText;

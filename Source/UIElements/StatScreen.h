@@ -30,8 +30,6 @@ public:
 
     StatScreen(Game *game, const std::string &fontName);
 
-    ~StatScreen();
-
     void SetDisplayStats(class Unit *unit);
 
     void SetName(const std::string &name);

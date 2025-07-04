@@ -27,10 +27,8 @@ AttackScreen::AttackScreen(class Game *game, const std::string &fontName)
     AddImage("../Assets/UI/AttackScreenBackground.png", SCREEN_POS, SCREEN_SIZE);
 }
 
-AttackScreen::~AttackScreen() {
-}
-
-void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon, class Weapon *enemyWeapon, int range) {
+void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon,
+                                   class Weapon *enemyWeapon, int range) {
     // Calculations for unit
     int damage = 0;
     if (unitWeapon->magic) {
@@ -82,7 +80,6 @@ void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats
         SetEnemyHit(std::to_string(chance_to_hit));
         SetEnemyCrit(std::to_string(crit_chance));
     }
-
 }
 
 void AttackScreen::SetName(const std::string &name) {
@@ -99,40 +96,40 @@ void AttackScreen::SetEnemyName(const std::string &name) {
     mEnName->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetWeapon(const std::string& wpn) {
+void AttackScreen::SetWeapon(const std::string &wpn) {
     mWeapon->SetText(wpn);
     int len = wpn.length() * CHAR_WIDTH;
     mWeapon->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, WEAPON_POS.y));
     mWeapon->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetEnemyWeapon(const std::string& wpn) {
+void AttackScreen::SetEnemyWeapon(const std::string &wpn) {
     mEnWeapon->SetText(wpn);
     int len = wpn.length() * CHAR_WIDTH;
     mEnWeapon->SetPosition(Vector2(SCREEN_POS.x + SCREEN_SIZE.x / 2 - len / 2, ENEMY_WEAPON_POS.y));
     mEnWeapon->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetHp(const std::string& hp) {
+void AttackScreen::SetHp(const std::string &hp) {
     mHp->SetText(hp);
     int len = hp.length() * CHAR_WIDTH;
     mHp->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetEnemyHp(const std::string& hp) {
+void AttackScreen::SetEnemyHp(const std::string &hp) {
     mEnHp->SetText(hp);
     int len = hp.length() * CHAR_WIDTH;
     mEnHp->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
 
-void AttackScreen::SetDmg(const std::string& dmg) {
+void AttackScreen::SetDmg(const std::string &dmg) {
     mDmg->SetText(dmg);
     int len = dmg.length() * CHAR_WIDTH;
     mDmg->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetEnemyDmg(const std::string& dmg) {
+void AttackScreen::SetEnemyDmg(const std::string &dmg) {
     mEnDmg->SetText(dmg);
     int len = dmg.length() * CHAR_WIDTH;
     mEnDmg->SetSize(Vector2(len, WORD_HEIGHT));
@@ -144,7 +141,7 @@ void AttackScreen::SetHit(const std::string &hit) {
     mHit->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetEnemyHit(const std::string& hit) {
+void AttackScreen::SetEnemyHit(const std::string &hit) {
     mEnHit->SetText(hit);
     int len = hit.length() * CHAR_WIDTH;
     mEnHit->SetSize(Vector2(len, WORD_HEIGHT));
@@ -157,7 +154,7 @@ void AttackScreen::SetCrit(const std::string &crit) {
     mCrit->SetSize(Vector2(len, WORD_HEIGHT));
 }
 
-void AttackScreen::SetEnemyCrit(const std::string& crit) {
+void AttackScreen::SetEnemyCrit(const std::string &crit) {
     mEnCrit->SetText(crit);
     int len = crit.length() * CHAR_WIDTH;
     mEnCrit->SetSize(Vector2(len, WORD_HEIGHT));

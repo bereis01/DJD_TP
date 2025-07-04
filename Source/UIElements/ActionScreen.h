@@ -11,7 +11,5 @@ public:
 
     ActionScreen(Game *game, const std::string &fontName);
 
-    ~ActionScreen();
-
     void HandleKeyPress(int key) override;
 };

@@ -13,9 +13,6 @@ TurnScreen::TurnScreen(Game *game, const std::string &fontName)
     mText = AddText("Player Turn", pos + Vector2(10, 10), Vector2(11 * CHAR_WIDTH, WORD_HEIGHT));
 }
 
-TurnScreen::~TurnScreen() {
-}
-
 void TurnScreen::ChangeTurn() {
     // Defines size and position
     const Vector2 size = Vector2(130, 40);

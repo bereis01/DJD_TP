@@ -16,7 +16,7 @@ public:
 
     UIScreen(class Game *game, const std::string &fontName, bool isInteractive = false);
 
-    virtual ~UIScreen();
+    ~UIScreen();
 
     // UIScreen subclasses can override these
     virtual void Update(float deltaTime);

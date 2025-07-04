@@ -15,7 +15,7 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
 
     AddText("Movement:", MOV_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
     mMove = AddText("5", MOV_POS + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 1, WORD_HEIGHT),
-                  POINT_SIZE);
+                    POINT_SIZE);
 
     AddText("Strength:", STR_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
     mStr = AddText("12", STR_POS + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT),
@@ -46,7 +46,7 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
 
     AddText("Might:", MT_POS, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
     mMt = AddText("5", MT_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                   POINT_SIZE);
+                  POINT_SIZE);
 
     AddText("Hit:", HIT_POS, Vector2(CHAR_WIDTH * 4, WORD_HEIGHT), POINT_SIZE);
     mHit = AddText("5", HIT_POS + Vector2(CHAR_WIDTH * 4 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
@@ -54,16 +54,13 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
 
     AddText("Critical:", CRIT_POS, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
     mCrit = AddText("5", CRIT_POS + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                   POINT_SIZE);
+                    POINT_SIZE);
 
     AddText("Range:", RNG_POS, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
     mRng = AddText("5", RNG_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
                    POINT_SIZE);
 
     AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
-}
-
-StatScreen::~StatScreen() {
 }
 
 void StatScreen::SetDisplayStats(class Unit *unit) {

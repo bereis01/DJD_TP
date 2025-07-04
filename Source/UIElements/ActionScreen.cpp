@@ -15,9 +15,6 @@ ActionScreen::ActionScreen(Game *game, const std::string &fontName)
               Vector2(4 * CHAR_WIDTH, WORD_HEIGHT));
 }
 
-ActionScreen::~ActionScreen() {
-}
-
 void ActionScreen::HandleKeyPress(int key) {
     if (!mInteractive)
         return;
