@@ -445,7 +445,7 @@ void Game::GenerateOutput() {
     // Victory screen
     if (mGamePlayState == GamePlayState::LevelComplete) {
         // Victory text
-        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Daydream.ttf");
+        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Alagard.ttf");
         VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
         mUIStack.emplace_back(VictoryText);
 
@@ -459,7 +459,7 @@ void Game::GenerateOutput() {
     // Fail screen
     if (mGamePlayState == GamePlayState::LevelFailed) {
         // Defeat text
-        auto DefeatText = new UIScreen(this, "../Assets/Fonts/Daydream.ttf");
+        auto DefeatText = new UIScreen(this, "../Assets/Fonts/Alagard.ttf");
         DefeatText->AddText("DEFEAT", Vector2(250, 270), Vector2(300, 100));
         mUIStack.emplace_back(DefeatText);
 
@@ -654,11 +654,11 @@ void Game::ChangeScene() {
         SetGamePlayState(GamePlayState::Map);
 
         // Loads HUD
-        mStatScreen = new StatScreen(this, "../Assets/Fonts/Daydream.ttf");
-        mActionScreen = new ActionScreen(this, "../Assets/Fonts/Daydream.ttf");
-        mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Daydream.ttf");
-        mAttackScreen = new AttackScreen(this, "../Assets/Fonts/Daydream.ttf");
-        mItemScreen = new ItemScreen(this, "../Assets/Fonts/Daydream.ttf");
+        mStatScreen = new StatScreen(this, "../Assets/Fonts/Alagard.ttf");
+        mActionScreen = new ActionScreen(this, "../Assets/Fonts/Alagard.ttf");
+        mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Alagard.ttf");
+        mAttackScreen = new AttackScreen(this, "../Assets/Fonts/Alagard.ttf");
+        mItemScreen = new ItemScreen(this, "../Assets/Fonts/Alagard.ttf");
     }
 
     // Set new scene
