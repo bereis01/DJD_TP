@@ -25,7 +25,11 @@ public:
 
     ItemScreen(Game *game, const std::string &fontName);
 
+    ~ItemScreen();
+
     void HandleKeyPress(int key) override;
+
+    void Update(float deltaTime) override;
 
     void SetupDisplay(class Unit *unit);
 
@@ -37,12 +41,21 @@ public:
 
     void SetRange(const std::string &rng);
 
+    void SetDescription(const std::string &desc);
+
+    void SetInfoVisibility(bool visible);
+
 private:
+    UIText *mInfoMt;
+    UIText *mInfoHit;
+    UIText *mInfoCrit;
+    UIText *mInfoRng;
     UIText *mMt;
     UIText *mHit;
     UIText *mCrit;
     UIText *mRng;
     UIText *mDescription;
+    UIImage *mDetais;
     class Unit *mUnit;
     int mNumWeapons;
     int mNumItens;

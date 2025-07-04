@@ -25,4 +25,6 @@ private:
     DrawPolygonComponent *mDrawPolygonComponent;
 
     CursorState mCursorState = CursorState::Free;
+
+    int mSelectedWeapon;
 };

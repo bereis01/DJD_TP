@@ -45,9 +45,11 @@ void UIText::SetText(const std::string &text, const Vector2 &pos, const Vector2 
 
 void UIText::Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
     // Draws the text texture in the given relative position
-    SDL_Rect titleQuad = {
-        static_cast<int>(mPosition.x + screenPos.x), static_cast<int>(mPosition.y + screenPos.y),
-        static_cast<int>(mSize.x), static_cast<int>(mSize.y)
-    };
-    SDL_RenderCopyEx(renderer, mTextTexture, NULL, &titleQuad, 0, NULL, SDL_FLIP_NONE);
+    if (mIsVisible) {
+        SDL_Rect titleQuad = {
+            static_cast<int>(mPosition.x + screenPos.x), static_cast<int>(mPosition.y + screenPos.y),
+            static_cast<int>(mSize.x), static_cast<int>(mSize.y)
+        };
+        SDL_RenderCopyEx(renderer, mTextTexture, NULL, &titleQuad, 0, NULL, SDL_FLIP_NONE);
+    }
 }

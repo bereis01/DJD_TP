@@ -16,6 +16,7 @@ Cursor::Cursor(Game *game, const std::string &texturePath)
 
     // Draws the cursor sprite
     new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
+    mSelectedWeapon = 0;
 }
 
 void Cursor::OnUpdate(float deltaTime) {
@@ -175,11 +176,35 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             mGame->PushUI(mGame->GetActionScreen());
         }
     } else if (mGame->GetGamePlayState() == Game::GamePlayState::ConfirmingAttack) {
+        if (key == SDLK_d) {
+            mSelectedWeapon++;
+            if (mSelectedWeapon > mGame->GetSelectedUnit()->GetAllWeapons().size() - 1) {
+                mSelectedWeapon = 0;
+            }
+            auto unit = mGame->GetSelectedUnit();
+            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
+            mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
+                unit->GetAllWeapons()[mSelectedWeapon], enemy->GetEquippedWeapon(), range);
+        }
+        if (key == SDLK_a) {
+            mSelectedWeapon--;
+            if (mSelectedWeapon < 0) {
+                mSelectedWeapon = mGame->GetSelectedUnit()->GetAllWeapons().size() - 1;
+            }
+            auto unit = mGame->GetSelectedUnit();
+            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
+            mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
+                unit->GetAllWeapons()[mSelectedWeapon], enemy->GetEquippedWeapon(), range);
+        }
         if (key == SDLK_RETURN) {
             mGame->PopUI();
+            mGame->GetSelectedUnit()->EquipWeapon(mSelectedWeapon);
             mGame->GetSelectedUnit()->Attack(mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()]);
             mGame->SetSelectedUnit(nullptr);
             mGame->SetTargetUnitIndex(-1);
+            mSelectedWeapon = 0;
             mGame->SetGamePlayState(Game::GamePlayState::Map);
         }
         if (key == SDLK_b) {

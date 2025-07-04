@@ -16,11 +16,13 @@ public:
     const Vector3 &GetColor() const { return mColor; }
     void SetColor(const Vector3 &color) { mColor = color; }
 
-    virtual void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
-    };
+    virtual void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {}
+    void SetVisible(bool visible) {mIsVisible = visible;}
+
 
 protected:
     Vector2 mPosition;
     Vector2 mSize;
     Vector3 mColor;
+    bool mIsVisible;
 };
