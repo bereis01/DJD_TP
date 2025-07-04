@@ -64,7 +64,7 @@ bool Game::Initialize() {
     mTicksCount = SDL_GetTicks();
 
     // Initializes particle system
-    mParticleSystem = new ParticleSystem(this, "../Assets/Fonts/Alagard.ttf");
+    mParticleSystem = new ParticleSystem(this, "../Assets/Fonts/DogicaPixel.ttf");
 
     // Starts the game
     SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
@@ -453,7 +453,7 @@ void Game::GenerateOutput() {
     // Victory screen
     if (mGamePlayState == GamePlayState::LevelComplete) {
         // Victory text
-        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Alagard.ttf");
+        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Dogica.ttf");
         VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
         mUIStack.emplace_back(VictoryText);
 
@@ -671,11 +671,11 @@ void Game::ChangeScene() {
         SetGamePlayState(GamePlayState::Map);
 
         // Loads HUD
-        mStatScreen = new StatScreen(this, "../Assets/Fonts/Alagard.ttf");
-        mActionScreen = new ActionScreen(this, "../Assets/Fonts/Alagard.ttf");
-        mTurnScreen = new TurnScreen(this, "../Assets/Fonts/Alagard.ttf");
-        mAttackScreen = new AttackScreen(this, "../Assets/Fonts/Alagard.ttf");
-        mItemScreen = new ItemScreen(this, "../Assets/Fonts/Alagard.ttf");
+        mStatScreen = new StatScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mActionScreen = new ActionScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mTurnScreen = new TurnScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mAttackScreen = new AttackScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mItemScreen = new ItemScreen(this, "../Assets/Fonts/SuperVCR.ttf");
     }
 
     // Set new scene

@@ -5,7 +5,7 @@
 class TurnScreen : public UIScreen {
 public:
     const int POINT_SIZE = 48;
-    const int WORD_HEIGHT = 20.0f;
+    const int WORD_HEIGHT = 15.0f;
     const int WORD_OFFSET = 5.0f;
     const int CHAR_WIDTH = 10.0f;
 

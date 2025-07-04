@@ -11,6 +11,6 @@ void ParticleSystem::CreateTextParticle(int x, int y, const std::string &text) {
     SDL_Texture *textTexture = mFont->RenderText(text);
 
     // Creates the text particle
-    Particle *textParticle = new Particle(mGame, textTexture, Vector2(5.0f * text.size(), 10.0f));
+    Particle *textParticle = new Particle(mGame, textTexture, Vector2(7.5f * text.size(), 7.5f));
     textParticle->SetPosition(Vector2(y * Game::TILE_SIZE, x * Game::TILE_SIZE));
 }

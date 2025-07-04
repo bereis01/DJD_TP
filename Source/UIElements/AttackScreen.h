@@ -5,7 +5,7 @@
 class AttackScreen : public UIScreen {
 public:
     const int POINT_SIZE = 48;
-    const int WORD_HEIGHT = 20.0f;
+    const int WORD_HEIGHT = 15.0f;
     const int CHAR_WIDTH = 10.0f;
     const Vector2 STATS_VERTICAL_OFFSET = Vector2(0, 38.0f);
     const Vector2 STATS_HORIZONTAL_OFFSET = Vector2(88.0f, 0);
