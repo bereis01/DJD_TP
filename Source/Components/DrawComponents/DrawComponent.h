@@ -7,7 +7,7 @@ public:
     // (Lower draw order corresponds with further back)
     DrawComponent(Actor *owner, int drawOrder = 100);
 
-    ~DrawComponent() override;
+    ~DrawComponent();
 
     virtual void Draw(SDL_Renderer *renderer);
 

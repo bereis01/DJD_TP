@@ -14,7 +14,7 @@ class Actor {
 public:
     Actor(Game *game);
 
-    virtual ~Actor();
+    ~Actor();
 
     // Update function called from Game (not overridable)
     void Update(float deltaTime);

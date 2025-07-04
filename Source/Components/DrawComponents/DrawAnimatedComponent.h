@@ -8,7 +8,7 @@ public:
     DrawAnimatedComponent(Actor *owner, const std::string &spriteSheetPath, const std::string &spriteSheetData,
                           int drawOrder = 100);
 
-    ~DrawAnimatedComponent() override;
+    ~DrawAnimatedComponent();
 
     void Draw(SDL_Renderer *renderer) override;
 

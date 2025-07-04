@@ -14,7 +14,7 @@ public:
     AABBColliderComponent(class Actor *owner, int dx, int dy, int w, int h,
                           ColliderLayer layer, bool isStatic = false, int updateOrder = 10);
 
-    ~AABBColliderComponent() override;
+    ~AABBColliderComponent();
 
     // Detects intersection and collision
     bool Intersect(const AABBColliderComponent &b) const;

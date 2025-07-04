@@ -12,8 +12,6 @@ DrawAnimatedComponent::DrawAnimatedComponent(Actor *owner, const std::string &sp
 }
 
 DrawAnimatedComponent::~DrawAnimatedComponent() {
-    DrawSpriteComponent::~DrawSpriteComponent();
-
     // Cleans spritesheet data (texture)
     for (const auto &rect: mSpriteSheetData) {
         delete rect;

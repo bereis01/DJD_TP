@@ -12,8 +12,6 @@ DrawSpriteComponent::DrawSpriteComponent(Actor *owner, const std::string &textur
 }
 
 DrawSpriteComponent::~DrawSpriteComponent() {
-    //DrawComponent::~DrawComponent();
-
     // Destroys the texture
     if (mSpriteSheetSurface) {
         SDL_DestroyTexture(mSpriteSheetSurface);

@@ -8,7 +8,7 @@ public:
     Component(Actor *owner, int updateOrder = 100);
 
     // Destructor
-    virtual ~Component();
+    ~Component();
 
     // Update this component by delta time
     virtual void Update(float deltaTime);
