@@ -6,7 +6,7 @@ Ally::Ally(Game *game, const std::string &unitType, Stats stats)
     mMovementAOE = new DrawAOEComponent(this, Vector2::Zero, stats.mov, 200);
     mMovementAOE->SetColor(Vector3(0, 0.0f, 255.0f));
     mAttackAOE = new DrawAOEComponent(this, Vector2::Zero, 0, 200);
-    mAttackAOE->SetColor(Vector3(255.0f, 0.0f, 0.0f));
+    mAttackAOE->SetColor(Vector3(255.0f, 255.0f, 0.0f));
 
     // Draws the colored square where the ally is
     mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
