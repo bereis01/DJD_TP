@@ -1,5 +1,6 @@
 #include "Unit.h"
 #include "../Game.h"
+#include "../Components/DrawComponents/DrawAnimatedComponent.h"
 #include "../UIElements/StatScreen.h"
 
 Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d, int r, int mv) {
@@ -24,9 +25,17 @@ Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
     magic = m;
 }
 
-Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy)
+Unit::Unit(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats,
+           bool isEnemy)
     : Actor(game) {
-    mDrawComponent = new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
+    // Sprite component
+    //mDrawComponent = new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
+    mDrawComponent = new DrawAnimatedComponent(this, spriteSheetPath, spriteSheetData, 200);
+    mDrawComponent->AddAnimation("Idle", {0, 1, 2, 3});
+    mDrawComponent->SetAnimation("Idle");
+    mDrawComponent->SetAnimFPS(5.0f);
+
+    // Other parameters
     mDmgTaken = 0;
     mStats = stats;
     mIsEnemy = isEnemy;
@@ -35,7 +44,7 @@ Unit::Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy
 
 Unit::~Unit() {
     // Deallocates weapons
-    for (auto weapon : mWeapons)
+    for (auto weapon: mWeapons)
         delete weapon;
 }
 

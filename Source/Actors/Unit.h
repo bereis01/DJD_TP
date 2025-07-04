@@ -3,6 +3,7 @@
 
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
+#include "../Components/DrawComponents/DrawAnimatedComponent.h"
 
 class Stats {
 public:
@@ -36,7 +37,8 @@ public:
 
 class Unit : public Actor {
 public:
-    Unit(Game *game, const std::string &texturePath, Stats stats, bool isEnemy = true);
+    Unit(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats,
+         bool isEnemy = true);
 
     virtual ~Unit();
 
@@ -57,14 +59,17 @@ public:
 
     // Weapon manipulation
     void AddWeapon(Weapon *weapon) { mWeapons.push_back(weapon); }
+
     void EquipWeapon(int pos);
-    Weapon *GetEquippedWeapon() { return mWeapons.front();}
-    std::vector<Weapon *> GetAllWeapons() { return mWeapons;}
+
+    Weapon *GetEquippedWeapon() { return mWeapons.front(); }
+    std::vector<Weapon *> GetAllWeapons() { return mWeapons; }
 
     // Item manipulation
-    void AddItem(const std::string& item) { mItens.push_back(item); }
-    std::vector<std::string> GetAllItens() { return mItens;}
-    void UseItem(const std::string& item);
+    void AddItem(const std::string &item) { mItens.push_back(item); }
+    std::vector<std::string> GetAllItens() { return mItens; }
+
+    void UseItem(const std::string &item);
 
     // In-game actions
     void ShowStats();
@@ -82,7 +87,7 @@ public:
 
 protected:
     // Sprite
-    DrawSpriteComponent *mDrawComponent;
+    DrawAnimatedComponent *mDrawComponent;
 
     // Stats
     Stats mStats;

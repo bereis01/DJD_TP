@@ -586,7 +586,8 @@ void Game::ChangeScene() {
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
         Weapon *w3 = new Weapon("Silver sword", 90, 13, 0, 1);
-        mTrueblade = new Ally(this, "../Assets/Sprites/Units/TrueBlade.png", s);
+        mTrueblade = new Ally(this, "../Assets/Sprites/Units/Allies/Knight.png",
+                              "../Assets/Sprites/Units/Allies/Knight.json", s);
         mTrueblade->SetXY(20, 8);
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);
@@ -599,7 +600,8 @@ void Game::ChangeScene() {
         s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
         w1 = new Weapon("Thunder", 80, 5, 10, 2, true);
         w2 = new Weapon("Fire", 90, 6, 0, 2, true);
-        mSorceress = new Ally(this, "../Assets/Sprites/Units/Sage.png", s);
+        mSorceress = new Ally(this, "../Assets/Sprites/Units/Allies/Wizard.png",
+                              "../Assets/Sprites/Units/Allies/Wizard.json", s);
         mSorceress->SetXY(21, 8);
         mSorceress->SetStats(s);
         mSorceress->AddWeapon(w1);
@@ -610,7 +612,8 @@ void Game::ChangeScene() {
         // Loads enemies
         Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
+                                 "../Assets/Sprites/Units/Enemies/Orc.json", ss);
         enemy->SetXY(19, 8);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
@@ -619,7 +622,8 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
+                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
         enemy2->SetXY(15, 13);
         enemy2->SetStats(ss);
         enemy2->AddWeapon(w);
@@ -628,7 +632,8 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
+                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
         enemy3->SetXY(13, 15);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
@@ -637,7 +642,8 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Knight.png", ss);
+        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
+                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
         enemy4->SetXY(13, 13);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
@@ -692,7 +698,7 @@ void Game::UnloadScene() {
 
     // Delete UI screens
     //for (auto ui: mUIStack)
-        //delete ui;
+    //delete ui;
     delete mStatScreen;
     delete mAttackScreen;
     delete mActionScreen;
