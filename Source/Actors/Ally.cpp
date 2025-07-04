@@ -43,4 +43,9 @@ void Ally::OnUpdate(float deltaTime) {
     // Updates the attack range with the weapon stats
     if (GetEquippedWeapon())
         mAttackAOE->SetRadius(GetEquippedWeapon()->range);
+    // Updates type indicator based on state
+    if (mAvailable)
+        mTypeIndicator->SetColor(Vector3(0, 255, 0));
+    else
+        mTypeIndicator->SetColor(Vector3(0, 0, 0));
 }
