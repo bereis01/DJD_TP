@@ -34,18 +34,21 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Idle", {15, 16, 17, 18, 19, 20});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5, 6});
         mDrawComponent->AddAnimation("Hurt", {11, 12, 13, 14});
+        mDrawComponent->AddAnimation("Death", {7, 8, 9, 10});
     } else if (unitType == "Wizard") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Wizard.png",
                                                    "../Assets/Sprites/Units/Allies/Wizard.json", 200);
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
+        mDrawComponent->AddAnimation("Death", {6, 7, 8, 9});
     } else if (unitType == "Orc") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
                                                    "../Assets/Sprites/Units/Enemies/Orc.json", 200);
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
+        mDrawComponent->AddAnimation("Death", {6, 7, 8, 9});
     }
     mDrawComponent->SetAnimation("Idle");
     mDrawComponent->SetAnimFPS(10.0f);
@@ -84,6 +87,8 @@ void Unit::PlayAnimation(const std::string &animName, float timer) {
         mDrawComponent->SetAnimation("Attack");
     else if (animName == "Hurt")
         mDrawComponent->SetAnimation("Hurt");
+    else if (animName == "Death")
+        mDrawComponent->SetAnimation("Death");
     mIsAnimating = true;
 }
 

@@ -56,10 +56,10 @@ void DrawAnimatedComponent::Draw(SDL_Renderer *renderer) {
     //     srcRect->h
     // };
     SDL_Rect dstRect = {
-        static_cast<int>(pos.x - cameraPos.x - 34),
-        static_cast<int>(pos.y - cameraPos.y - 34),
-        100,
-        100
+        static_cast<int>(pos.x - cameraPos.x - 59),
+        static_cast<int>(pos.y - cameraPos.y - 59),
+        150,
+        150
     };
 
     // Applies flip if applicable
