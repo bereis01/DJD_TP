@@ -1,6 +1,7 @@
 #include "Unit.h"
 #include "../Game.h"
 #include "../Components/DrawComponents/DrawAnimatedComponent.h"
+#include "../Effects/ParticleSystem.h"
 #include "../UIElements/StatScreen.h"
 
 Stats::Stats(std::string n, int h, int ch, int st, int m, int sk, int sp, int d, int r, int mv) {
@@ -67,6 +68,7 @@ void Unit::ShowStats() {
 }
 
 void Unit::Attack(class Unit *target, bool isCounter) {
+    // Calculates damage
     Stats target_stats = target->GetStats();
     int chance_to_hit = (GetEquippedWeapon()->hit + mStats.skl * 2) - (target_stats.spd * 2);
     int crit_chance = GetEquippedWeapon()->criticalChance + mStats.spd - target_stats.skl;
@@ -84,7 +86,14 @@ void Unit::Attack(class Unit *target, bool isCounter) {
         if (crit_chance > to_crit) {
             damage = damage * 3;
         }
+
+        // Applies damage to target
         target->SetCurrentHp(target_stats.currHp - damage);
+
+        // Shows damage particle
+        mGame->GetParticleSystem()->CreateTextParticle(target->GetX(), target->GetY(), std::to_string(damage));
+
+        // Kills target if hp becomes less than 0
         if (target_stats.currHp - damage <= 0) {
             if (mGame->GetGamePlayState() == Game::GamePlayState::EnemyTurn && target->IsEnemy()) {
                 return;
@@ -94,6 +103,8 @@ void Unit::Attack(class Unit *target, bool isCounter) {
             return;
         }
     }
+
+    // Applies counter attack if applicable
     if (!isCounter) {
         int unitX = GetX();
         int unitY = GetY();
@@ -103,6 +114,8 @@ void Unit::Attack(class Unit *target, bool isCounter) {
             target->Attack(this, true);
         }
     }
+
+    // Makes the unit unusable any further
     mAvailable = false;
 }
 

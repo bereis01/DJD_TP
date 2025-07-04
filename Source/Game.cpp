@@ -18,6 +18,7 @@
 #include "UIElements/StatScreen.h"
 #include "UIElements/ActionScreen.h"
 #include "UIElements/AttackScreen.h"
+#include "Effects/ParticleSystem.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -61,6 +62,9 @@ bool Game::Initialize() {
 
     // Initializes time counter
     mTicksCount = SDL_GetTicks();
+
+    // Initializes particle system
+    mParticleSystem = new ParticleSystem(this, "../Assets/Fonts/Alagard.ttf");
 
     // Starts the game
     SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
@@ -168,8 +172,8 @@ void Game::ProcessInput() {
                 }
 
                 // Handles key presses for actors
-                for (auto actor: mActors)
-                    actor->HandleKeyPress(key, isPressed);
+                for (int i = 0; i < mActors.size(); i++)
+                    mActors[i]->HandleKeyPress(key, isPressed);
 
                 break;
             }
@@ -521,6 +525,9 @@ UIFont *Game::LoadFont(const std::string &fileName) {
 void Game::Shutdown() {
     // Unload current Scene
     UnloadScene();
+
+    // Deletes particle system
+    delete mParticleSystem;
 
     // Deletes loaded fonts
     for (auto font: mFonts) {

@@ -113,6 +113,7 @@ public:
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
     class AttackScreen *GetAttackScreen() { return mAttackScreen; }
+
     void ShowItems();
 
     // Renderer functions
@@ -122,7 +123,9 @@ public:
     std::vector<class Ally *> GetUnits() { return mUnits; }
 
     class Unit *GetUnitByPosition(int x, int y);
+
     class Ally *GetAllyByPosition(int x, int y);
+
     class Enemy *GetEnemyByPosition(int x, int y);
 
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
@@ -147,6 +150,9 @@ public:
     // Game state management
     void SetGamePlayState(GamePlayState state) { mGamePlayState = state; }
     GamePlayState GetGamePlayState() const { return mGamePlayState; }
+
+    // Particle system
+    class ParticleSystem *GetParticleSystem() { return mParticleSystem; }
 
 private:
     // Game processing functions
@@ -243,4 +249,7 @@ private:
     TurnScreen *mTurnScreen = nullptr;
     AttackScreen *mAttackScreen = nullptr;
     ItemScreen *mItemScreen = nullptr;
+
+    // Particles
+    class ParticleSystem *mParticleSystem = nullptr;
 };

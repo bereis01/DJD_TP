@@ -68,6 +68,12 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/AttackScreen.h
         Source/UIElements/ItemScreen.h
         Source/UIElements/ItemScreen.cpp
+        Source/Effects/ParticleSystem.cpp
+        Source/Effects/ParticleSystem.h
+        Source/Effects/Particle.cpp
+        Source/Effects/Particle.h
+        Source/Components/DrawComponents/DrawTextureComponent.cpp
+        Source/Components/DrawComponents/DrawTextureComponent.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)
