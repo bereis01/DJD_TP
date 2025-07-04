@@ -113,9 +113,7 @@ public:
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
     class AttackScreen *GetAttackScreen() { return mAttackScreen; }
-    void ShowItens();
-
-    void LoadHUDScreens();
+    void ShowItems();
 
     // Renderer functions
     SDL_Renderer *GetRenderer() { return mRenderer; }
@@ -227,7 +225,6 @@ private:
     std::vector<Enemy *> mEnemies;
     int mCurrentEnemyIndex;
 
-    // TODO: Maybe move to cursor?
     class Unit *mSelectedUnit;
 
     // Level data
@@ -242,9 +239,9 @@ private:
     float mSceneManagerTimer = 0.0f;
 
     // HUD
-    StatScreen *mStatScreen;
-    ActionScreen *mActionScreen;
-    TurnScreen *mTurnScreen;
-    AttackScreen *mAttackScreen;
-    ItemScreen *mItemScreen;
+    StatScreen *mStatScreen = nullptr;
+    ActionScreen *mActionScreen = nullptr;
+    TurnScreen *mTurnScreen = nullptr;
+    AttackScreen *mAttackScreen = nullptr;
+    ItemScreen *mItemScreen = nullptr;
 };

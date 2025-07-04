@@ -691,9 +691,13 @@ void Game::UnloadScene() {
     }
 
     // Delete UI screens
-    for (auto ui: mUIStack) {
-        delete ui;
-    }
+    //for (auto ui: mUIStack)
+        //delete ui;
+    delete mStatScreen;
+    delete mAttackScreen;
+    delete mActionScreen;
+    delete mItemScreen;
+    delete mTurnScreen;
     mUIStack.clear();
 
     // Delete background texture
@@ -816,7 +820,7 @@ void Game::SetupAttack() {
     mUIStack.pop_back();
 }
 
-void Game::ShowItens() {
+void Game::ShowItems() {
     if (mGamePlayState == GamePlayState::ChoosingAction) {
         PopUI();
         PushUI(mItemScreen);

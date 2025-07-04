@@ -99,11 +99,11 @@ void Unit::EquipWeapon(int pos) {
     if (it != mWeapons.end() && it != mWeapons.begin()) {
         std::swap(*it, mWeapons.front());
     }
-    mGame->ShowItens();
+    mGame->ShowItems();
     mGame->GetActionScreen()->SetSelectedButtonIndex(0);
 }
 
-void Unit::UseItem(const std::string& item) {
+void Unit::UseItem(const std::string &item) {
     if (mStats.currHp < mStats.hp) {
         if (item == "Healing potion") {
             mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
