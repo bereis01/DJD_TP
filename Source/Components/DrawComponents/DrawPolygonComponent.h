@@ -9,6 +9,8 @@ public:
     void SetColor(Vector3 color) { mColor = color; }
     void SetAlpha(int alpha) { mAlpha = alpha; }
 
+    void SetSize(Vector2 size) { mSize = size; }
+
     void Draw(SDL_Renderer *renderer) override;
 
 protected:

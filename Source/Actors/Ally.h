@@ -16,4 +16,8 @@ private:
     DrawAOEComponent *mMovementAOE;
     DrawAOEComponent *mAttackAOE;
     DrawPolygonComponent *mTypeIndicator;
+
+    // Life bar
+    DrawPolygonComponent *mRedBar;
+    DrawPolygonComponent *mGreenBar;
 };

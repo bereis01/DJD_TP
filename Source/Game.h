@@ -213,7 +213,6 @@ private:
     // Game state
     GamePlayState mGamePlayState;
 
-    // TODO move to constructor
     // Game-specific
     class Cursor *mCursor = nullptr;
     class Ally *mTrueblade = nullptr;

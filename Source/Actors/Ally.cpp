@@ -12,6 +12,13 @@ Ally::Ally(Game *game, const std::string &spriteSheetPath, const std::string &sp
     mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
     mTypeIndicator->SetColor(Vector3(0, 255, 0));
     mTypeIndicator->SetAlpha(50);
+
+    // Life bar
+    mRedBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2));
+    mRedBar->SetColor(Vector3(255, 0, 0));
+
+    mGreenBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2), 150);
+    mGreenBar->SetColor(Vector3(0, 255, 0));
 }
 
 Ally::~Ally() {
@@ -19,6 +26,9 @@ Ally::~Ally() {
 }
 
 void Ally::OnUpdate(float deltaTime) {
+    // Updates life indicator
+    mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * Game::TILE_SIZE, 2));
+
     // Updates AOE fields
     // Shows Movement AOE if player is moving the unit
     if (mGame->GetGamePlayState() == Game::GamePlayState::MovingUnit && mGame->GetSelectedUnit() == this)

@@ -42,4 +42,8 @@ private:
     float mMovementTimer = MOVEMENT_TIMER;
     float mAttackTimer = ATTACK_TIMER;
     float mWaitTimer = WAIT_TIMER;
+
+    // Life bar
+    DrawPolygonComponent *mRedBar;
+    DrawPolygonComponent *mGreenBar;
 };

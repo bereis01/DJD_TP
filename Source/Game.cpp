@@ -284,14 +284,18 @@ void Game::UpdateCamera(float deltaTime) {
     // Makes the camera move as the cursor touches the edges
     if (mCursor) {
         Vector2 pos = mCursor->GetPosition();
-        while (pos.x - mCameraPos.x > (mWindowWidth - 2 * TILE_SIZE))
-            mCameraPos.x += TILE_SIZE;
-        while (pos.x < mCameraPos.x)
-            mCameraPos.x -= TILE_SIZE;
-        while (pos.y - mCameraPos.y > (mWindowHeight - 2 * TILE_SIZE))
-            mCameraPos.y += TILE_SIZE;
-        while (pos.y < mCameraPos.y)
-            mCameraPos.y -= TILE_SIZE;
+        if (pos.x - mCameraPos.x > (mWindowWidth - 2 * TILE_SIZE))
+            if (mCameraPos.x + mWindowWidth < LEVEL_WIDTH * TILE_SIZE)
+                mCameraPos.x += TILE_SIZE;
+        if (pos.x < mCameraPos.x + TILE_SIZE)
+            if (mCameraPos.x > 0)
+                mCameraPos.x -= TILE_SIZE;
+        if (pos.y - mCameraPos.y > (mWindowHeight - 2 * TILE_SIZE))
+            if (mCameraPos.y + mWindowHeight < LEVEL_HEIGHT * TILE_SIZE)
+                mCameraPos.y += TILE_SIZE;
+        if (pos.y < mCameraPos.y + TILE_SIZE)
+            if (mCameraPos.y > 0)
+                mCameraPos.y -= TILE_SIZE;
     }
 }
 

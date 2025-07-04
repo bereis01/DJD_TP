@@ -8,6 +8,13 @@ Enemy::Enemy(Game *game, const std::string &spriteSheetPath, const std::string &
     mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
     mTypeIndicator->SetColor(Vector3(255, 0, 0));
     mTypeIndicator->SetAlpha(50);
+
+    // Life bar
+    mRedBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2));
+    mRedBar->SetColor(Vector3(255, 0, 0));
+
+    mGreenBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2), 150);
+    mGreenBar->SetColor(Vector3(0, 255, 0));
 }
 
 
@@ -16,6 +23,9 @@ Enemy::~Enemy() {
 }
 
 void Enemy::OnUpdate(float deltaTime) {
+    // Updates life indicator
+    mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * Game::TILE_SIZE, 2));
+
     // Returns if not enemy turn
     if (mGame->GetGamePlayState() != Game::GamePlayState::EnemyTurn) {
         return;
