@@ -32,14 +32,20 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Knight.png",
                                                    "../Assets/Sprites/Units/Allies/Knight.json", 200);
         mDrawComponent->AddAnimation("Idle", {15, 16, 17, 18, 19, 20});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5, 6});
+        mDrawComponent->AddAnimation("Hurt", {11, 12, 13, 14});
     } else if (unitType == "Wizard") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Wizard.png",
                                                    "../Assets/Sprites/Units/Allies/Wizard.json", 200);
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
+        mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
     } else if (unitType == "Orc") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
                                                    "../Assets/Sprites/Units/Enemies/Orc.json", 200);
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
+        mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
     }
     mDrawComponent->SetAnimation("Idle");
     mDrawComponent->SetAnimFPS(10.0f);
@@ -55,6 +61,30 @@ Unit::~Unit() {
     // Deallocates weapons
     for (auto weapon: mWeapons)
         delete weapon;
+}
+
+void Unit::OnUpdate(float deltaTime) {
+    // If there is an animation going, decreases the timer and
+    // when it reaches 0, reverts back to default state
+    if (mIsAnimating) {
+        if (mAnimationTimer > 0) {
+            mAnimationTimer -= deltaTime;
+        } else {
+            // Reverts to Idle animation and disables animating state
+            mDrawComponent->SetAnimation("Idle");
+            mIsAnimating = false;
+        }
+    }
+}
+
+void Unit::PlayAnimation(const std::string &animName, float timer) {
+    // Sets up the timer, changes the animation and sets the animating flag
+    mAnimationTimer = timer;
+    if (animName == "Attack")
+        mDrawComponent->SetAnimation("Attack");
+    else if (animName == "Hurt")
+        mDrawComponent->SetAnimation("Hurt");
+    mIsAnimating = true;
 }
 
 void Unit::SetStats(Stats stats) {
@@ -97,6 +127,12 @@ void Unit::Attack(class Unit *target, bool isCounter) {
 
         // Applies damage to target
         target->SetCurrentHp(target_stats.currHp - damage);
+
+        // Plays animation
+        if (!isCounter) {
+            PlayAnimation("Attack", 0.6f);
+            target->PlayAnimation("Hurt", 0.4f);
+        }
 
         // Shows damage particle
         mGame->GetParticleSystem()->CreateTextParticle(target->GetX(), target->GetY(), std::to_string(damage));

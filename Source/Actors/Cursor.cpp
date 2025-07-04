@@ -1,5 +1,4 @@
 #include "Cursor.h"
-
 #include "Enemy.h"
 #include "../Game.h"
 #include "Unit.h"
@@ -165,7 +164,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
                 int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
                 mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
-                    unit->GetEquippedWeapon(), enemy->GetEquippedWeapon(), range);
+                                                          unit->GetEquippedWeapon(), enemy->GetEquippedWeapon(), range);
                 mGame->PushUI(mGame->GetAttackScreen());
                 mGame->SetGamePlayState(Game::GamePlayState::ConfirmingAttack);
             }
@@ -185,7 +184,8 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
             int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
-                unit->GetAllWeapons()[mSelectedWeapon], enemy->GetEquippedWeapon(), range);
+                                                      unit->GetAllWeapons()[mSelectedWeapon],
+                                                      enemy->GetEquippedWeapon(), range);
         }
         if (key == SDLK_a) {
             mSelectedWeapon--;
@@ -196,7 +196,8 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
             int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
-                unit->GetAllWeapons()[mSelectedWeapon], enemy->GetEquippedWeapon(), range);
+                                                      unit->GetAllWeapons()[mSelectedWeapon],
+                                                      enemy->GetEquippedWeapon(), range);
         }
         if (key == SDLK_RETURN) {
             mGame->PopUI();

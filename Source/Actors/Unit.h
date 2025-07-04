@@ -84,9 +84,19 @@ public:
     bool IsEnemy() { return mIsEnemy; }
     void SetAvailable(bool available) { mAvailable = available; }
 
+    // Update function
+    void OnUpdate(float deltaTime);
+
+    // Animation
+    void PlayAnimation(const std::string &animName, float timer);
+
 protected:
     // Sprite
     DrawAnimatedComponent *mDrawComponent;
+
+    // Animation
+    float mAnimationTimer = 0.0f;
+    bool mIsAnimating = false;
 
     // Stats
     Stats mStats;

@@ -23,6 +23,9 @@ Enemy::~Enemy() {
 }
 
 void Enemy::OnUpdate(float deltaTime) {
+    // Calls Unit update
+    Unit::OnUpdate(deltaTime);
+
     // Updates life indicator
     mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * Game::TILE_SIZE, 2));
 
