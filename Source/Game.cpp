@@ -453,7 +453,7 @@ void Game::GenerateOutput() {
     // Victory screen
     if (mGamePlayState == GamePlayState::LevelComplete) {
         // Victory text
-        auto VictoryText = new UIScreen(this, "../Assets/Fonts/Dogica.ttf");
+        auto VictoryText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
         mUIStack.emplace_back(VictoryText);
 
@@ -467,7 +467,7 @@ void Game::GenerateOutput() {
     // Fail screen
     if (mGamePlayState == GamePlayState::LevelFailed) {
         // Defeat text
-        auto DefeatText = new UIScreen(this, "../Assets/Fonts/Alagard.ttf");
+        auto DefeatText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         DefeatText->AddText("DEFEAT", Vector2(250, 270), Vector2(300, 100));
         mUIStack.emplace_back(DefeatText);
 
@@ -597,8 +597,7 @@ void Game::ChangeScene() {
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
         Weapon *w3 = new Weapon("Silver sword", 90, 13, 0, 1);
-        mTrueblade = new Ally(this, "../Assets/Sprites/Units/Allies/Knight.png",
-                              "../Assets/Sprites/Units/Allies/Knight.json", s);
+        mTrueblade = new Ally(this, "Knight", s);
         mTrueblade->SetXY(20, 8);
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);
@@ -611,8 +610,7 @@ void Game::ChangeScene() {
         s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
         w1 = new Weapon("Thunder", 80, 5, 10, 2, true);
         w2 = new Weapon("Fire", 90, 6, 0, 2, true);
-        mSorceress = new Ally(this, "../Assets/Sprites/Units/Allies/Wizard.png",
-                              "../Assets/Sprites/Units/Allies/Wizard.json", s);
+        mSorceress = new Ally(this, "Wizard", s);
         mSorceress->SetXY(21, 8);
         mSorceress->SetStats(s);
         mSorceress->AddWeapon(w1);
@@ -623,8 +621,7 @@ void Game::ChangeScene() {
         // Loads enemies
         Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
-                                 "../Assets/Sprites/Units/Enemies/Orc.json", ss);
+        Enemy *enemy = new Enemy(this, "Orc", ss);
         enemy->SetXY(19, 8);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
@@ -633,8 +630,7 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy2 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
-                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
+        Enemy *enemy2 = new Enemy(this, "Orc", ss);
         enemy2->SetXY(15, 13);
         enemy2->SetStats(ss);
         enemy2->AddWeapon(w);
@@ -643,8 +639,7 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy3 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
-                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
+        Enemy *enemy3 = new Enemy(this, "Orc", ss);
         enemy3->SetXY(13, 15);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
@@ -653,16 +648,12 @@ void Game::ChangeScene() {
 
         ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy4 = new Enemy(this, "../Assets/Sprites/Units/Enemies/Orc.png",
-                                  "../Assets/Sprites/Units/Enemies/Orc.json", ss);
+        Enemy *enemy4 = new Enemy(this, "Orc", ss);
         enemy4->SetXY(13, 13);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
         //enemy4->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy4);
-
-        // Loads HUD
-        mStatScreen = new StatScreen(this, "../Assets/Fonts/Arial.ttf");
 
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");

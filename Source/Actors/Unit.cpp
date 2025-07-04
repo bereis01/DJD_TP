@@ -26,15 +26,23 @@ Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
     magic = m;
 }
 
-Unit::Unit(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats,
-           bool isEnemy)
-    : Actor(game) {
+Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) : Actor(game) {
     // Sprite component
-    //mDrawComponent = new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
-    mDrawComponent = new DrawAnimatedComponent(this, spriteSheetPath, spriteSheetData, 200);
-    mDrawComponent->AddAnimation("Idle", {0, 1, 2, 3});
+    if (unitType == "Knight") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Knight.png",
+                                                   "../Assets/Sprites/Units/Allies/Knight.json", 200);
+        mDrawComponent->AddAnimation("Idle", {15, 16, 17, 18, 19, 20});
+    } else if (unitType == "Wizard") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Wizard.png",
+                                                   "../Assets/Sprites/Units/Allies/Wizard.json", 200);
+        mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
+    } else if (unitType == "Orc") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
+                                                   "../Assets/Sprites/Units/Enemies/Orc.json", 200);
+        mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
+    }
     mDrawComponent->SetAnimation("Idle");
-    mDrawComponent->SetAnimFPS(5.0f);
+    mDrawComponent->SetAnimFPS(10.0f);
 
     // Other parameters
     mDmgTaken = 0;

@@ -1,7 +1,7 @@
 #include "Ally.h"
 
-Ally::Ally(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats)
-    : Unit(game, spriteSheetPath, spriteSheetData, stats, false) {
+Ally::Ally(Game *game, const std::string &unitType, Stats stats)
+    : Unit(game, stats, false, unitType) {
     // Components to draw the AOE when moving/attacking
     mMovementAOE = new DrawAOEComponent(this, Vector2::Zero, stats.mov, 200);
     mMovementAOE->SetColor(Vector3(0, 0.0f, 255.0f));

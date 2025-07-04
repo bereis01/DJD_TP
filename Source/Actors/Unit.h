@@ -37,8 +37,7 @@ public:
 
 class Unit : public Actor {
 public:
-    Unit(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats,
-         bool isEnemy = true);
+    Unit(Game *game, Stats stats, bool isEnemy = true, const std::string &unitType = "Knight");
 
     virtual ~Unit();
 

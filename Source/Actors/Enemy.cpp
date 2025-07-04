@@ -2,8 +2,8 @@
 #include "Unit.h"
 #include "../Game.h"
 
-Enemy::Enemy(Game *game, const std::string &spriteSheetPath, const std::string &spriteSheetData, Stats stats)
-    : Unit(game, spriteSheetPath, spriteSheetData, stats) {
+Enemy::Enemy(Game *game, const std::string &unitType, Stats stats)
+    : Unit(game, stats, true, unitType) {
     // Draws the colored square where the enemy is
     mTypeIndicator = new DrawPolygonComponent(this, Vector2::Zero, Vector2(Game::TILE_SIZE, Game::TILE_SIZE));
     mTypeIndicator->SetColor(Vector3(255, 0, 0));

@@ -49,11 +49,17 @@ void DrawAnimatedComponent::Draw(SDL_Renderer *renderer) {
     // Creates destiny rect based on actor and camera positions
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
+    // SDL_Rect dstRect = {
+    //     static_cast<int>(pos.x - cameraPos.x),
+    //     static_cast<int>(pos.y - cameraPos.y),
+    //     srcRect->w,
+    //     srcRect->h
+    // };
     SDL_Rect dstRect = {
-        static_cast<int>(pos.x - cameraPos.x),
-        static_cast<int>(pos.y - cameraPos.y),
-        srcRect->w,
-        srcRect->h
+        static_cast<int>(pos.x - cameraPos.x - 59),
+        static_cast<int>(pos.y - cameraPos.y - 59),
+        150,
+        150
     };
 
     // Applies flip if applicable
