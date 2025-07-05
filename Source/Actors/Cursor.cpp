@@ -41,33 +41,30 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             }
 
             // Plays movement audio
-            mGame->GetAudio()->PlaySound("CursorMove.wav");
+            mGame->GetAudio()->PlaySound("CursorMove.ogg");
         }
-
         if (key == SDLK_s) {
             if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE) {
                 mPosition.y += Game::TILE_SIZE;
 
                 // Plays movement audio
-                mGame->GetAudio()->PlaySound("CursorMove.wav");
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
             }
         }
-
         if (key == SDLK_a) {
             if (mPosition.x > 0) {
                 mPosition.x -= Game::TILE_SIZE;
 
                 // Plays movement audio
-                mGame->GetAudio()->PlaySound("CursorMove.wav");
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
             }
         }
-
         if (key == SDLK_d) {
             if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE) {
                 mPosition.x += Game::TILE_SIZE;
 
                 // Plays movement audio
-                mGame->GetAudio()->PlaySound("CursorMove.wav");
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
             }
         }
 
@@ -84,7 +81,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 unit->SetOldPosition(unit->GetPosition());
 
                 // Plays select audio
-                mGame->GetAudio()->PlaySound("CursorSelect.wav");
+                mGame->GetAudio()->PlaySound("CursorSelect.ogg");
             }
         }
 
@@ -99,25 +96,45 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
 
                 // Plays audio
-                mGame->GetAudio()->PlaySound("StatsOpen.wav");
+                mGame->GetAudio()->PlaySound("StatsOpen.ogg");
             }
         }
 
         // A unit is selected for movement
     } else if (mGame->GetGamePlayState() == Game::GamePlayState::MovingUnit) {
         // Movement
-        if (key == SDLK_w)
-            if (mPosition.y > 0)
+        if (key == SDLK_w) {
+            if (mPosition.y > 0) {
                 mPosition.y -= Game::TILE_SIZE;
-        if (key == SDLK_s)
-            if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE)
+            }
+
+            // Plays movement audio
+            mGame->GetAudio()->PlaySound("CursorMove.ogg");
+        }
+        if (key == SDLK_s) {
+            if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE) {
                 mPosition.y += Game::TILE_SIZE;
-        if (key == SDLK_a)
-            if (mPosition.x > 0)
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
+            }
+        }
+        if (key == SDLK_a) {
+            if (mPosition.x > 0) {
                 mPosition.x -= Game::TILE_SIZE;
-        if (key == SDLK_d)
-            if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE)
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
+            }
+        }
+        if (key == SDLK_d) {
+            if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE) {
                 mPosition.x += Game::TILE_SIZE;
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
+            }
+        }
 
         // Enter selection
         if (key == SDLK_RETURN) {
@@ -139,6 +156,12 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 // Moves the game to the action selection state
                 mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
                 mGame->PushUI(mGame->GetActionScreen());
+
+                // Plays audio for action screen
+                mGame->GetAudio()->PlaySound("StatsOpen.ogg");
+            } else {
+                // Plays audio for movement impossible
+                mGame->GetAudio()->PlaySound("Error.ogg");
             }
         }
 
@@ -153,7 +176,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
 
                 // Plays audio
-                mGame->GetAudio()->PlaySound("StatsOpen.wav");
+                mGame->GetAudio()->PlaySound("StatsOpen.ogg");
             }
         }
 
@@ -161,6 +184,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
         if (key == SDLK_b) {
             mGame->SetGamePlayState(Game::GamePlayState::Map);
             mGame->SetSelectedUnit(nullptr);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Cancel.ogg");
         }
 
         // Showing unit's stats
@@ -174,7 +200,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 mGame->SetGamePlayState(Game::GamePlayState::Map);
 
             // Plays audio
-            mGame->GetAudio()->PlaySound("StatsClose.wav");
+            mGame->GetAudio()->PlaySound("StatsClose.ogg");
         }
 
         // Choosing enemy target
@@ -187,6 +213,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 }
                 mGame->SetTargetUnitIndex(next_index);
                 mPosition = mGame->GetEnemiesInRange()[next_index]->GetPosition();
+
+                // Plays audio
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
             }
             if (key == SDLK_s || key == SDLK_a) {
                 int next_index = mGame->GetTargetUnitIndex() - 1;
@@ -195,6 +224,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 }
                 mGame->SetTargetUnitIndex(next_index);
                 mPosition = mGame->GetEnemiesInRange()[next_index]->GetPosition();
+
+                // Plays audio
+                mGame->GetAudio()->PlaySound("CursorMove.ogg");
             }
             if (key == SDLK_RETURN) {
                 auto unit = mGame->GetSelectedUnit();
@@ -204,14 +236,21 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                                                           unit->GetEquippedWeapon(), enemy->GetEquippedWeapon(), range);
                 mGame->PushUI(mGame->GetAttackScreen());
                 mGame->SetGamePlayState(Game::GamePlayState::ConfirmingAttack);
+
+                // Plays audio
+                mGame->GetAudio()->PlaySound("StatsOpen.ogg");
             }
         }
         if (key == SDLK_b) {
             mGame->SetTargetUnitIndex(-1);
             mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
             mGame->PushUI(mGame->GetActionScreen());
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("StatsClose.ogg");
         }
     } else if (mGame->GetGamePlayState() == Game::GamePlayState::ConfirmingAttack) {
+        // Changing weapon on attack screen
         if (key == SDLK_d) {
             mSelectedWeapon++;
             if (mSelectedWeapon > mGame->GetSelectedUnit()->GetAllWeapons().size() - 1) {
@@ -223,7 +262,11 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
                                                       unit->GetAllWeapons()[mSelectedWeapon],
                                                       enemy->GetEquippedWeapon(), range);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Swipe.ogg");
         }
+        // Changing weapon on attack screen
         if (key == SDLK_a) {
             mSelectedWeapon--;
             if (mSelectedWeapon < 0) {
@@ -235,7 +278,11 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
                                                       unit->GetAllWeapons()[mSelectedWeapon],
                                                       enemy->GetEquippedWeapon(), range);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Swipe.ogg");
         }
+        // Attacking
         if (key == SDLK_RETURN) {
             mGame->PopUI();
             mGame->GetSelectedUnit()->EquipWeapon(mSelectedWeapon);
@@ -244,10 +291,17 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             mGame->SetTargetUnitIndex(-1);
             mSelectedWeapon = 0;
             mGame->SetGamePlayState(Game::GamePlayState::Map);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Confirm.ogg");
         }
+        // Cancelling
         if (key == SDLK_b) {
             mGame->PopUI();
             mGame->SetGamePlayState(Game::GamePlayState::ChoosingTarget);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("StatsClose.ogg");
         }
     }
 }

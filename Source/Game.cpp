@@ -254,7 +254,7 @@ void Game::UpdateTurn(float deltaTime) {
         mCurrentEnemyIndex = mEnemies.size() - 1;
 
         // Plays turn changing sound
-        mAudio->PlaySound("EnemyTurn.wav");
+        mAudio->PlaySound("EnemyTurn.ogg");
     } else {
         // Traverses the enemies, activating each one
         if (mCurrentEnemyIndex >= 0) {
@@ -279,7 +279,7 @@ void Game::UpdateTurn(float deltaTime) {
             mTurnScreen->ChangeTurn();
 
             // Plays turn changing sound
-            mAudio->PlaySound("PlayerTurn.wav");
+            mAudio->PlaySound("PlayerTurn.ogg");
         }
     }
 }
@@ -693,7 +693,7 @@ void Game::ChangeScene() {
         mItemScreen = new ItemScreen(this, "../Assets/Fonts/SuperVCR.ttf");
 
         // Plays music
-        mAudio->PlaySound("Level1.wav", true);
+        mAudio->PlaySound("Level1.ogg", true);
     }
 
     // Set new scene
