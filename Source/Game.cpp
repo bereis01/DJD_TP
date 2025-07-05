@@ -5,6 +5,7 @@
 #include <vector>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "Utils/CSV.h"
 #include "Utils/Random.h"
 #include "Game.h"
@@ -19,6 +20,7 @@
 #include "UIElements/ActionScreen.h"
 #include "UIElements/AttackScreen.h"
 #include "Effects/ParticleSystem.h"
+#include "Audio/AudioSystem.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -57,6 +59,12 @@ bool Game::Initialize() {
         return false;
     }
 
+    // Initialize SDL_mixer
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
+        SDL_Log("Failed to initialize SDL_mixer");
+        return false;
+    }
+
     // Initializes random number generator library
     Random::Init();
 
@@ -65,6 +73,9 @@ bool Game::Initialize() {
 
     // Initializes particle system
     mParticleSystem = new ParticleSystem(this, "../Assets/Fonts/DogicaPixel.ttf");
+
+    // Initializes audio system
+    mAudio = new AudioSystem();
 
     // Starts the game
     SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
@@ -216,6 +227,9 @@ void Game::UpdateGame() {
     // Updates the turn
     UpdateTurn(deltaTime);
 
+    // Updates audio
+    mAudio->Update(deltaTime);
+
     // Checks victory/defeat
     CheckVictory();
 }
@@ -238,6 +252,9 @@ void Game::UpdateTurn(float deltaTime) {
         SetGamePlayState(GamePlayState::EnemyTurn);
         mTurnScreen->ChangeTurn();
         mCurrentEnemyIndex = mEnemies.size() - 1;
+
+        // Plays turn changing sound
+        mAudio->PlaySound("EnemyTurn.wav");
     } else {
         // Traverses the enemies, activating each one
         if (mCurrentEnemyIndex >= 0) {
@@ -260,6 +277,9 @@ void Game::UpdateTurn(float deltaTime) {
 
             SetGamePlayState(GamePlayState::Map);
             mTurnScreen->ChangeTurn();
+
+            // Plays turn changing sound
+            mAudio->PlaySound("PlayerTurn.wav");
         }
     }
 }
@@ -529,6 +549,10 @@ void Game::Shutdown() {
     // Deletes particle system
     delete mParticleSystem;
 
+    // Deletes audio system
+    delete mAudio;
+    Mix_CloseAudio();
+
     // Deletes loaded fonts
     for (auto font: mFonts) {
         font.second->Unload();
@@ -667,6 +691,9 @@ void Game::ChangeScene() {
         mTurnScreen = new TurnScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         mAttackScreen = new AttackScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         mItemScreen = new ItemScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+
+        // Plays music
+        mAudio->PlaySound("Level1.wav", true);
     }
 
     // Set new scene

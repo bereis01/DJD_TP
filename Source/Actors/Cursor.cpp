@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include "../Game.h"
 #include "Unit.h"
+#include "../Audio/AudioSystem.h"
 #include "../UIElements/StatScreen.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
 #include "../Components/DrawComponents/DrawPolygonComponent.h"
@@ -34,18 +35,42 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
     // Roaming the map
     if (mGame->GetGamePlayState() == Game::GamePlayState::Map) {
         // Movement
-        if (key == SDLK_w)
-            if (mPosition.y > 0)
+        if (key == SDLK_w) {
+            if (mPosition.y > 0) {
                 mPosition.y -= Game::TILE_SIZE;
-        if (key == SDLK_s)
-            if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE)
+            }
+
+            // Plays movement audio
+            mGame->GetAudio()->PlaySound("CursorMove.wav");
+        }
+
+        if (key == SDLK_s) {
+            if (mPosition.y < (Game::LEVEL_HEIGHT - 1) * Game::TILE_SIZE) {
                 mPosition.y += Game::TILE_SIZE;
-        if (key == SDLK_a)
-            if (mPosition.x > 0)
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.wav");
+            }
+        }
+
+        if (key == SDLK_a) {
+            if (mPosition.x > 0) {
                 mPosition.x -= Game::TILE_SIZE;
-        if (key == SDLK_d)
-            if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE)
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.wav");
+            }
+        }
+
+        if (key == SDLK_d) {
+            if (mPosition.x < (Game::LEVEL_WIDTH - 1) * Game::TILE_SIZE) {
                 mPosition.x += Game::TILE_SIZE;
+
+                // Plays movement audio
+                mGame->GetAudio()->PlaySound("CursorMove.wav");
+            }
+        }
+
 
         // Enter selection
         if (key == SDLK_RETURN) {
@@ -57,6 +82,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
                 mGame->SetSelectedUnit(unit);
                 unit->SetOldPosition(unit->GetPosition());
+
+                // Plays select audio
+                mGame->GetAudio()->PlaySound("CursorSelect.wav");
             }
         }
 
@@ -69,6 +97,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             if (unit != nullptr) {
                 unit->ShowStats();
                 mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
+
+                // Plays audio
+                mGame->GetAudio()->PlaySound("StatsOpen.wav");
             }
         }
 
@@ -120,6 +151,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
             if (unit != nullptr) {
                 unit->ShowStats();
                 mGame->SetGamePlayState(Game::GamePlayState::ShowingStats);
+
+                // Plays audio
+                mGame->GetAudio()->PlaySound("StatsOpen.wav");
             }
         }
 
@@ -138,6 +172,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
                 mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
             else
                 mGame->SetGamePlayState(Game::GamePlayState::Map);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("StatsClose.wav");
         }
 
         // Choosing enemy target

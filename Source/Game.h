@@ -154,6 +154,9 @@ public:
     // Particle system
     class ParticleSystem *GetParticleSystem() { return mParticleSystem; }
 
+    // Audio functions
+    class AudioSystem *GetAudio() { return mAudio; }
+
 private:
     // Game processing functions
     void ProcessInput();
@@ -252,4 +255,7 @@ private:
 
     // Particles
     class ParticleSystem *mParticleSystem = nullptr;
+
+    // Audio
+    AudioSystem *mAudio = nullptr;
 };
