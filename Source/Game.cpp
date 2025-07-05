@@ -235,10 +235,19 @@ void Game::UpdateGame() {
 }
 
 void Game::CheckVictory() {
-    if (mEnemies.size() == 0)
+    if (mEnemies.size() == 0) {
         SetGamePlayState(GamePlayState::LevelComplete);
-    if (mUnits.size() == 0)
+
+        // Plays audio
+        mAudio->PlaySound("Victory.ogg");
+    }
+
+    if (mUnits.size() == 0) {
         SetGamePlayState(GamePlayState::LevelFailed);
+
+        // Plays audio
+        mAudio->PlaySound("Defeat.ogg");
+    }
 }
 
 void Game::UpdateTurn(float deltaTime) {
