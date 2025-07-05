@@ -111,14 +111,17 @@ void Unit::ShowStats() {
 }
 
 void Unit::Attack(class Unit *target, bool isCounter) {
-    // Calculates damage
+    // Calculates parameters
     Stats target_stats = target->GetStats();
     int chance_to_hit = (GetEquippedWeapon()->hit + mStats.skl * 2) - (target_stats.spd * 2);
     int crit_chance = GetEquippedWeapon()->criticalChance + mStats.spd - target_stats.skl;
     crit_chance = std::max(crit_chance, 0);
     int true_hit = (rand() % 101) + (rand() % 101);
     int to_crit = rand() % 101;
+
+    // If it is a hit
     if (chance_to_hit * 2 > true_hit) {
+        // Calculates damage
         int damage = 0;
         if (GetEquippedWeapon()->magic) {
             damage = mStats.mag + GetEquippedWeapon()->might - target_stats.res;
@@ -151,6 +154,15 @@ void Unit::Attack(class Unit *target, bool isCounter) {
             mAvailable = false;
             return;
         }
+    }
+    // If it is a miss
+    else {
+        // Plays animation
+        if (!isCounter)
+            PlayAnimation("Attack", 0.6f);
+
+        // Shows damage particle
+        mGame->GetParticleSystem()->CreateTextParticle(target->GetX(), target->GetY(), "MISS!");
     }
 
     // Applies counter attack if applicable
