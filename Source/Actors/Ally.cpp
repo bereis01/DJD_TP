@@ -14,10 +14,10 @@ Ally::Ally(Game *game, const std::string &unitType, Stats stats)
     mTypeIndicator->SetAlpha(50);
 
     // Life bar
-    mRedBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2));
+    mRedBar = new DrawPolygonComponent(this, Vector2(3, Game::TILE_SIZE), Vector2(Game::TILE_SIZE - 6, 2));
     mRedBar->SetColor(Vector3(255, 0, 0));
 
-    mGreenBar = new DrawPolygonComponent(this, Vector2(0, Game::TILE_SIZE), Vector2(Game::TILE_SIZE, 2), 150);
+    mGreenBar = new DrawPolygonComponent(this, Vector2(3, Game::TILE_SIZE), Vector2(Game::TILE_SIZE - 6, 2), 150);
     mGreenBar->SetColor(Vector3(0, 255, 0));
 }
 
@@ -30,7 +30,7 @@ void Ally::OnUpdate(float deltaTime) {
     Unit::OnUpdate(deltaTime);
 
     // Updates life indicator
-    mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * Game::TILE_SIZE, 2));
+    mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * (Game::TILE_SIZE - 6), 2));
 
     // Updates AOE fields
     // Shows Movement AOE if player is moving the unit
