@@ -18,6 +18,10 @@ DrawTextureComponent::~DrawTextureComponent() {
 }
 
 void DrawTextureComponent::Draw(SDL_Renderer *renderer) {
+    // Do not draw if not visible
+    if (!mIsVisible)
+        return;
+
     // Gets positions
     Vector2 pos = mOwner->GetPosition();
     Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
@@ -37,7 +41,6 @@ void DrawTextureComponent::Draw(SDL_Renderer *renderer) {
     }
 
     // Renders the texture
-    // SDL_SetTextureBlendMode(mSpriteSheetSurface, SDL_BLENDMODE_BLEND);
-    // SDL_SetTextureColorMod(mSpriteSheetSurface, static_cast<Uint8>(modColor.x), static_cast<Uint8>(modColor.y), static_cast<Uint8>(modColor.z));
+    SDL_SetTextureAlphaMod(mTexture, mAlpha);
     SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstRect, mOwner->GetRotation(), nullptr, flip);
 }

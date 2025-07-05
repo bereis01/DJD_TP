@@ -22,10 +22,13 @@ Cursor::Cursor(Game *game, const std::string &texturePath)
 void Cursor::OnUpdate(float deltaTime) {
     // Sets the cursor indicator to the appropriate color according to tile selected
     if (mCursorState == CursorState::Free) {
-        if (mGame->GetLevelData(GetX(), GetY()) == 0)
+        if (mGame->GetLevelData(GetX(), GetY()) == 0) {
             mDrawPolygonComponent->SetColor(Vector3(255, 0, 0));
-        else
+            mDrawPolygonComponent->SetAlpha(50);
+        } else {
             mDrawPolygonComponent->SetColor(Vector3(0, 255, 0));
+            mDrawPolygonComponent->SetAlpha(0);
+        }
     } else if (mCursorState == CursorState::Locked)
         mDrawPolygonComponent->SetColor(Vector3(255, 255, 0));
 }

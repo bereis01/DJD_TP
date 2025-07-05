@@ -703,6 +703,9 @@ void Game::ChangeScene() {
 
         // Plays music
         mAudio->PlaySound("Level1.ogg", true);
+
+        // Shows title
+        mParticleSystem->CreateTitleParticle("LEVEL 1");
     }
 
     // Set new scene

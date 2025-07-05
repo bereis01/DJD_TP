@@ -8,6 +8,8 @@ public:
     // Text particle
     void CreateTextParticle(int x, int y, const std::string &text);
 
+    void CreateTitleParticle(const std::string &text);
+
     // Animated particle
     void CreateAnimatedParticle(int x, int y, const std::string &type);
 

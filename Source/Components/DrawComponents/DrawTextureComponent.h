@@ -11,10 +11,14 @@ public:
 
     void Draw(SDL_Renderer *renderer) override;
 
+    void SetAlpha(int alpha) { mAlpha = alpha; }
+
 protected:
     // Texture to be drawn
     SDL_Texture *mTexture;
 
+    // Attributes
     int mWidth;
     int mHeight;
+    int mAlpha = 255;
 };
