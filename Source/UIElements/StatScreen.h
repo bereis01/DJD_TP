@@ -8,6 +8,10 @@ public:
     const int WORD_HEIGHT = 15.0f;
     const int WORD_OFFSET = 5.0f;
     const int CHAR_WIDTH = 10.0f;
+
+    const Vector2 BACKGROUND_POS = Vector2(80, 80);
+    const Vector2 BACKGROUND_SIZE = Vector2(500, 700);
+
     const Vector2 SCREEN_POS = Vector2(80, 80);
     const Vector2 SCREEN_SIZE = Vector2(320, 320);
     const Vector2 STATS_VERTICAL_OFFSET = Vector2(0, 40);

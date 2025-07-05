@@ -60,7 +60,7 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
     mRng = AddText("5", RNG_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
                    POINT_SIZE);
 
-    AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
+    AddImage("../Assets/UI/PlainBackground.png", SCREEN_POS, SCREEN_SIZE);
 
     // Controls
     std::string controlsText = "Press [SPACE] to return";

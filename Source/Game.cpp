@@ -231,7 +231,8 @@ void Game::UpdateGame() {
     mAudio->Update(deltaTime);
 
     // Checks victory/defeat
-    CheckVictory();
+    if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed)
+        CheckVictory();
 }
 
 void Game::CheckVictory() {
@@ -625,6 +626,9 @@ void Game::ChangeScene() {
         mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
         mCursor->SetXY(20, 8);
 
+        // Adjusts camera position
+        mCameraPos = Vector2(64, 160);
+
         // Loads units (with stats and weapons)
         Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5, 6);
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
@@ -705,7 +709,7 @@ void Game::ChangeScene() {
         mAudio->PlaySound("Level1.ogg", true);
 
         // Shows title
-        mParticleSystem->CreateTitleParticle("LEVEL 1");
+        mParticleSystem->CreateTitleParticle("Level1");
     }
 
     // Set new scene

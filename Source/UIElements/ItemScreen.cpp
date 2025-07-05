@@ -51,8 +51,8 @@ ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     mDescription = AddText("Item description", DESC_POS, Vector2(CHAR_WIDTH * 16, WORD_HEIGHT),
                            POINT_SIZE);
 
-    AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
-    mDetais = AddImage("../Assets/UI/WoodBackground.png", DETAIL_SCREEN_POS, DETAIL_SCREEN_SIZE);
+    AddImage("../Assets/UI/PlainBackground.png", SCREEN_POS, SCREEN_SIZE);
+    mDetais = AddImage("../Assets/UI/PlainBackground.png", DETAIL_SCREEN_POS, DETAIL_SCREEN_SIZE);
     mUnit = nullptr;
     mNumWeapons = 0;
     mNumItens = 0;

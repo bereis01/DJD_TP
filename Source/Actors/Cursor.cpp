@@ -15,7 +15,7 @@ Cursor::Cursor(Game *game, const std::string &texturePath)
     mDrawPolygonComponent->SetAlpha(50);
 
     // Draws the cursor sprite
-    new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200);
+    new DrawSpriteComponent(this, texturePath, Game::TILE_SIZE, Game::TILE_SIZE, 200, 0, 400);
     mSelectedWeapon = 0;
 }
 
