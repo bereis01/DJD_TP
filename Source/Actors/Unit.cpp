@@ -1,5 +1,6 @@
 #include "Unit.h"
 #include "../Game.h"
+#include "../Audio/AudioSystem.h"
 #include "../Components/DrawComponents/DrawAnimatedComponent.h"
 #include "../Effects/ParticleSystem.h"
 #include "../UIElements/StatScreen.h"
@@ -27,6 +28,8 @@ Weapon::Weapon(std::string n, int acc, int mt, int crit, int rng, bool m) {
 }
 
 Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) : Actor(game) {
+    mUnitType = unitType;
+
     // Sprite component
     if (unitType == "Knight") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Knight.png",
@@ -91,11 +94,28 @@ void Unit::OnUpdate(float deltaTime) {
 void Unit::PlayAnimation(const std::string &animName, float timer) {
     // Sets up the timer, changes the animation and sets the animating flag
     mAnimationTimer = timer;
-    if (animName == "Attack")
+    if (animName == "Attack") {
+        // Sets animation
         mDrawComponent->SetAnimation("Attack");
-    else if (animName == "Hurt")
+
+        // Plays audio
+        if (mUnitType == "TrueBlade")
+            mGame->GetAudio()->PlaySound("TrueBladeHit.ogg");
+        else if (mUnitType == "Knight")
+            mGame->GetAudio()->PlaySound("KnightHit.ogg");
+        else if (mUnitType == "Wizard")
+            mGame->GetAudio()->PlaySound("WizardHit.ogg");
+        else if (mUnitType == "Pegasus")
+            mGame->GetAudio()->PlaySound("PegasusHit.ogg");
+        else if (mUnitType == "Orc")
+            mGame->GetAudio()->PlaySound("OrcHit.ogg");
+    } else if (animName == "Hurt") {
+        // Sets animation
         mDrawComponent->SetAnimation("Hurt");
-    else if (animName == "Death")
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("Hurt.ogg");
+    } else if (animName == "Death")
         mDrawComponent->SetAnimation("Death");
     mIsAnimating = true;
 }
@@ -220,6 +240,9 @@ void Unit::UseItem(const std::string &item) {
 }
 
 void Unit::Die() {
+    // Plays audio
+    mGame->GetAudio()->PlaySound("Death.ogg");
+
     SetState(ActorState::Destroy);
 }
 

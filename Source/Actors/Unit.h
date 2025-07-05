@@ -111,4 +111,6 @@ protected:
     // Turn management
     bool mAvailable = true;
     bool mIsEnemy = true;
+
+    std::string mUnitType;
 };
