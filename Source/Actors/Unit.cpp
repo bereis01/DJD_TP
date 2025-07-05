@@ -41,14 +41,14 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
-        mDrawComponent->AddAnimation("Death", {6, 7, 8, 9});
+        mDrawComponent->AddAnimation("Death", {7, 8, 9, 6});
     } else if (unitType == "Orc") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
                                                    "../Assets/Sprites/Units/Enemies/Orc.json", 200);
         mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
-        mDrawComponent->AddAnimation("Death", {6, 7, 8, 9});
+        mDrawComponent->AddAnimation("Death", {8, 9, 6, 7});
     }
     mDrawComponent->SetAnimation("Idle");
     mDrawComponent->SetAnimFPS(10.0f);
@@ -151,6 +151,10 @@ void Unit::Attack(class Unit *target, bool isCounter) {
                 return;
             }
             target->Die();
+
+            // Shows death particle
+            mGame->GetParticleSystem()->CreateAnimatedParticle(target->GetX(), target->GetY(), "Death");
+
             mAvailable = false;
             return;
         }
