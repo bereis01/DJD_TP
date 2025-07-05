@@ -6,7 +6,8 @@ class DrawAnimatedComponent : public DrawSpriteComponent {
 public:
     // (Lower draw order corresponds with further back)
     DrawAnimatedComponent(Actor *owner, const std::string &spriteSheetPath, const std::string &spriteSheetData,
-                          int drawOrder = 100);
+                          int drawOrder = 100, int width = 124, int height = 124, int widthOffset = 46,
+                          int heightOffset = 46);
 
     ~DrawAnimatedComponent();
 

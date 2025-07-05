@@ -42,6 +42,14 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
         mDrawComponent->AddAnimation("Death", {7, 8, 9, 6});
+    } else if (unitType == "TrueBlade") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/TrueBlade.png",
+                                                   "../Assets/Sprites/Units/Allies/TrueBlade.json", 200,
+                                                   50, 32, 9, 0);
+        mDrawComponent->AddAnimation("Idle", {15, 16, 17, 18});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
+        mDrawComponent->AddAnimation("Hurt", {11, 12, 13, 14});
+        mDrawComponent->AddAnimation("Death", {6, 7, 8, 9, 10});
     } else if (unitType == "Orc") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
                                                    "../Assets/Sprites/Units/Enemies/Orc.json", 200);

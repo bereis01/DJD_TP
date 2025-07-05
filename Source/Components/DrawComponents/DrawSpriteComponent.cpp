@@ -3,10 +3,13 @@
 #include "../../Game.h"
 
 DrawSpriteComponent::DrawSpriteComponent(Actor *owner, const std::string &texturePath, const int width,
-                                         const int height, const int drawOrder)
+                                         const int height, const int widthOffset, const int heightOffset,
+                                         const int drawOrder)
     : DrawComponent(owner, drawOrder)
       , mWidth(width)
-      , mHeight(height) {
+      , mHeight(height)
+      , mWidthOffset(widthOffset)
+      , mHeightOffset(heightOffset) {
     // Loads spritesheet texture
     mSpriteSheetSurface = mOwner->GetGame()->LoadTexture(texturePath);
 }

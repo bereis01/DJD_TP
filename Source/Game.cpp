@@ -597,7 +597,7 @@ void Game::ChangeScene() {
         Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
         Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
         Weapon *w3 = new Weapon("Silver sword", 90, 13, 0, 1);
-        mTrueblade = new Ally(this, "Knight", s);
+        mTrueblade = new Ally(this, "TrueBlade", s);
         mTrueblade->SetXY(20, 8);
         mTrueblade->SetStats(s);
         mTrueblade->AddWeapon(w1);

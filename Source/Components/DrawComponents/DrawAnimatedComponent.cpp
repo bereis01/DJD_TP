@@ -5,8 +5,9 @@
 #include <fstream>
 
 DrawAnimatedComponent::DrawAnimatedComponent(Actor *owner, const std::string &spriteSheetPath,
-                                             const std::string &spriteSheetData, int drawOrder)
-    : DrawSpriteComponent(owner, spriteSheetPath, 0, 0, drawOrder) {
+                                             const std::string &spriteSheetData, int drawOrder, int width, int height,
+                                             int widthOffset, int heightOffset)
+    : DrawSpriteComponent(owner, spriteSheetPath, width, height, widthOffset, heightOffset, drawOrder) {
     // Loads the spritesheet containing all animation sprites
     LoadSpriteSheet(spriteSheetPath, spriteSheetData);
 }
@@ -56,10 +57,10 @@ void DrawAnimatedComponent::Draw(SDL_Renderer *renderer) {
     //     srcRect->h
     // };
     SDL_Rect dstRect = {
-        static_cast<int>(pos.x - cameraPos.x - 59),
-        static_cast<int>(pos.y - cameraPos.y - 59),
-        150,
-        150
+        static_cast<int>(pos.x - cameraPos.x - mWidthOffset),
+        static_cast<int>(pos.y - cameraPos.y - mHeightOffset),
+        mWidth,
+        mHeight
     };
 
     // Applies flip if applicable
