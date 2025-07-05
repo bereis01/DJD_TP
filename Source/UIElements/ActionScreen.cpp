@@ -1,6 +1,7 @@
 #include "ActionScreen.h"
 #include "../Game.h"
 #include "../Actors/Unit.h"
+#include "../Audio/AudioSystem.h"
 
 ActionScreen::ActionScreen(Game *game, const std::string &fontName)
     : UIScreen(game, fontName, true) {
@@ -25,6 +26,9 @@ void ActionScreen::HandleKeyPress(int key) {
             mSelectedButtonIndex = static_cast<int>(mButtons.size()) - 1;
         }
         mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("CursorMove.ogg");
     } else if (key == SDLK_s) {
         mButtons[mSelectedButtonIndex]->SetHighlighted(false);
         mSelectedButtonIndex++;
@@ -32,11 +36,17 @@ void ActionScreen::HandleKeyPress(int key) {
             mSelectedButtonIndex = 0;
         }
         mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("CursorMove.ogg");
     } else if (key == SDLK_RETURN) {
         if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
             mButtons[mSelectedButtonIndex]->OnClick();
             SetSelectedButtonIndex(0);
         }
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("Confirm.ogg");
     } else if (key == SDLK_b) {
         mGame->PopUI();
         if (mGame->GetGamePlayState() == Game::GamePlayState::ChoosingAction) {
@@ -44,5 +54,8 @@ void ActionScreen::HandleKeyPress(int key) {
             mGame->GetSelectedUnit()->SetPosition(mGame->GetSelectedUnit()->GetOldPosition());
             SetSelectedButtonIndex(0);
         }
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("StatsClose.ogg");
     }
 }
