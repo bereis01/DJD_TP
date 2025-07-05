@@ -14,6 +14,27 @@ ActionScreen::ActionScreen(Game *game, const std::string &fontName)
               Vector2(5 * CHAR_WIDTH, WORD_HEIGHT));
     AddButton("Wait", screenPos + Vector2(25, 90), Vector2(100, 30), [this]() { mGame->GetSelectedUnit()->Wait(); },
               Vector2(4 * CHAR_WIDTH, WORD_HEIGHT));
+
+    // Controls
+    std::string controlsText = "Press [W, S] to navigate";
+    AddText(controlsText,
+            Vector2((screenPos.x + (screenSize.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (screenPos.y + screenSize.y + 5)), Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE);
+
+    controlsText = "Press [ENTER] to confirm";
+    AddText(controlsText,
+            Vector2((screenPos.x + (screenSize.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (screenPos.y + screenSize.y + 5 + 1.5 * WORD_HEIGHT)),
+            Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE);
+
+    controlsText = "Press [B] to return";
+    AddText(controlsText,
+            Vector2((screenPos.x + (screenSize.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (screenPos.y + screenSize.y + 5 + 3 * WORD_HEIGHT)),
+            Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE);
 }
 
 void ActionScreen::HandleKeyPress(int key) {

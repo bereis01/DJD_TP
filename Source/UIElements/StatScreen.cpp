@@ -61,6 +61,11 @@ StatScreen::StatScreen(class Game *game, const std::string &fontName)
                    POINT_SIZE);
 
     AddImage("../Assets/UI/WoodBackground.png", SCREEN_POS, SCREEN_SIZE);
+
+    // Controls
+    std::string controlsText = "Press [SPACE] to return";
+    AddText(controlsText, CONTROLS_POS + Vector2((SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2, 5),
+            Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT), POINT_SIZE);
 }
 
 void StatScreen::SetDisplayStats(class Unit *unit) {

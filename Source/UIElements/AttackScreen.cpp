@@ -25,6 +25,27 @@ AttackScreen::AttackScreen(class Game *game, const std::string &fontName)
     mEnCrit = AddText("0", CRIT_POS - STATS_HORIZONTAL_OFFSET, Vector2(CHAR_WIDTH * 1, WORD_HEIGHT), POINT_SIZE);
 
     AddImage("../Assets/UI/AttackScreenBackground.png", SCREEN_POS, SCREEN_SIZE);
+
+    // Controls
+    std::string controlsText = "Press [A, D] to change weapon";
+    AddText(controlsText,
+            Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5)), Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE, 2048);
+
+    controlsText = "Press [ENTER] to confirm";
+    AddText(controlsText,
+            Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 1.5 * WORD_HEIGHT)),
+            Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE);
+
+    controlsText = "Press [B] to return";
+    AddText(controlsText,
+            Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 3 * WORD_HEIGHT)),
+            Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+            POINT_SIZE);
 }
 
 void AttackScreen::SetDisplayStats(class Stats unitStats, class Stats enemyStats, class Weapon *unitWeapon,

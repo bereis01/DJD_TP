@@ -28,6 +28,8 @@ public:
     const Vector2 CRIT_POS = Vector2(20, 0) + SCREEN_POS + STATS_VERTICAL_OFFSET * 7;
     const Vector2 RNG_POS = Vector2(180, 0) + SCREEN_POS + STATS_VERTICAL_OFFSET * 7;
 
+    const Vector2 CONTROLS_POS = SCREEN_POS + STATS_VERTICAL_OFFSET * 8;
+
     StatScreen(Game *game, const std::string &fontName);
 
     void SetDisplayStats(class Unit *unit);
