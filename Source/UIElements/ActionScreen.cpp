@@ -5,14 +5,14 @@
 
 ActionScreen::ActionScreen(Game *game, const std::string &fontName)
     : UIScreen(game, fontName, true) {
-    const Vector2 screenSize = Vector2(100, 90);
+    const Vector2 screenSize = Vector2(110, 100);
     const Vector2 screenPos = Vector2(mGame->GetWindowWidth() - 250, 100);
     AddImage("../Assets/UI/PlainBackground.png", screenPos, screenSize);
-    AddButton("Attack", screenPos + Vector2(0, 0), Vector2(100, 30), [this]() { mGame->SetupAttack(); },
+    AddButton("Attack", screenPos + Vector2(5, 5), Vector2(100, 30), [this]() { mGame->SetupAttack(); },
               Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
-    AddButton("Items", screenPos + Vector2(0, 30), Vector2(100, 30), [this]() { mGame->ShowItems(); },
+    AddButton("Items", screenPos + Vector2(5, 35), Vector2(100, 30), [this]() { mGame->ShowItems(); },
               Vector2(5 * CHAR_WIDTH, WORD_HEIGHT));
-    AddButton("Wait", screenPos + Vector2(0, 60), Vector2(100, 30), [this]() { mGame->GetSelectedUnit()->Wait(); },
+    AddButton("Wait", screenPos + Vector2(5, 65), Vector2(100, 30), [this]() { mGame->GetSelectedUnit()->Wait(); },
               Vector2(4 * CHAR_WIDTH, WORD_HEIGHT));
 
     // Controls

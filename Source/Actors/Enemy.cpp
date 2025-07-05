@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Unit.h"
 #include "../Game.h"
+#include "../Audio/AudioSystem.h"
 
 Enemy::Enemy(Game *game, const std::string &unitType, Stats stats)
     : Unit(game, stats, true, unitType) {
@@ -93,6 +94,9 @@ void Enemy::OnUpdate(float deltaTime) {
                 distance--;
             }
             SetXY(selfX, selfY);
+
+            // Plays audio for movement
+            mGame->GetAudio()->PlaySound("CursorMove.ogg");
 
             // Restart timer
             mMovementTimer = MOVEMENT_TIMER;

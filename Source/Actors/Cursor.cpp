@@ -85,6 +85,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
 
                 // Plays select audio
                 mGame->GetAudio()->PlaySound("CursorSelect.ogg");
+            } else {
+                // Plays audio
+                mGame->GetAudio()->PlaySound("Error.ogg");
             }
         }
 
@@ -100,6 +103,9 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
 
                 // Plays audio
                 mGame->GetAudio()->PlaySound("StatsOpen.ogg");
+            } else {
+                // Plays audio
+                mGame->GetAudio()->PlaySound("Error.ogg");
             }
         }
 

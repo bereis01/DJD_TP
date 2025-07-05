@@ -195,6 +195,9 @@ void Unit::Attack(class Unit *target, bool isCounter) {
 
         // Shows damage particle
         mGame->GetParticleSystem()->CreateTextParticle(target->GetX(), target->GetY(), "MISS!");
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("Miss.ogg");
     }
 
     // Applies counter attack if applicable
