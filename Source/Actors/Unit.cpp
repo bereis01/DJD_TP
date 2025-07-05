@@ -1,3 +1,4 @@
+#include <queue>
 #include "Unit.h"
 #include "../Game.h"
 #include "../Audio/AudioSystem.h"
@@ -67,6 +68,7 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
     // Other parameters
     mDmgTaken = 0;
     mStats = stats;
+    mIsFlyer = false;
     mIsEnemy = isEnemy;
     mAvailable = true;
 }
@@ -136,6 +138,72 @@ void Unit::SetStats(Stats stats) {
 void Unit::ShowStats() {
     mGame->GetStatScreen()->SetDisplayStats(this);
     mGame->PushUI(mGame->GetStatScreen());
+}
+
+void Unit::SetMovementRange() {
+    std::queue<std::tuple<int, int>> front;
+    int y_size = mGame->LEVEL_WIDTH;
+    front.push(std::make_tuple(GetX(), 0));
+    front.push(std::make_tuple(GetY(), 0));
+    mMovementRange.insert(GetX() * y_size + GetY());
+    while (!front.empty())
+    {
+        int x = std::get<0>(front.front());
+        front.pop();
+        int y = std::get<0>(front.front());
+        int counter = std::get<1>(front.front());
+        front.pop();
+        if (counter >= mStats.mov) {
+            continue;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            int destX = 0;
+            int destY = 0;
+            if (i == 0) {
+                destX = x - 1;
+                destY = y;
+            } else if (i == 1) {
+                destX = x + 1;
+                destY = y;
+            } else if (i == 2) {
+                destX = x;
+                destY = y - 1;
+            } else if (i == 3) {
+                destX = x;
+                destY = y + 1;
+            }
+            std::unordered_set<int>::const_iterator got = mMovementRange.find(destX * y_size + destY);
+            if (got != mMovementRange.end()) {
+                continue;
+            }
+            int movX = abs(destX - GetX());
+            int movY = abs(destY - GetY());
+
+            bool isFree = false;
+            if ((mIsEnemy && mGame->GetAllyByPosition(destX, destY) == nullptr) || movX + movY == 0)
+                isFree = true;
+            if ((!mIsEnemy && mGame->GetEnemyByPosition(destX, destY) == nullptr) || movX + movY == 0)
+                isFree = true;
+
+            if (mIsFlyer && isFree && mGame->GetLevelData(destX, destY) != 2) {
+                front.push(std::make_tuple(destX, counter + 1));
+                front.push(std::make_tuple(destY, counter + 1));
+                mMovementRange.insert(destX * y_size + destY);
+            } else if (!mIsFlyer && isFree && mGame->GetLevelData(destX, destY) == 1) {
+                front.push(std::make_tuple(destX, counter + 1));
+                front.push(std::make_tuple(destY, counter + 1));
+                mMovementRange.insert(destX * y_size + destY);
+            }
+        }
+    }
+}
+
+bool Unit::MovementIsInRange(int x, int y) {
+    std::unordered_set<int>::const_iterator got = mMovementRange.find(x * mGame->LEVEL_WIDTH + y);
+    if (got != mMovementRange.end())
+        return true;
+    return false;
 }
 
 void Unit::Attack(class Unit *target, bool isCounter) {

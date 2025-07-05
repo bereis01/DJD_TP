@@ -79,6 +79,8 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
 
             // If there is a unit, selects it (to move it)
             if (unit != nullptr && unit->IsAvailable()) {
+                unit->ClearMovementRange();
+                unit->SetMovementRange();
                 mGame->SetGamePlayState(Game::GamePlayState::MovingUnit);
                 mGame->SetSelectedUnit(unit);
                 unit->SetOldPosition(unit->GetPosition());
@@ -149,17 +151,7 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
         if (key == SDLK_RETURN) {
             // Gets the selected unit
             Unit *unit = mGame->GetSelectedUnit();
-
-            // Calculates how many squares to move
-            int movX = abs(unit->GetX() - GetX());
-            int movY = abs(unit->GetY() - GetY());
-
-            // Checks if distance is under the permitted, if there is no unit there and if it can go there
-            if ((movX + movY <= unit->GetMovement() &&
-                 mGame->GetUnitByPosition(GetX(), GetY()) == nullptr &&
-                 mGame->GetLevelData(GetX(), GetY()) != 0) ||
-                (movX + movY == 0)) {
-                // Just moves it (TODO maybe animate later?)
+            if (unit->MovementIsInRange(GetX(), GetY())) {
                 unit->SetXY(GetX(), GetY());
 
                 // Moves the game to the action selection state

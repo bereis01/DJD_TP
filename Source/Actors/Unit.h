@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include <unordered_set>
 
 #include "Actor.h"
 #include "../Components/DrawComponents/DrawSpriteComponent.h"
@@ -73,6 +74,12 @@ public:
     // In-game actions
     void ShowStats();
 
+    void SetMovementRange();
+
+    void ClearMovementRange() {mMovementRange.clear();}
+
+    bool MovementIsInRange(int x, int y);
+
     void Attack(Unit *target, bool isCounter = false);
 
     void Wait();
@@ -101,7 +108,7 @@ protected:
     // Stats
     Stats mStats;
     int mDmgTaken;
-    // int mMovement;
+    bool mIsFlyer;
     Vector2 mOldPosition;
 
     // Weapons and itens
@@ -109,6 +116,7 @@ protected:
     std::vector<std::string> mItens;
 
     // Turn management
+    std::unordered_set<int> mMovementRange;
     bool mAvailable = true;
     bool mIsEnemy = true;
 
