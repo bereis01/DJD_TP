@@ -2,6 +2,7 @@
 #include "../Game.h"
 #include "../UIElements/UIText.h"
 #include "../Actors/Unit.h"
+#include "../Audio/AudioSystem.h"
 
 ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     : UIScreen(game, fontName, true) {
@@ -84,6 +85,7 @@ ItemScreen::~ItemScreen() {
 void ItemScreen::HandleKeyPress(int key) {
     if (!mInteractive)
         return;
+    // Navigation
     if (key == SDLK_w) {
         mButtons[mSelectedButtonIndex]->SetHighlighted(false);
         mSelectedButtonIndex--;
@@ -91,6 +93,9 @@ void ItemScreen::HandleKeyPress(int key) {
             mSelectedButtonIndex = mButtons.size() - 1;
         }
         mButtons[mSelectedButtonIndex]->SetHighlighted(true);
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("CursorMove.ogg");
     } else if (key == SDLK_s) {
         mButtons[mSelectedButtonIndex]->SetHighlighted(false);
         mSelectedButtonIndex++;
@@ -98,17 +103,30 @@ void ItemScreen::HandleKeyPress(int key) {
             mSelectedButtonIndex = 0;
         }
         mButtons[mSelectedButtonIndex]->SetHighlighted(true);
-    } else if (key == SDLK_RETURN) {
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("CursorMove.ogg");
+    }
+    // Selection
+    else if (key == SDLK_RETURN) {
         if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
             mButtons[mSelectedButtonIndex]->OnClick();
         }
-    } else if (key == SDLK_b) {
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("CursorSelect.ogg");
+    }
+    // Cancelling
+    else if (key == SDLK_b) {
         mGame->PopUI();
         if (mGame->GetGamePlayState() == Game::GamePlayState::OnInventory) {
             mGame->SetGamePlayState(Game::GamePlayState::ChoosingAction);
             SetSelectedButtonIndex(0);
             mGame->PushUI(mGame->GetActionScreen());
         }
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("Cancel.ogg");
     }
 }
 
