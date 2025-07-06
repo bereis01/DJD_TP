@@ -6,6 +6,10 @@ AnimatedParticle::AnimatedParticle(Game *game, const std::string &type, const Ve
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Effects/Death.png",
                                                    "../Assets/Sprites/Effects/Death.json", 300);
         mDrawComponent->AddAnimation("Default", {0, 1, 2, 3, 4});
+    } else if (type == "Heal") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Effects/Heal.png",
+                                                   "../Assets/Sprites/Effects/Heal.json", 300);
+        mDrawComponent->AddAnimation("Default", {0, 1, 2, 3});
     }
     mDrawComponent->SetAnimation("Default");
     mDrawComponent->SetAnimFPS(10.0f);

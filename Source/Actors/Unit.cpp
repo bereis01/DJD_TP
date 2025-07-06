@@ -309,8 +309,20 @@ void Unit::UseItem(const std::string &item) {
     if (mStats.currHp < mStats.hp) {
         if (item == "Healing potion") {
             mStats.currHp = std::min(mStats.currHp + 10, mStats.hp);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Heal.ogg");
+
+            // Plays visual effects
+            mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
         } else if (item == "Healing gem") {
             mStats.currHp = std::min(mStats.currHp + 20, mStats.hp);
+
+            // Plays audio
+            mGame->GetAudio()->PlaySound("Heal.ogg");
+
+            // Plays visual effects
+            mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
         }
         mAvailable = false;
         mGame->GetUIStack().pop_back();

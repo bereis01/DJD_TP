@@ -2,6 +2,7 @@
 #include "Unit.h"
 #include "../Game.h"
 #include "../Audio/AudioSystem.h"
+#include "../Effects/ParticleSystem.h"
 #include "../Utils/Random.h"
 
 Enemy::Enemy(Game *game, const std::string &unitType, Stats stats)
@@ -145,7 +146,12 @@ void Enemy::OnUpdate(float deltaTime) {
                     mStats.currHp += static_cast<int>(Math::Clamp(
                         Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
                         0.0f, static_cast<float>(mStats.hp)));
+
+                    // Plays audio
                     mGame->GetAudio()->PlaySound("Heal.ogg");
+
+                    // Plays visual effects
+                    mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
                 }
             } else {
                 if (Random::GetFloat() < 0.1f) {
@@ -155,6 +161,9 @@ void Enemy::OnUpdate(float deltaTime) {
 
                     // Plays audio
                     mGame->GetAudio()->PlaySound("Heal.ogg");
+
+                    // Plays visual effects
+                    mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
                 }
             }
 

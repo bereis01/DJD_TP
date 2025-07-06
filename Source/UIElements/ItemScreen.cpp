@@ -15,6 +15,8 @@ ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     CRIT_POS += DETAIL_SCREEN_POS;
     RNG_POS += DETAIL_SCREEN_POS;
     DESC_POS += DETAIL_SCREEN_POS;
+
+    AddText("WEAPONS", WEAPON_POS - Vector2::UnitY * 40, Vector2(CHAR_WIDTH * 7, WORD_HEIGHT), POINT_SIZE);
     AddButton("Weapon1", WEAPON_POS, Vector2(BUTTON_SIZE, 30), nullptr,
               Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
     AddButton("Weapon2", WEAPON_POS + VERTICAL_OFFSET, Vector2(BUTTON_SIZE, 30), nullptr,
@@ -24,7 +26,7 @@ ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     AddButton("Weapon4", WEAPON_POS + VERTICAL_OFFSET * 3, Vector2(BUTTON_SIZE, 30), nullptr,
               Vector2(4 * CHAR_WIDTH, WORD_HEIGHT));
 
-    AddText("ITENS", ITEM_POS - Vector2::UnitY * 40, Vector2(CHAR_WIDTH * 5, WORD_HEIGHT), POINT_SIZE);
+    AddText("ITEMS", ITEM_POS - Vector2::UnitY * 40, Vector2(CHAR_WIDTH * 5, WORD_HEIGHT), POINT_SIZE);
     AddButton("Item1", ITEM_POS, Vector2(BUTTON_SIZE, 30), nullptr,
               Vector2(4 * CHAR_WIDTH, WORD_HEIGHT));
     AddButton("Item2", ITEM_POS + VERTICAL_OFFSET, Vector2(BUTTON_SIZE, 30), nullptr,
@@ -51,7 +53,7 @@ ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     mDescription = AddText("Item description", DESC_POS, Vector2(CHAR_WIDTH * 16, WORD_HEIGHT),
                            POINT_SIZE);
 
-    AddImage("../Assets/UI/PlainBackground.png", SCREEN_POS, SCREEN_SIZE);
+    AddImage("../Assets/UI/PlainBackground.png", SCREEN_POS - Vector2(0, 50), SCREEN_SIZE);
     mDetais = AddImage("../Assets/UI/PlainBackground.png", DETAIL_SCREEN_POS, DETAIL_SCREEN_SIZE);
     mUnit = nullptr;
     mNumWeapons = 0;
@@ -61,20 +63,20 @@ ItemScreen::ItemScreen(class Game *game, const std::string &fontName)
     std::string controlsText = "Press [W, S] to choose item";
     AddText(controlsText,
             Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
-                    (SCREEN_POS.y + SCREEN_SIZE.y + 5)), Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 - 50)), Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
             POINT_SIZE, 2048);
 
     controlsText = "Press [ENTER] to confirm";
     AddText(controlsText,
             Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
-                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 1.5 * WORD_HEIGHT)),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 1.5 * WORD_HEIGHT - 50)),
             Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
             POINT_SIZE);
 
     controlsText = "Press [B] to return";
     AddText(controlsText,
             Vector2((SCREEN_POS.x + (SCREEN_SIZE.x - (controlsText.size() * CHAR_WIDTH)) / 2),
-                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 3 * WORD_HEIGHT)),
+                    (SCREEN_POS.y + SCREEN_SIZE.y + 5 + 3 * WORD_HEIGHT - 50)),
             Vector2(CHAR_WIDTH * controlsText.size(), WORD_HEIGHT),
             POINT_SIZE);
 }

@@ -11,7 +11,7 @@ public:
     const int WORD_OFFSET = 5.0f;
     const Vector2 VERTICAL_OFFSET = Vector2(0, 42.0f);
     Vector2 SCREEN_POS = Vector2(250, 100);
-    const Vector2 SCREEN_SIZE = Vector2(220, 360);
+    const Vector2 SCREEN_SIZE = Vector2(220, 410);
     Vector2 DETAIL_SCREEN_POS = Vector2(300, 50);
     const Vector2 DETAIL_SCREEN_SIZE = Vector2(240, 88);
 
