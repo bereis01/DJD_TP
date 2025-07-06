@@ -43,6 +43,7 @@ public:
         LevelComplete,
         LevelFailed,
         Shopping,
+        // DoneShopping,
     };
 
     static const int LEVEL_WIDTH = 30; // In tiles

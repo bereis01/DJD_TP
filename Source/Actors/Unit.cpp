@@ -185,7 +185,8 @@ void Unit::SetMovementRange() {
                 isFree = true;
             if ((!mIsEnemy && mGame->GetEnemyByPosition(destX, destY) == nullptr) || movX + movY == 0)
                 isFree = true;
-
+            if (destX >= mGame->LEVEL_HEIGHT || destY >= mGame->LEVEL_WIDTH)
+                continue;
             if (mIsFlyer && isFree && mGame->GetLevelData(destX, destY) != 2) {
                 front.push(std::make_tuple(destX, counter + 1));
                 front.push(std::make_tuple(destY, counter + 1));

@@ -686,6 +686,7 @@ void Game::ChangeScene() {
         mPegasusKnight->SetStats(s);
         mPegasusKnight->AddWeapon(w);
         mPegasusKnight->SetFlyer(true);
+        mPegasusKnight->AddItem("Healing gem");
         mUnits.emplace_back(mPegasusKnight);
 
         s = Stats("Hubert", 20, 20, 3, 10, 10, 8, 3, 11, 5);
@@ -694,6 +695,7 @@ void Game::ChangeScene() {
         mMage->SetXY(21, 12);
         mMage->SetStats(s);
         mMage->AddWeapon(w);
+        mMage->AddItem("Healing potion");
         mUnits.emplace_back(mMage);
 
         s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 10, 5, 5);
@@ -702,18 +704,22 @@ void Game::ChangeScene() {
         mWarrior->SetXY(21, 17);
         mWarrior->SetStats(s);
         mWarrior->AddWeapon(w);
+        mWarrior->AddItem("Healing potion");
+        mWarrior->AddItem("Healing gem");
         mUnits.emplace_back(mWarrior);
 
         // Loads enemies
         Stats ss = Stats("Orc", 20, 20, 8, 4, 6, 6, 3, 0, 4);
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 1; i++) {
             Enemy *enemy = new Enemy(this, "Orc", ss);
             w = new Weapon("Iron Sword", 90, 6, 0, 1);
             enemy->SetStats(ss);
             enemy->AddWeapon(w);
             mEnemies.emplace_back(enemy);
         }
-        mEnemies[0]->SetXY(6, 12);
+        mEnemies[0]->SetXY(19, 16);
+        mEnemies[0]->SetCurrentHp(1);
+        /*
         mEnemies[1]->SetXY(6, 13);
         mEnemies[2]->SetXY(13, 13);
         mEnemies[3]->SetXY(13, 10);
@@ -726,31 +732,7 @@ void Game::ChangeScene() {
         mEnemies[10]->SetXY(17, 17);
         mEnemies[11]->SetXY(15, 20);
         mEnemies[11]->SetXY(16, 21);
-/*
-        ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
-        w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy2 = new Enemy(this, "Orc", ss);
-        enemy2->SetXY(15, 13);
-        enemy2->SetStats(ss);
-        enemy2->AddWeapon(w);
-        mEnemies.emplace_back(enemy2);
-
-        ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
-        w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy3 = new Enemy(this, "Orc", ss);
-        enemy3->SetXY(13, 15);
-        enemy3->SetStats(ss);
-        enemy3->AddWeapon(w);
-        mEnemies.emplace_back(enemy3);
-
-        ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
-        w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy4 = new Enemy(this, "Orc", ss);
-        enemy4->SetXY(13, 13);
-        enemy4->SetStats(ss);
-        enemy4->AddWeapon(w);
-        mEnemies.emplace_back(enemy4);
-*/
+        */
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");
 
@@ -770,7 +752,7 @@ void Game::ChangeScene() {
         // Shows title
         mParticleSystem->CreateTitleParticle("Level1");
     } else if (mNextScene == GameScene::Level2) {
-        mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
+        mLevelData = LoadLevel("../Assets/Levels/Level2_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
         // Checks if loading was successful and builds the level
         if (mLevelData == nullptr) {
@@ -783,20 +765,54 @@ void Game::ChangeScene() {
             unit->SetCurrentHp(unit->GetStats().hp);
         }
 
-        Stats ss = Stats("Enemy2", 1, 1, 8, 4, 6, 6, 3, 0, 4);
-        Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy = new Enemy(this, "Orc", ss);
-        enemy->SetXY(18, 7);
-        enemy->SetStats(ss);
-        enemy->AddWeapon(w);
-        mEnemies.emplace_back(enemy);
+        Weapon *w = nullptr;
+        Stats ss = Stats("Orc", 20, 20, 8, 4, 6, 6, 3, 0, 4);
+        for (int i = 0; i < 27; i++) {
+            Enemy *enemy = new Enemy(this, "Orc", ss);
+            w = new Weapon("Iron Sword", 90, 6, 0, 1);
+            enemy->SetStats(ss);
+            enemy->AddWeapon(w);
+            mEnemies.emplace_back(enemy);
+        }
+        mEnemies[0]->SetXY(1, 11); // Boss, need to adjust stats
+        mEnemies[1]->SetXY(1, 12);
+        mEnemies[2]->SetXY(2, 11);
+        mEnemies[3]->SetXY(2, 16);
+        mEnemies[4]->SetXY(6, 8);
+        mEnemies[5]->SetXY(5, 9);
+        mEnemies[6]->SetXY(4, 20);
+        mEnemies[7]->SetXY(7, 20);
+        mEnemies[8]->SetXY(7, 21);
+        mEnemies[9]->SetXY(7, 22);
+        mEnemies[10]->SetXY(9, 9);
+        mEnemies[11]->SetXY(10, 8);
+        mEnemies[12]->SetXY(11, 12);
+        mEnemies[13]->SetXY(12, 12);
+        mEnemies[14]->SetXY(11, 17);
+        mEnemies[15]->SetXY(17, 15);
+        mEnemies[16]->SetXY(19, 14);
+        mEnemies[17]->SetXY(19, 13);
+        mEnemies[18]->SetXY(20, 13);
+        mEnemies[19]->SetXY(14, 21);
+        mEnemies[20]->SetXY(15, 22);
+        mEnemies[21]->SetXY(24, 7);
+        mEnemies[22]->SetXY(24, 8);
+        mEnemies[23]->SetXY(27, 15);
+        mEnemies[24]->SetXY(28, 14);
+        mEnemies[25]->SetXY(23, 20);
+        mEnemies[26]->SetXY(19, 21);
 
-        mCursor->SetXY(20, 8);
-        mCameraPos = Vector2(64, 160);
-        mBackground = LoadTexture("../Assets/Levels/Level1.png");
+        mTrueblade->SetXY(27, 22);
+        mPegasusKnight->SetXY(28, 21);
+        mWarrior->SetXY(27, 21);
+        mMage->SetXY(28, 22);
+        mCursor->SetXY(27, 22);
+        mCameraPos = Vector2(64, 128);
+        mBackground = LoadTexture("../Assets/Levels/Level2.png");
 
         // Sets game state
         SetGamePlayState(GamePlayState::Map);
+        mParticleSystem->CreateTitleParticle("Level2");
     }
 
     // Set new scene
