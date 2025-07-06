@@ -69,6 +69,18 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
         mDrawComponent->AddAnimation("Death", {8, 9, 6, 7});
+    } else if (unitType == "Skeleton") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Skeleton.png",
+                                                   "../Assets/Sprites/Units/Enemies/Skeleton.json", 200);
+        mDrawComponent->AddAnimation("Idle", {17, 18, 19, 20, 21, 22});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5, 6, 7, 8});
+        mDrawComponent->AddAnimation("Hurt", {13, 14, 15, 16});
+    } else if (unitType == "Boss") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Boss.png",
+                                                   "../Assets/Sprites/Units/Enemies/Boss.json", 200);
+        mDrawComponent->AddAnimation("Idle", {14, 15, 16, 17, 18, 19});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
+        mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
     }
     mDrawComponent->SetAnimation("Idle");
     mDrawComponent->SetAnimFPS(10.0f);
@@ -119,6 +131,10 @@ void Unit::PlayAnimation(const std::string &animName, float timer) {
             mGame->GetAudio()->PlaySound("PegasusHit.ogg");
         else if (mUnitType == "Orc")
             mGame->GetAudio()->PlaySound("OrcHit.ogg");
+        else if (mUnitType == "Skeleton")
+            mGame->GetAudio()->PlaySound("SkeletonHit.ogg");
+        else if (mUnitType == "Boss")
+            mGame->GetAudio()->PlaySound("BossHit.ogg");
     } else if (animName == "Hurt") {
         // Sets animation
         mDrawComponent->SetAnimation("Hurt");

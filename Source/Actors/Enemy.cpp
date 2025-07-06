@@ -80,24 +80,58 @@ void Enemy::OnUpdate(float deltaTime) {
                 int targetY = selfY;
                 SetMovementRange();
 
-                // Moves the most it can in X and Y directions
-                while (true) {
-                    // Sanity checks
-                    if (targetX + directionX >= Game::LEVEL_HEIGHT)
-                        break;
-                    if (!MovementIsInRange(targetX + directionX, targetY))
-                        break;
+                // Different enemies have different patterns
+                if (mUnitType == "Orc") {
+                    // Moves the most it can in X and Y directions
+                    while (true) {
+                        // Sanity checks
+                        if (targetX + directionX >= Game::LEVEL_HEIGHT)
+                            break;
+                        if (!MovementIsInRange(targetX + directionX, targetY))
+                            break;
 
-                    targetX += directionX;
-                }
-                while (true) {
-                    // Sanity checks
-                    if (targetY + directionY >= Game::LEVEL_WIDTH)
-                        break;
-                    if (!MovementIsInRange(targetX, targetY + directionY))
-                        break;
+                        targetX += directionX;
+                    }
+                    while (true) {
+                        // Sanity checks
+                        if (targetY + directionY >= Game::LEVEL_WIDTH)
+                            break;
+                        if (!MovementIsInRange(targetX, targetY + directionY))
+                            break;
 
-                    targetY += directionY;
+                        targetY += directionY;
+                    }
+                } else if (mUnitType == "Skeleton") {
+                    // Moves just one tile to each direction
+                    // Sanity checks
+                    if (!(targetX + directionX >= Game::LEVEL_HEIGHT))
+                        if (MovementIsInRange(targetX + directionX, targetY))
+                            targetX += directionX;
+                    if (!(targetY + directionY >= Game::LEVEL_WIDTH))
+                        if (!MovementIsInRange(targetX, targetY + directionY))
+                            targetY += directionY;
+                } else if (mUnitType == "Boss") {
+                    // Moves randomly a certain amount of times
+                    int movementX = Random::GetIntRange(1, static_cast<int>((static_cast<float>(mStats.mov) + 1) / 2));
+                    for (int i = 0; i < movementX; i++) {
+                        // Sanity checks
+                        if (targetX + directionX >= Game::LEVEL_HEIGHT)
+                            break;
+                        if (!MovementIsInRange(targetX + directionX, targetY))
+                            break;
+
+                        targetX += directionX;
+                    }
+                    int movementY = Random::GetIntRange(1, static_cast<int>((static_cast<float>(mStats.mov) + 1) / 2));
+                    for (int i = 0; i < movementY; i++) {
+                        // Sanity checks
+                        if (targetY + directionY >= Game::LEVEL_WIDTH)
+                            break;
+                        if (!MovementIsInRange(targetX, targetY + directionY))
+                            break;
+
+                        targetY += directionY;
+                    }
                 }
 
                 // Sets the enemy to new position
@@ -141,8 +175,11 @@ void Enemy::OnUpdate(float deltaTime) {
     } else if (mEnemyState == EnemyState::Waiting) {
         if (mWaitTimer <= 0) {
             // Heals with a probability
+            float chanceHeal = mUnitType == "Boss" ? 0.25f : 0.1f;
+            float chanceHealLow = mUnitType == "Boss" ? 0.75f : 0.5f;
+
             if (static_cast<float>(mStats.currHp) < 0.25f * static_cast<float>(mStats.hp)) {
-                if (Random::GetFloat() < 0.5f) {
+                if (Random::GetFloat() < chanceHealLow) {
                     mStats.currHp += static_cast<int>(Math::Clamp(
                         Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
                         0.0f, static_cast<float>(mStats.hp)));
@@ -154,7 +191,7 @@ void Enemy::OnUpdate(float deltaTime) {
                     mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
                 }
             } else {
-                if (Random::GetFloat() < 0.1f) {
+                if (Random::GetFloat() < chanceHeal) {
                     mStats.currHp += static_cast<int>(Math::Clamp(
                         Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
                         0.0f, static_cast<float>(mStats.hp)));
