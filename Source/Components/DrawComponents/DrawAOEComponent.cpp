@@ -3,11 +3,12 @@
 #include "../../Game.h"
 #include "../../Actors/Unit.h"
 
-DrawAOEComponent::DrawAOEComponent(Unit *owner, Vector2 pos, int radius, int drawOrder)
+DrawAOEComponent::DrawAOEComponent(Unit *owner, const std::string &type, Vector2 pos, int radius, int drawOrder)
     : DrawComponent(owner, drawOrder)
       , mPosition(pos)
       , mRadius(radius)
-      , mUnit(owner) {
+      , mUnit(owner)
+      , mType(type) {
 }
 
 void DrawAOEComponent::Draw(SDL_Renderer *renderer) {
@@ -26,42 +27,55 @@ void DrawAOEComponent::Draw(SDL_Renderer *renderer) {
                           static_cast<int>((ownerPos.y + mPosition.y - cameraPos.y) / Game::TILE_SIZE));
 
     // Algorithm that traverses all the tiles in radius manhattan distance
-    for (int radius = 1; radius <= mRadius; radius++) {
-        for (int offset = 0; offset < radius; offset++) {
-            int invOffset = radius - offset;
+    if (mType == "Attack") {
+        for (int radius = 1; radius <= mRadius; radius++) {
+            for (int offset = 0; offset < radius; offset++) {
+                int invOffset = radius - offset;
 
-            // Draws the tiles
-            int x = pos.x + offset;
-            int y = pos.y + invOffset;
-            if (mUnit->MovementIsInRange(x, y)) {
+                // Draws the tiles
+                int x = pos.x + offset;
+                int y = pos.y + invOffset;
                 SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
                 SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
                 SDL_RenderFillRect(renderer, &fillRect);
-            }
 
-            x = pos.x + invOffset;
-            y = pos.y - offset;
-            if (mUnit->MovementIsInRange(x, y)) {
-                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                x = pos.x + invOffset;
+                y = pos.y - offset;
+                fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+
+                x = pos.x - offset;
+                y = pos.y - invOffset;
+                fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+
+                x = pos.x - invOffset;
+                y = pos.y + offset;
+                fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
                 SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
                 SDL_RenderFillRect(renderer, &fillRect);
             }
+        }
+    } else if (mType == "Movement") {
+        auto tiles = mUnit->GetMovementRange();
+        for (auto tile: tiles) {
+            // Gets camera pos
+            Vector2 cameraPos = mOwner->GetGame()->GetCameraPos();
 
-            x = pos.x - offset;
-            y = pos.y - invOffset;
-            if (mUnit->MovementIsInRange(x, y)) {
-                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-                SDL_RenderFillRect(renderer, &fillRect);
-            }
+            // Calculates x and y coordinates
+            int x = int(tile / 30);
+            int y = tile % 30;
 
-            x = pos.x - invOffset;
-            y = pos.y + offset;
-            if (mUnit->MovementIsInRange(x, y)) {
-                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-                SDL_RenderFillRect(renderer, &fillRect);
-            }
+            // Draws the square
+            SDL_Rect fillRect = {
+                static_cast<int>(y * Game::TILE_SIZE - cameraPos.x),
+                static_cast<int>(x * Game::TILE_SIZE - cameraPos.y),
+                Game::TILE_SIZE, Game::TILE_SIZE
+            };
+            SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+            SDL_RenderFillRect(renderer, &fillRect);
         }
     }
 }

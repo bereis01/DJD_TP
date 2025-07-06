@@ -4,7 +4,7 @@
 class DrawAOEComponent : public DrawComponent {
 public:
     // (Lower draw order corresponds with further back)
-    DrawAOEComponent(Unit *owner, Vector2 pos, int radius, int drawOrder = 100);
+    DrawAOEComponent(Unit *owner, const std::string &type, Vector2 pos, int radius, int drawOrder = 100);
 
     void SetColor(Vector3 color) { mColor = color; }
     void SetAlpha(int alpha) { mAlpha = alpha; }
@@ -21,4 +21,5 @@ protected:
     int mAlpha = 50;
 
     Unit *mUnit;
+    std::string mType;
 };

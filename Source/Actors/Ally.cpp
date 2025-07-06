@@ -3,9 +3,9 @@
 Ally::Ally(Game *game, const std::string &unitType, Stats stats)
     : Unit(game, stats, false, unitType) {
     // Components to draw the AOE when moving/attacking
-    mMovementAOE = new DrawAOEComponent(this, Vector2::Zero, stats.mov, 200);
+    mMovementAOE = new DrawAOEComponent(this, "Movement", Vector2::Zero, stats.mov, 200);
     mMovementAOE->SetColor(Vector3(0, 0.0f, 255.0f));
-    mAttackAOE = new DrawAOEComponent(this, Vector2::Zero, 0, 200);
+    mAttackAOE = new DrawAOEComponent(this, "Attack", Vector2::Zero, 0, 200);
     mAttackAOE->SetColor(Vector3(255.0f, 255.0f, 0.0f));
 
     // Draws the colored square where the ally is

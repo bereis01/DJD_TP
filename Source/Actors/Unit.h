@@ -76,9 +76,11 @@ public:
 
     void SetMovementRange();
 
-    void ClearMovementRange() {mMovementRange.clear();}
+    void ClearMovementRange() { mMovementRange.clear(); }
 
     bool MovementIsInRange(int x, int y);
+
+    std::unordered_set<int> GetMovementRange() { return mMovementRange; }
 
     void Attack(Unit *target, bool isCounter = false);
 
@@ -90,7 +92,7 @@ public:
     bool IsAvailable() { return mAvailable; }
     bool IsEnemy() { return mIsEnemy; }
     void SetAvailable(bool available) { mAvailable = available; }
-    void SetFlyer(bool f) {mIsFlyer = f; }
+    void SetFlyer(bool f) { mIsFlyer = f; }
 
     // Update function
     void OnUpdate(float deltaTime);
