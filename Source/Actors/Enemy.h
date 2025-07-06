@@ -15,9 +15,9 @@ public:
         Dead
     };
 
-    const float MOVEMENT_TIMER = 0.5f;
-    const float ATTACK_TIMER = 0.5f;
-    const float WAIT_TIMER = 0.0f;
+    const float MOVEMENT_TIMER = 0.5f; // Before moving
+    const float ATTACK_TIMER = 0.5f; // After moving, before attacking
+    const float WAIT_TIMER = 0.0f; // After attacking, before next enemy
 
     Enemy(Game *game, const std::string &unitType, Stats stats);
 

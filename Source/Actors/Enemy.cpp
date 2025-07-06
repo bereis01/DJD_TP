@@ -2,6 +2,7 @@
 #include "Unit.h"
 #include "../Game.h"
 #include "../Audio/AudioSystem.h"
+#include "../Utils/Random.h"
 
 Enemy::Enemy(Game *game, const std::string &unitType, Stats stats)
     : Unit(game, stats, true, unitType) {
@@ -38,10 +39,11 @@ void Enemy::OnUpdate(float deltaTime) {
     // State machine to control actions
     if (mEnemyState == EnemyState::Moving) {
         if (mMovementTimer <= 0) {
-            // Gets the closest unit and its position
+            // Self position
             int selfX = GetX();
             int selfY = GetY();
 
+            // Gets the closest unit and its position
             Vector2 closestPos = Vector2::Zero;
             auto units = mGame->GetUnits();
             for (auto unit: units) {
@@ -56,44 +58,50 @@ void Enemy::OnUpdate(float deltaTime) {
                 }
             }
 
-            // Moves the enemy towards the closest unit
-            // Assumes that the arena is convex
-            int distance = Math::Abs(closestPos.x - selfX) + Math::Abs(closestPos.y - selfY);
-            if (distance > mStats.mov) // Trims the distance to movement stat
-                distance = mStats.mov;
-            if (GetEquippedWeapon()) // Does not move if in attack range
-                if (distance <= GetEquippedWeapon()->range)
-                    distance = 0;
-            // Alternates moving between X and Y for the value of the distance
-            while (distance > 0) {
-                if (distance % 2 == 0) {
-                    if ((closestPos.x - selfX) > 0) {
-                        // Only goes to the direction if there is no unit and if it is valid
-                        if (mGame->GetUnitByPosition(selfX + 1, selfY) == nullptr && mGame->GetLevelData(
-                                selfX + 1, selfY) != 0)
-                            selfX += 1;
-                    } else {
-                        // Only goes to the direction if there is no unit and if it is valid
-                        if (mGame->GetUnitByPosition(selfX - 1, selfY) == nullptr && mGame->GetLevelData(
-                                selfX - 1, selfY) != 0)
-                            selfX -= 1;
-                    }
-                } else {
-                    if ((closestPos.y - selfY) > 0) {
-                        // Only goes to the direction if there is no unit and if it is valid
-                        if (mGame->GetUnitByPosition(selfX, selfY + 1) == nullptr && mGame->GetLevelData(
-                                selfX, selfY + 1) != 0)
-                            selfY += 1;
-                    } else {
-                        // Only goes to the direction if there is no unit and if it is valid
-                        if (mGame->GetUnitByPosition(selfX, selfY - 1) == nullptr && mGame->GetLevelData(
-                                selfX, selfY - 1) != 0)
-                            selfY -= 1;
-                    }
-                }
-                distance--;
+            // Calculates distance to the closest unit
+            int distanceX = Math::Abs(closestPos.x - selfX);
+            int distanceY = Math::Abs(closestPos.y - selfY);
+            int directionX = distanceX != 0 ? (closestPos.x - selfX) / Math::Abs(closestPos.x - selfX) : 1;
+            int directionY = distanceY != 0 ? (closestPos.y - selfY) / Math::Abs(closestPos.y - selfY) : 1;
+
+            // If low hp, moves away from units
+            bool lowHP = false;
+            if (static_cast<float>(mStats.currHp) < 0.25f * static_cast<float>(mStats.hp)) {
+                directionX *= -1;
+                directionY *= -1;
+                lowHP = true;
             }
-            SetXY(selfX, selfY);
+
+            // Moves the enemy towards the closest unit if not in attack range of weapon
+            if ((distanceX + distanceY) > GetEquippedWeapon()->range || lowHP) {
+                // Auxiliary declarations/calls
+                int targetX = selfX;
+                int targetY = selfY;
+                SetMovementRange();
+
+                // Moves the most it can in X and Y directions
+                while (true) {
+                    // Sanity checks
+                    if (targetX + directionX >= Game::LEVEL_HEIGHT)
+                        break;
+                    if (!MovementIsInRange(targetX + directionX, targetY))
+                        break;
+
+                    targetX += directionX;
+                }
+                while (true) {
+                    // Sanity checks
+                    if (targetY + directionY >= Game::LEVEL_WIDTH)
+                        break;
+                    if (!MovementIsInRange(targetX, targetY + directionY))
+                        break;
+
+                    targetY += directionY;
+                }
+
+                // Sets the enemy to new position
+                SetXY(targetX, targetY);
+            }
 
             // Plays audio for movement
             mGame->GetAudio()->PlaySound("CursorMove.ogg");
@@ -131,6 +139,25 @@ void Enemy::OnUpdate(float deltaTime) {
             mAttackTimer -= deltaTime;
     } else if (mEnemyState == EnemyState::Waiting) {
         if (mWaitTimer <= 0) {
+            // Heals with a probability
+            if (static_cast<float>(mStats.currHp) < 0.25f * static_cast<float>(mStats.hp)) {
+                if (Random::GetFloat() < 0.5f) {
+                    mStats.currHp += static_cast<int>(Math::Clamp(
+                        Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
+                        0.0f, static_cast<float>(mStats.hp)));
+                    mGame->GetAudio()->PlaySound("Heal.ogg");
+                }
+            } else {
+                if (Random::GetFloat() < 0.1f) {
+                    mStats.currHp += static_cast<int>(Math::Clamp(
+                        Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
+                        0.0f, static_cast<float>(mStats.hp)));
+
+                    // Plays audio
+                    mGame->GetAudio()->PlaySound("Heal.ogg");
+                }
+            }
+
             // Restart timer
             mWaitTimer = WAIT_TIMER;
 
