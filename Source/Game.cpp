@@ -738,6 +738,7 @@ void Game::ChangeScene() {
         mEnemies[11]->SetXY(15, 20);
         mEnemies[11]->SetXY(16, 21);
         */
+
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");
 
@@ -757,6 +758,7 @@ void Game::ChangeScene() {
         // Shows title
         mParticleSystem->CreateTitleParticle("Level1");
     } else if (mNextScene == GameScene::Level2) {
+        // Loads first level
         mLevelData = LoadLevel("../Assets/Levels/Level2_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
         // Checks if loading was successful and builds the level
@@ -765,11 +767,23 @@ void Game::ChangeScene() {
             return;
         }
 
+        // Adjusts cursor
+        mCursor->SetXY(27, 22);
+
+        // Adjusts camera
+        mCameraPos = Vector2(64, 128);
+
+        // Reloads units from last level
         for (auto unit: mUnits) {
             unit->SetAvailable(true);
             unit->SetCurrentHp(unit->GetStats().hp);
         }
+        mTrueblade->SetXY(27, 22);
+        mPegasusKnight->SetXY(28, 21);
+        mWarrior->SetXY(27, 21);
+        mMage->SetXY(28, 22);
 
+        // Loads enemies
         Weapon *w = nullptr;
         Stats ss = Stats("Orc", 20, 20, 8, 4, 6, 6, 3, 0, 4);
         for (int i = 0; i < 27; i++) {
@@ -807,17 +821,20 @@ void Game::ChangeScene() {
         mEnemies[25]->SetXY(23, 20);
         mEnemies[26]->SetXY(19, 21);
 
-        mTrueblade->SetXY(27, 22);
-        mPegasusKnight->SetXY(28, 21);
-        mWarrior->SetXY(27, 21);
-        mMage->SetXY(28, 22);
-        mCursor->SetXY(27, 22);
-        mCameraPos = Vector2(64, 128);
+        // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level2.png");
 
         // Sets game state
         SetGamePlayState(GamePlayState::Map);
-        mParticleSystem->CreateTitleParticle("Level2");
+
+        // Loads HUD
+        PushUI(mTurnScreen);
+
+        // Plays music
+        mMusic = mAudio->PlaySound("Level1.ogg", true);
+
+        // Shows title
+        mParticleSystem->CreateTitleParticle("Level1");
     }
 
     // Set new scene
