@@ -1,11 +1,13 @@
 #include "DrawAOEComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
+#include "../../Actors/Unit.h"
 
-DrawAOEComponent::DrawAOEComponent(Actor *owner, Vector2 pos, int radius, int drawOrder)
+DrawAOEComponent::DrawAOEComponent(Unit *owner, Vector2 pos, int radius, int drawOrder)
     : DrawComponent(owner, drawOrder)
       , mPosition(pos)
-      , mRadius(radius) {
+      , mRadius(radius)
+      , mUnit(owner) {
 }
 
 void DrawAOEComponent::Draw(SDL_Renderer *renderer) {
@@ -31,27 +33,35 @@ void DrawAOEComponent::Draw(SDL_Renderer *renderer) {
             // Draws the tiles
             int x = pos.x + offset;
             int y = pos.y + invOffset;
-            SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-            SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-            SDL_RenderFillRect(renderer, &fillRect);
+            if (mUnit->MovementIsInRange(x, y)) {
+                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+            }
 
             x = pos.x + invOffset;
             y = pos.y - offset;
-            fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-            SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-            SDL_RenderFillRect(renderer, &fillRect);
+            if (mUnit->MovementIsInRange(x, y)) {
+                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+            }
 
             x = pos.x - offset;
             y = pos.y - invOffset;
-            fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-            SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-            SDL_RenderFillRect(renderer, &fillRect);
+            if (mUnit->MovementIsInRange(x, y)) {
+                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+            }
 
             x = pos.x - invOffset;
             y = pos.y + offset;
-            fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
-            SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
-            SDL_RenderFillRect(renderer, &fillRect);
+            if (mUnit->MovementIsInRange(x, y)) {
+                SDL_Rect fillRect = {x * Game::TILE_SIZE, y * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE};
+                SDL_SetRenderDrawColor(renderer, mColor.x, mColor.y, mColor.z, mAlpha); // 2nd line of code in question
+                SDL_RenderFillRect(renderer, &fillRect);
+            }
         }
     }
 }
