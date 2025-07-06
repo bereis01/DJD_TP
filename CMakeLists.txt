@@ -60,8 +60,6 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/ActionScreen.h
         Source/UIElements/TurnScreen.cpp
         Source/UIElements/TurnScreen.h
-        Source/UIElements/MainMenu.cpp
-        Source/UIElements/MainMenu.h
         Source/Actors/Enemy.cpp
         Source/Actors/Enemy.h
         Source/Actors/Ally.cpp
