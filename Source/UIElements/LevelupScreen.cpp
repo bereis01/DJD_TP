@@ -70,8 +70,12 @@ LevelupScreen::~LevelupScreen() {
 }
 
 void LevelupScreen::HandleKeyPress(int key) {
+    // Corner cases
+    if (mGame->GetSceneManagerState() == Game::SceneManagerState::Exiting)
+        return;
     if (!mInteractive)
         return;
+
     // Navigation
     if (key == SDLK_a) {
         mButtons[mSelectedButtonIndex]->SetHighlighted(false);
@@ -243,6 +247,9 @@ void LevelupScreen::Upgrade() {
     }
     if (isOver) {
         mGame->SetGameScene(Game::GameScene::Level2);
+
+        // Plays audio
+        mGame->GetAudio()->PlaySound("Finish.ogg");
     }
 }
 

@@ -1,8 +1,8 @@
 #include "MenuScreen.h"
 #include "../Audio/AudioSystem.h"
 
-MenuScreen::MenuScreen(Game *game, const std::string &fontName, SoundHandle handle)
-    : UIScreen(game, fontName, true), mMusicHandle(handle) {
+MenuScreen::MenuScreen(Game *game, const std::string &fontName)
+    : UIScreen(game, fontName, true) {
 }
 
 void MenuScreen::Update(float deltaTime) {
@@ -60,10 +60,7 @@ void MenuScreen::HandleKeyPress(int key) {
             SetSelectedButtonIndex(0);
         }
 
-        // Stops menu music
-        mGame->GetAudio()->StopSound(mMusicHandle);
-
         // Plays audio
-        mGame->GetAudio()->PlaySound("Confirm.ogg");
+        mGame->GetAudio()->PlaySound("Start.ogg");
     }
 }

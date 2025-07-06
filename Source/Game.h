@@ -12,6 +12,7 @@
 #include "UIElements/ShopScreen.h"
 #include "UIElements/LevelupScreen.h"
 #include "Utils/Math.h"
+#include "Audio/AudioSystem.h"
 
 class Game {
 public:
@@ -163,6 +164,8 @@ public:
     void SetGamePlayState(GamePlayState state) { mGamePlayState = state; }
     GamePlayState GetGamePlayState() const { return mGamePlayState; }
 
+    SceneManagerState GetSceneManagerState() const { return mSceneManagerState; }
+
     // Particle system
     class ParticleSystem *GetParticleSystem() { return mParticleSystem; }
 
@@ -275,4 +278,5 @@ private:
 
     // Audio
     AudioSystem *mAudio = nullptr;
+    SoundHandle mMusic;
 };

@@ -183,6 +183,10 @@ void Game::ProcessInput() {
                         mGamePlayState = GamePlayState::Shopping;
                         PopUI();
                         PushUI(mShopScreen);
+
+                        // Plays audio
+                        mAudio->PlaySound("Store.ogg");
+
                         break;
                     }
                 }
@@ -645,11 +649,11 @@ void Game::ChangeScene() {
         // Shows title
         mParticleSystem->CreateTitleParticle("Title", 10.0f, 5.0f, -1.0f, false);
 
-        // Plays audio
-        auto handle = mAudio->PlaySound("Menu.ogg");
+        // Plays music
+        mMusic = mAudio->PlaySound("Menu.ogg", true);
 
         // Shows menu buttons
-        mMenuScreen = new MenuScreen(this, "../Assets/Fonts/SuperVCR.ttf", handle);
+        mMenuScreen = new MenuScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         mUIStack.emplace_back(mMenuScreen);
     }
     // First phase
@@ -748,7 +752,7 @@ void Game::ChangeScene() {
         mItemScreen = new ItemScreen(this, "../Assets/Fonts/SuperVCR.ttf");
 
         // Plays music
-        mAudio->PlaySound("Level1.ogg", true);
+        mMusic = mAudio->PlaySound("Level1.ogg", true);
 
         // Shows title
         mParticleSystem->CreateTitleParticle("Level1");
@@ -832,6 +836,10 @@ void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
     mNextScene = scene;
     mSceneManagerState = fastStart ? SceneManagerState::Change : SceneManagerState::Exiting;
     mSceneManagerTimer = transitionTime;
+
+    // Stops music from previous scene
+    if (mNextScene != GameScene::MainMenu)
+        mAudio->StopSound(mMusic);
 }
 
 void Game::ResetGameScene(float transitionTime) {
@@ -991,4 +999,7 @@ void Game::GoToExpScreen() {
     mLevelupScreen = new LevelupScreen(this, "../Assets/Fonts/SuperVCR.ttf");
     PopUI();
     PushUI(mLevelupScreen);
+
+    // Plays audio
+    mAudio->PlaySound("PowerUp.ogg");
 }

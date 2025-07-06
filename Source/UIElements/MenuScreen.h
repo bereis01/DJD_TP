@@ -11,7 +11,7 @@ public:
     const int WORD_OFFSET = 5.0f;
     const int CHAR_WIDTH = 10.0f;
 
-    MenuScreen(Game *game, const std::string &fontName, SoundHandle handle);
+    MenuScreen(Game *game, const std::string &fontName);
 
     void Update(float deltaTime) override;
 
@@ -19,6 +19,4 @@ public:
 
 private:
     float mButtonTimer = BUTTON_TIMER;
-
-    SoundHandle mMusicHandle;
 };
