@@ -10,6 +10,8 @@ public:
 
     ~UIImage();
 
+    void SetImage(SDL_Renderer *renderer, const std::string &imagePath);
+
     void Draw(SDL_Renderer *renderer, const Vector2 &screenPos) override;
 
 private:

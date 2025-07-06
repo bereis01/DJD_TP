@@ -29,7 +29,7 @@ void MenuScreen::Update(float deltaTime) {
 
 void MenuScreen::HandleKeyPress(int key) {
     // Returns if not interactive
-    if (!mInteractive)
+    if (!mInteractive || mButtonTimer > 0)
         return;
 
     if (key == SDLK_a) {

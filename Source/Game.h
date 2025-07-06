@@ -9,6 +9,8 @@
 #include "UIElements/AttackScreen.h"
 #include "UIElements/ItemScreen.h"
 #include "UIElements/MenuScreen.h"
+#include "UIElements/ShopScreen.h"
+#include "UIElements/LevelupScreen.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -114,6 +116,7 @@ public:
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
     class AttackScreen *GetAttackScreen() { return mAttackScreen; }
+    void GoToExpScreen();
 
     void ShowItems();
 
@@ -128,6 +131,12 @@ public:
     class Ally *GetAllyByPosition(int x, int y);
 
     class Enemy *GetEnemyByPosition(int x, int y);
+
+    // Get the player's units
+    class Ally *GetTrueblade() {return mTrueblade;}
+    class Ally *GetPegasusKnight() {return mPegasusKnight;}
+    class Ally *GetMage() {return mMage;}
+    class Ally *GetWarrior() {return mWarrior;}
 
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
     Unit *GetSelectedUnit() const { return mSelectedUnit; }
@@ -226,7 +235,9 @@ private:
     // Game-specific
     class Cursor *mCursor = nullptr;
     class Ally *mTrueblade = nullptr;
-    class Ally *mSorceress = nullptr;
+    class Ally *mPegasusKnight = nullptr;
+    class Ally *mMage = nullptr;
+    class Ally *mWarrior = nullptr;
     std::vector<Ally *> mUnits;
     std::vector<Enemy *> mEnemiesInRange;
     int mTargetUnitIndex;
@@ -254,6 +265,8 @@ private:
     TurnScreen *mTurnScreen = nullptr;
     AttackScreen *mAttackScreen = nullptr;
     ItemScreen *mItemScreen = nullptr;
+    ShopScreen *mShopScreen = nullptr;
+    LevelupScreen *mLevelupScreen = nullptr;
 
     // Particles
     class ParticleSystem *mParticleSystem = nullptr;

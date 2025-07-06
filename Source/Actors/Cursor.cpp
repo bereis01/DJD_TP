@@ -253,13 +253,20 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
     } else if (mGame->GetGamePlayState() == Game::GamePlayState::ConfirmingAttack) {
         // Changing weapon on attack screen
         if (key == SDLK_d) {
+            auto unit = mGame->GetSelectedUnit();
+            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
             mSelectedWeapon++;
             if (mSelectedWeapon > mGame->GetSelectedUnit()->GetAllWeapons().size() - 1) {
                 mSelectedWeapon = 0;
             }
-            auto unit = mGame->GetSelectedUnit();
-            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
-            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
+            while (unit->GetAllWeapons()[mSelectedWeapon]->range < range) {
+                mSelectedWeapon++;
+                if (mSelectedWeapon > mGame->GetSelectedUnit()->GetAllWeapons().size() - 1) {
+                    mSelectedWeapon = 0;
+                }
+            }
+
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
                                                       unit->GetAllWeapons()[mSelectedWeapon],
                                                       enemy->GetEquippedWeapon(), range);
@@ -269,13 +276,20 @@ void Cursor::OnHandleKeyPress(const int key, const bool isPressed) {
         }
         // Changing weapon on attack screen
         if (key == SDLK_a) {
+            auto unit = mGame->GetSelectedUnit();
+            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
+            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
             mSelectedWeapon--;
             if (mSelectedWeapon < 0) {
                 mSelectedWeapon = mGame->GetSelectedUnit()->GetAllWeapons().size() - 1;
             }
-            auto unit = mGame->GetSelectedUnit();
-            auto enemy = mGame->GetEnemiesInRange()[mGame->GetTargetUnitIndex()];
-            int range = abs(unit->GetX() - enemy->GetX()) + abs(unit->GetY() - enemy->GetY());
+            while (unit->GetAllWeapons()[mSelectedWeapon]->range < range) {
+                mSelectedWeapon--;
+                if (mSelectedWeapon < 0) {
+                    mSelectedWeapon = mGame->GetSelectedUnit()->GetAllWeapons().size() - 1;
+                }
+            }
+
             mGame->GetAttackScreen()->SetDisplayStats(unit->GetStats(), enemy->GetStats(),
                                                       unit->GetAllWeapons()[mSelectedWeapon],
                                                       enemy->GetEquippedWeapon(), range);

@@ -32,9 +32,9 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
     mUnitType = unitType;
 
     // Sprite component
-    if (unitType == "Knight") {
-        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Knight.png",
-                                                   "../Assets/Sprites/Units/Allies/Knight.json", 200);
+    if (unitType == "Warrior") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Warrior.png",
+                                                   "../Assets/Sprites/Units/Allies/Warrior.json", 200);
         mDrawComponent->AddAnimation("Idle", {15, 16, 17, 18, 19, 20});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5, 6});
         mDrawComponent->AddAnimation("Hurt", {11, 12, 13, 14});
@@ -46,7 +46,7 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
         mDrawComponent->AddAnimation("Death", {7, 8, 9, 6});
-    } else if (unitType == "TrueBlade") {
+    } else if (unitType == "TrueBlade" || unitType == "PegasusKnight") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/TrueBlade.png",
                                                    "../Assets/Sprites/Units/Allies/TrueBlade.json", 200,
                                                    50, 32, 9, 0);
@@ -200,8 +200,10 @@ void Unit::SetMovementRange() {
 }
 
 bool Unit::MovementIsInRange(int x, int y) {
+    if (x == GetX() && y == GetY())
+        return true;
     std::unordered_set<int>::const_iterator got = mMovementRange.find(x * mGame->LEVEL_WIDTH + y);
-    if (got != mMovementRange.end())
+    if (got != mMovementRange.end() && mGame->GetUnitByPosition(x, y) == nullptr)
         return true;
     return false;
 }

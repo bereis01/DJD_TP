@@ -83,7 +83,7 @@ void StatScreen::SetDisplayStats(class Unit *unit) {
     SetSpd(std::to_string(stats.spd));
     SetDef(std::to_string(stats.def));
     SetRes(std::to_string(stats.res));
-    SetWeaponName(weapon->name);
+    SetWeaponName("Weapon: " + weapon->name);
     SetMight(std::to_string(weapon->might));
     SetHit(std::to_string(weapon->hit));
     SetCrit(std::to_string(weapon->criticalChance));

@@ -90,6 +90,7 @@ public:
     bool IsAvailable() { return mAvailable; }
     bool IsEnemy() { return mIsEnemy; }
     void SetAvailable(bool available) { mAvailable = available; }
+    void SetFlyer(bool f) {mIsFlyer = f; }
 
     // Update function
     void OnUpdate(float deltaTime);

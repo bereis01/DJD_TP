@@ -22,6 +22,7 @@
 #include "Effects/ParticleSystem.h"
 #include "Audio/AudioSystem.h"
 #include "UIElements/MenuScreen.h"
+#include "UIElements/ShopScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -79,7 +80,8 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
+    //SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
+    SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
 
     return true;
 }
@@ -168,11 +170,21 @@ void Game::ProcessInput() {
 
                 // Changes turn if player has pressed E
                 if (key == SDLK_e) {
-                    if (mGamePlayState == GamePlayState::EnemyTurn)
-                        SetGamePlayState(GamePlayState::Map);
-                    else
-                        SetGamePlayState(GamePlayState::EnemyTurn);
-                    mTurnScreen->ChangeTurn();
+                    if (mGamePlayState == GamePlayState::Map) {
+                        for (auto unit: mUnits) {
+                            unit->SetAvailable(false);
+                            mTurnScreen->ChangeTurn();
+                        }
+                    }
+                }
+                if (key == SDLK_RETURN) {
+                    if (mGamePlayState == GamePlayState::LevelComplete) {
+                        mShopScreen = new ShopScreen(this, "../Assets/Fonts/SuperVCR.ttf", 2);
+                        mGamePlayState = GamePlayState::Shopping;
+                        PopUI();
+                        PushUI(mShopScreen);
+                        break;
+                    }
                 }
 
                 // Handle key press for UI screens
@@ -233,7 +245,7 @@ void Game::UpdateGame() {
         UpdateTurn(deltaTime);
 
         // Checks victory/defeat
-        if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed)
+        if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed && mGamePlayState != GamePlayState::Shopping)
             CheckVictory();
     }
 }
@@ -495,11 +507,12 @@ void Game::GenerateOutput() {
         // Victory text
         auto VictoryText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
+        VictoryText->AddText("Press ENTER to continue", Vector2(225, 420), Vector2(350, 30));
         mUIStack.emplace_back(VictoryText);
 
         // Blue background
         SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
-        SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 0.5 * 255);
+        SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 0.5 * 255);
         SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(mRenderer, &drawRect);
     }
@@ -509,6 +522,7 @@ void Game::GenerateOutput() {
         // Defeat text
         auto DefeatText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         DefeatText->AddText("DEFEAT", Vector2(250, 270), Vector2(300, 100));
+        DefeatText->AddText("Press ENTER to restart", Vector2(225, 420), Vector2(350, 30));
         mUIStack.emplace_back(DefeatText);
 
         // Red background
@@ -650,44 +664,69 @@ void Game::ChangeScene() {
 
         // Loads cursor
         mCursor = new Cursor(this, "../Assets/Sprites/Cursor.png");
-        mCursor->SetXY(20, 8);
+        mCursor->SetXY(20, 16);
 
         // Adjusts camera position
-        mCameraPos = Vector2(64, 160);
+        mCameraPos = Vector2(64, 128);
 
         // Loads units (with stats and weapons)
         Stats s = Stats("Mia", 30, 30, 9, 4, 12, 20, 5, 5, 6);
-        Weapon *w1 = new Weapon("Wo dao", 90, 7, 20, 1);
-        Weapon *w2 = new Weapon("Steel sword", 85, 9, 0, 1);
-        Weapon *w3 = new Weapon("Silver sword", 90, 13, 0, 1);
+        Weapon *w = new Weapon("Iron sword", 90, 6, 0, 1);
         mTrueblade = new Ally(this, "TrueBlade", s);
-        mTrueblade->SetXY(20, 8);
+        mTrueblade->SetXY(20, 16);
         mTrueblade->SetStats(s);
-        mTrueblade->AddWeapon(w1);
-        mTrueblade->AddWeapon(w2);
-        mTrueblade->AddWeapon(w3);
+        mTrueblade->AddWeapon(w);
         mTrueblade->AddItem("Healing potion");
         mUnits.emplace_back(mTrueblade);
 
-        s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
-        w1 = new Weapon("Thunder", 80, 5, 10, 2, true);
-        w2 = new Weapon("Fire", 90, 6, 0, 2, true);
-        mSorceress = new Ally(this, "Wizard", s);
-        mSorceress->SetXY(21, 8);
-        mSorceress->SetStats(s);
-        mSorceress->AddWeapon(w1);
-        mSorceress->AddWeapon(w2);
-        mUnits.emplace_back(mSorceress);
+        s = Stats("Marcia", 25, 25, 9, 7, 10, 15, 4, 9, 7);
+        w = new Weapon("Iron lance", 85, 7, 0, 1);
+        mPegasusKnight = new Ally(this, "PegasusKnight", s);
+        mPegasusKnight->SetXY(20, 12);
+        mPegasusKnight->SetStats(s);
+        mPegasusKnight->AddWeapon(w);
+        mPegasusKnight->SetFlyer(true);
+        mUnits.emplace_back(mPegasusKnight);
+
+        s = Stats("Hubert", 20, 20, 3, 10, 10, 8, 3, 11, 5);
+        w = new Weapon("Thunder", 80, 5, 10, 2, true);
+        mMage = new Ally(this, "Wizard", s);
+        mMage->SetXY(21, 12);
+        mMage->SetStats(s);
+        mMage->AddWeapon(w);
+        mUnits.emplace_back(mMage);
+
+        s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 10, 5, 5);
+        w = new Weapon("Iron axe", 80, 8, 0, 1);
+        mWarrior = new Ally(this, "Warrior", s);
+        mWarrior->SetXY(21, 17);
+        mWarrior->SetStats(s);
+        mWarrior->AddWeapon(w);
+        mUnits.emplace_back(mWarrior);
 
         // Loads enemies
-        Stats ss = Stats("Enemy1", 25, 25, 8, 4, 6, 6, 3, 0, 4);
-        Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
-        Enemy *enemy = new Enemy(this, "Orc", ss);
-        enemy->SetXY(19, 8);
-        enemy->SetStats(ss);
-        enemy->AddWeapon(w);
-        mEnemies.emplace_back(enemy);
-
+        Stats ss = Stats("Orc", 20, 20, 8, 4, 6, 6, 3, 0, 4);
+        for (int i = 0; i < 13; i++) {
+            Enemy *enemy = new Enemy(this, "Orc", ss);
+            w = new Weapon("Iron Sword", 90, 6, 0, 1);
+            enemy->SetStats(ss);
+            enemy->AddWeapon(w);
+            mEnemies.emplace_back(enemy);
+        }
+        mEnemies[0]->SetXY(6, 12);
+        mEnemies[1]->SetXY(6, 13);
+        mEnemies[2]->SetXY(13, 13);
+        mEnemies[3]->SetXY(13, 10);
+        mEnemies[4]->SetXY(12, 9);
+        mEnemies[5]->SetXY(14, 9);
+        mEnemies[6]->SetXY(21, 8);
+        mEnemies[7]->SetXY(21, 7);
+        mEnemies[8]->SetXY(21, 14);
+        mEnemies[9]->SetXY(17, 16);
+        mEnemies[10]->SetXY(17, 17);
+        mEnemies[11]->SetXY(15, 20);
+        mEnemies[11]->SetXY(16, 21);
+/*
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
         w = new Weapon("Iron Sword", 90, 6, 0, 1);
         Enemy *enemy2 = new Enemy(this, "Orc", ss);
@@ -711,7 +750,7 @@ void Game::ChangeScene() {
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
         mEnemies.emplace_back(enemy4);
-
+*/
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level1.png");
 
@@ -730,6 +769,34 @@ void Game::ChangeScene() {
 
         // Shows title
         mParticleSystem->CreateTitleParticle("Level1");
+    } else if (mNextScene == GameScene::Level2) {
+        mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
+
+        // Checks if loading was successful and builds the level
+        if (mLevelData == nullptr) {
+            SDL_Log("Failed initializing level");
+            return;
+        }
+
+        for (auto unit: mUnits) {
+            unit->SetAvailable(true);
+            unit->SetCurrentHp(unit->GetStats().hp);
+        }
+
+        Stats ss = Stats("Enemy2", 1, 1, 8, 4, 6, 6, 3, 0, 4);
+        Weapon *w = new Weapon("Iron Sword", 90, 6, 0, 1);
+        Enemy *enemy = new Enemy(this, "Orc", ss);
+        enemy->SetXY(18, 7);
+        enemy->SetStats(ss);
+        enemy->AddWeapon(w);
+        mEnemies.emplace_back(enemy);
+
+        mCursor->SetXY(20, 8);
+        mCameraPos = Vector2(64, 160);
+        mBackground = LoadTexture("../Assets/Levels/Level1.png");
+
+        // Sets game state
+        SetGamePlayState(GamePlayState::Map);
     }
 
     // Set new scene
@@ -757,6 +824,7 @@ void Game::ResetGameScene(float transitionTime) {
 
 void Game::UnloadScene() {
     // Delete actors
+    /*
     while (!mActors.empty()) {
         delete mActors.back();
     }
@@ -768,6 +836,7 @@ void Game::UnloadScene() {
     delete mActionScreen;
     delete mItemScreen;
     delete mTurnScreen;
+    */
     mUIStack.clear();
 
     // Delete background texture
@@ -899,4 +968,10 @@ void Game::ShowItems() {
     } else {
         mItemScreen->SetupDisplay(mSelectedUnit);
     }
+}
+
+void Game::GoToExpScreen() {
+    mLevelupScreen = new LevelupScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+    PopUI();
+    PushUI(mLevelupScreen);
 }

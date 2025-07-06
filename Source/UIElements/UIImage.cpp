@@ -23,8 +23,25 @@ UIImage::~UIImage() {
     }
 }
 
+void UIImage::SetImage(SDL_Renderer* renderer, const std::string& imagePath) {
+    SDL_Surface *surface = IMG_Load(imagePath.c_str());
+    if (!surface)
+        SDL_Log("Failed to load image: %s", IMG_GetError());
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture)
+        SDL_Log("Failed to create texture: %s", SDL_GetError());
+    SDL_FreeSurface(surface);
+
+    mTexture = texture;
+}
+
+
 void UIImage::Draw(SDL_Renderer *renderer, const Vector2 &screenPos) {
     if (!mTexture)
+        return;
+
+    if (!mIsVisible)
         return;
 
     SDL_Rect imageQuad = {
