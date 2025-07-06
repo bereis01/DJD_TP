@@ -42,15 +42,15 @@ ShopScreen::ShopScreen(class Game *game, const std::string &fontName, int level)
 
     Vector2 pos = FIRST_BUTTON_POS;
     for (int i = 0; i < mWeapons.size(); i++) {
-        AddButton(mWeapons[i]->name, pos, Vector2(BUTTON_SIZE, 30), [this, i] () { BuyWeapon(i);},
+        AddButton(mWeapons[i]->name, pos, Vector2(BUTTON_SIZE, 30), [this, i]() { BuyWeapon(i); },
                   Vector2(mWeapons[i]->name.size() * CHAR_WIDTH, WORD_HEIGHT));
         pos += VERTICAL_OFFSET;
     }
-    AddButton("End shopping", pos + Vector2(211, 0), Vector2(BUTTON_SIZE, 30), [this] () { GoToExp();},
-                  Vector2(12 * CHAR_WIDTH, WORD_HEIGHT));
+    AddButton("End shopping", pos + Vector2(211, 0), Vector2(BUTTON_SIZE, 30), [this]() { GoToExp(); },
+              Vector2(12 * CHAR_WIDTH, WORD_HEIGHT));
 
     mName = AddText("WeaponName", NAME_POS, Vector2(CHAR_WIDTH * 10, WORD_HEIGHT),
-                  POINT_SIZE);
+                    POINT_SIZE);
 
     mInfoMt = AddText("Might:", MT_POS, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
     mMt = AddText("5", MT_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
@@ -128,11 +128,11 @@ void ShopScreen::SetIcon(int index) {
     if (index <= 2) {
         mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/TrueBlade.png");
     } else if (index <= 5) {
-        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/PegasusKnight.png");
+        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/Pegasus.png");
     } else if (index <= 8) {
-        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/Warrior.png");
+        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/Knight.png");
     } else if (index <= 10) {
-        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/Mage.png");
+        mUnitIcon->SetImage(mGame->GetRenderer(), "../Assets/Sprites/Units/Wizard.png");
     } else {
         mUnitIcon->SetVisible(false);
     }

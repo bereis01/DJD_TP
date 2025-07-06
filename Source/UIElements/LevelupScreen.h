@@ -51,10 +51,15 @@ public:
     void Update(float deltaTime) override;
 
     void SetStr(const std::string &str, int index);
+
     void SetMag(const std::string &mag, int index);
+
     void SetSkl(const std::string &skl, int index);
+
     void SetSpd(const std::string &spd, int index);
+
     void SetDef(const std::string &def, int index);
+
     void SetRes(const std::string &res, int index);
 
     void Upgrade();
@@ -69,7 +74,6 @@ private:
     std::vector<UIText *> mRes;
     int mCurrentUpgrade;
     bool mSecondChoice;
-
 
 
     UIText *mCurrentGold;

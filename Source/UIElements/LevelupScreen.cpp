@@ -16,47 +16,53 @@ LevelupScreen::LevelupScreen(class Game *game, const std::string &fontName, int 
     Vector2 dim = Vector2(29 * 18, 30);
     mInfoText = AddText("Give +1 strength to two units", Vector2(SCREEN_SIZE.x / 2 - dim.x / 2, 142), dim);
 
-    AddButton("Mia", FIRST_BUTTON_POS, BUTTON_SIZE, [this] () { Upgrade();},
-                Vector2(3 * CHAR_WIDTH, WORD_HEIGHT));
+    AddButton("Mia", FIRST_BUTTON_POS, BUTTON_SIZE, [this]() { Upgrade(); },
+              Vector2(3 * CHAR_WIDTH, WORD_HEIGHT));
     AddImage("../Assets/Sprites/Units/TrueBlade.png", FIRST_UNIT_ICON_POS, UNIT_ICON_SIZE);
 
-    AddButton("Marcia", FIRST_BUTTON_POS + HORIZONTAL_OFFSET, BUTTON_SIZE, [this] () { Upgrade();},
-                Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
-    AddImage("../Assets/Sprites/Units/PegasusKnight.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET, UNIT_ICON_SIZE);
+    AddButton("Marcia", FIRST_BUTTON_POS + HORIZONTAL_OFFSET, BUTTON_SIZE, [this]() { Upgrade(); },
+              Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
+    AddImage("../Assets/Sprites/Units/Pegasus.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET, UNIT_ICON_SIZE);
 
-    AddButton("Hubert", FIRST_BUTTON_POS + HORIZONTAL_OFFSET * 2, BUTTON_SIZE, [this] () { Upgrade();},
-                Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
-    AddImage("../Assets/Sprites/Units/Mage.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET * 2, UNIT_ICON_SIZE);
+    AddButton("Hubert", FIRST_BUTTON_POS + HORIZONTAL_OFFSET * 2, BUTTON_SIZE, [this]() { Upgrade(); },
+              Vector2(6 * CHAR_WIDTH, WORD_HEIGHT));
+    AddImage("../Assets/Sprites/Units/Wizard.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET * 2, UNIT_ICON_SIZE);
 
-    AddButton("Ferdinand", FIRST_BUTTON_POS + HORIZONTAL_OFFSET * 3, BUTTON_SIZE, [this] () { Upgrade();},
-                Vector2(9 * CHAR_WIDTH, WORD_HEIGHT));
-    AddImage("../Assets/Sprites/Units/Warrior.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET * 3, UNIT_ICON_SIZE);
+    AddButton("Ferdinand", FIRST_BUTTON_POS + HORIZONTAL_OFFSET * 3, BUTTON_SIZE, [this]() { Upgrade(); },
+              Vector2(9 * CHAR_WIDTH, WORD_HEIGHT));
+    AddImage("../Assets/Sprites/Units/Knight.png", FIRST_UNIT_ICON_POS + HORIZONTAL_OFFSET * 3, UNIT_ICON_SIZE);
 
 
     for (int i = 0; i < 4; i++) {
         AddText("Strength:", STR_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 9, WORD_HEIGHT), POINT_SIZE);
-        mStr.emplace_back(AddText("12", STR_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH * 2, WORD_HEIGHT),
-                       POINT_SIZE));
+        mStr.emplace_back(AddText("12", STR_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 9 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH * 2, WORD_HEIGHT),
+                                  POINT_SIZE));
 
         AddText("Magic:", MAG_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
-        mMag.emplace_back(AddText("4", MAG_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                       POINT_SIZE));
+        mMag.emplace_back(AddText("4", MAG_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                                  POINT_SIZE));
 
         AddText("Skill:", SKL_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
-        mSkl.emplace_back(AddText("9", SKL_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                       POINT_SIZE));
+        mSkl.emplace_back(AddText("9", SKL_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                                  POINT_SIZE));
 
         AddText("Speed:", SPD_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 6, WORD_HEIGHT), POINT_SIZE);
-        mSpd.emplace_back(AddText("9", SPD_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                       POINT_SIZE));
+        mSpd.emplace_back(AddText("9", SPD_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                                  POINT_SIZE));
 
         AddText("Defense:", DEF_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 8, WORD_HEIGHT), POINT_SIZE);
-        mDef.emplace_back(AddText("9", DEF_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 8 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                       POINT_SIZE));
+        mDef.emplace_back(AddText("9", DEF_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 8 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                                  POINT_SIZE));
 
         AddText("Resistance:", RES_POS + HORIZONTAL_OFFSET * i, Vector2(CHAR_WIDTH * 11, WORD_HEIGHT), POINT_SIZE);
-        mRes.emplace_back(AddText("5", RES_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 11 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
-                       POINT_SIZE));
+        mRes.emplace_back(AddText("5", RES_POS + HORIZONTAL_OFFSET * i + Vector2(CHAR_WIDTH * 11 + WORD_OFFSET, 0),
+                                  Vector2(CHAR_WIDTH, WORD_HEIGHT),
+                                  POINT_SIZE));
     }
 }
 
@@ -130,7 +136,6 @@ void LevelupScreen::Update(float deltaTime) {
     SetSpd(std::to_string(s.spd), 3);
     SetDef(std::to_string(s.def), 3);
     SetRes(std::to_string(s.res), 3);
-
 }
 
 void LevelupScreen::Upgrade() {
