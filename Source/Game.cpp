@@ -21,6 +21,7 @@
 #include "UIElements/AttackScreen.h"
 #include "Effects/ParticleSystem.h"
 #include "Audio/AudioSystem.h"
+#include "UIElements/MenuScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -218,21 +219,23 @@ void Game::UpdateGame() {
     // Update all actors and pending actors
     UpdateActors(deltaTime);
 
-    // Update camera position
-    UpdateCamera(deltaTime);
-
     // Updates the scene
     UpdateSceneManager(deltaTime);
-
-    // Updates the turn
-    UpdateTurn(deltaTime);
 
     // Updates audio
     mAudio->Update(deltaTime);
 
-    // Checks victory/defeat
-    if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed && mGamePlayState != GamePlayState::MainMenu)
-        CheckVictory();
+    if (mGameScene != GameScene::MainMenu) {
+        // Update camera position
+        UpdateCamera(deltaTime);
+
+        // Updates the turn
+        UpdateTurn(deltaTime);
+
+        // Checks victory/defeat
+        if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed)
+            CheckVictory();
+    }
 }
 
 void Game::CheckVictory() {
@@ -413,19 +416,26 @@ void Game::RemoveCollider(AABBColliderComponent *collider) {
 
 void Game::GenerateOutput() {
     // Set draw color to blue
-    SDL_SetRenderDrawColor(mRenderer, 107, 140, 255, 255);
+    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 
     // Clear back buffer
     SDL_RenderClear(mRenderer);
 
     // Draws background texture considering camera position
     if (mBackground) {
-        SDL_Rect dstRect = {
-            static_cast<int>(-mCameraPos.x),
-            static_cast<int>(-mCameraPos.y),
-            static_cast<int>(LEVEL_WIDTH * TILE_SIZE),
-            static_cast<int>(LEVEL_HEIGHT * TILE_SIZE)
-        };
+        SDL_Rect dstRect = {0, 0, 0, 0};
+        if (mGameScene == GameScene::MainMenu) {
+            dstRect = {0, 0, mWindowWidth, mWindowHeight};
+            SDL_SetTextureBlendMode(mBackground, SDL_BLENDMODE_BLEND);
+            SDL_SetTextureAlphaMod(mBackground, 150);
+        } else {
+            dstRect = {
+                static_cast<int>(-mCameraPos.x),
+                static_cast<int>(-mCameraPos.y),
+                LEVEL_WIDTH * TILE_SIZE,
+                LEVEL_HEIGHT * TILE_SIZE
+            };
+        }
         SDL_RenderCopy(mRenderer, mBackground, nullptr, &dstRect);
     }
 
@@ -612,14 +622,23 @@ void Game::ChangeScene() {
     mCameraPos.Set(0.0f, 0.0f);
 
     // Scene Manager FSM: using if/else instead of switch
+    // Main Menu
     if (mNextScene == GameScene::MainMenu) {
-        mGamePlayState = GamePlayState::MainMenu;
-        mCameraPos = Vector2(0, 0);
-        //mAudio->PlaySound("Level1.ogg", true);
-        //mParticleSystem->CreateTitleParticle("Level1");
-        mMainMenu = new MainMenu(this, "../Assets/Fonts/SuperVCR.ttf");
-        PushUI(mMainMenu);
-    } else if (mNextScene == GameScene::Level1) {
+        // Loads background image
+        mBackground = LoadTexture("../Assets/UI/MenuBackground.png");
+
+        // Shows title
+        mParticleSystem->CreateTitleParticle("Title", 10.0f, 5.0f, -1.0f, false);
+
+        // Plays audio
+        auto handle = mAudio->PlaySound("Menu.ogg");
+
+        // Shows menu buttons
+        mMenuScreen = new MenuScreen(this, "../Assets/Fonts/SuperVCR.ttf", handle);
+        mUIStack.emplace_back(mMenuScreen);
+    }
+    // First phase
+    else if (mNextScene == GameScene::Level1) {
         // Loads first level
         mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
@@ -717,10 +736,6 @@ void Game::ChangeScene() {
     mGameScene = mNextScene;
 }
 
-void Game::StartGame() {
-    //SetGameScene(GameScene::MainMenu, TRANSITION_TIME, false);
-}
-
 void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
     // Sanity checks
     if (scene != GameScene::MainMenu && scene != GameScene::Level1 && scene != GameScene::Level2 && scene !=
@@ -747,8 +762,7 @@ void Game::UnloadScene() {
     }
 
     // Delete UI screens
-    //for (auto ui: mUIStack)
-    //delete ui;
+    //delete mMenuScreen;
     delete mStatScreen;
     delete mAttackScreen;
     delete mActionScreen;

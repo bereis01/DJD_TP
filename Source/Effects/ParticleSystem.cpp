@@ -23,18 +23,21 @@ void ParticleSystem::CreateAnimatedParticle(int x, int y, const std::string &typ
     animatedParticle->SetPosition(Vector2(y * Game::TILE_SIZE, x * Game::TILE_SIZE));
 }
 
-void ParticleSystem::CreateTitleParticle(const std::string &text) {
+void ParticleSystem::CreateTitleParticle(const std::string &type, float timer, float fadeInTimer, float fadeOutTimer,
+                                         bool setTimer) {
     int WIDTH = 640;
     int HEIGHT = 360;
 
     // Creates the text for the particle
     SDL_Texture *titleTexture = nullptr;
-    if (text == "Level1")
+    if (type == "Title")
+        titleTexture = mGame->LoadTexture("../Assets/UI/Title.png");
+    else if (type == "Level1")
         titleTexture = mGame->LoadTexture("../Assets/UI/Level1Title.png");
 
     // Creates the text particle
     TitleParticle *titleParticle = new
-            TitleParticle(mGame, titleTexture, Vector2(WIDTH, HEIGHT));
+            TitleParticle(mGame, titleTexture, Vector2(WIDTH, HEIGHT), timer, fadeInTimer, fadeOutTimer, setTimer);
     titleParticle->SetPosition(Vector2((mGame->GetWindowWidth() - WIDTH) / 2 + mGame->GetCameraPos().x,
                                        (mGame->GetWindowHeight() - HEIGHT) / 2 + mGame->GetCameraPos().y));
 }
