@@ -80,8 +80,8 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    //SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
-    SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
+    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
+    //SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
 
     return true;
 }
@@ -245,7 +245,8 @@ void Game::UpdateGame() {
         UpdateTurn(deltaTime);
 
         // Checks victory/defeat
-        if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed && mGamePlayState != GamePlayState::Shopping)
+        if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed &&
+            mGamePlayState != GamePlayState::Shopping)
             CheckVictory();
     }
 }
@@ -681,7 +682,7 @@ void Game::ChangeScene() {
 
         s = Stats("Marcia", 25, 25, 9, 7, 10, 15, 4, 9, 7);
         w = new Weapon("Iron lance", 85, 7, 0, 1);
-        mPegasusKnight = new Ally(this, "PegasusKnight", s);
+        mPegasusKnight = new Ally(this, "Pegasus", s);
         mPegasusKnight->SetXY(20, 12);
         mPegasusKnight->SetStats(s);
         mPegasusKnight->AddWeapon(w);
@@ -839,20 +840,20 @@ void Game::ResetGameScene(float transitionTime) {
 }
 
 void Game::UnloadScene() {
-    // Delete actors
-    /*
-    while (!mActors.empty()) {
-        delete mActors.back();
+    // Delete actors and UI screens
+    if (mGameScene == GameScene::MainMenu) {
+        while (!mActors.empty()) {
+            delete mActors.back();
+        }
+
+        delete mStatScreen;
+        delete mAttackScreen;
+        delete mActionScreen;
+        delete mItemScreen;
+        delete mTurnScreen;
     }
 
-    // Delete UI screens
-    //delete mMenuScreen;
-    delete mStatScreen;
-    delete mAttackScreen;
-    delete mActionScreen;
-    delete mItemScreen;
-    delete mTurnScreen;
-    */
+    // Clears UI screen stack
     mUIStack.clear();
 
     // Delete background texture

@@ -117,6 +117,7 @@ public:
     ActionScreen *GetActionScreen() { return mActionScreen; }
     class StatScreen *GetStatScreen() { return mStatScreen; }
     class AttackScreen *GetAttackScreen() { return mAttackScreen; }
+
     void GoToExpScreen();
 
     void ShowItems();
@@ -134,10 +135,10 @@ public:
     class Enemy *GetEnemyByPosition(int x, int y);
 
     // Get the player's units
-    class Ally *GetTrueblade() {return mTrueblade;}
-    class Ally *GetPegasusKnight() {return mPegasusKnight;}
-    class Ally *GetMage() {return mMage;}
-    class Ally *GetWarrior() {return mWarrior;}
+    class Ally *GetTrueblade() { return mTrueblade; }
+    class Ally *GetPegasusKnight() { return mPegasusKnight; }
+    class Ally *GetMage() { return mMage; }
+    class Ally *GetWarrior() { return mWarrior; }
 
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
     Unit *GetSelectedUnit() const { return mSelectedUnit; }

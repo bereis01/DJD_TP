@@ -46,7 +46,7 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {10, 11, 12, 13});
         mDrawComponent->AddAnimation("Death", {7, 8, 9, 6});
-    } else if (unitType == "TrueBlade" || unitType == "PegasusKnight") {
+    } else if (unitType == "TrueBlade") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/TrueBlade.png",
                                                    "../Assets/Sprites/Units/Allies/TrueBlade.json", 200,
                                                    50, 32, 9, 0);
@@ -54,6 +54,14 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3, 4, 5});
         mDrawComponent->AddAnimation("Hurt", {11, 12, 13, 14});
         mDrawComponent->AddAnimation("Death", {6, 7, 8, 9, 10});
+    } else if (unitType == "Pegasus") {
+        mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Pegasus.png",
+                                                   "../Assets/Sprites/Units/Allies/Pegasus.json", 200,
+                                                   50, 32, 9, 0);
+        mDrawComponent->AddAnimation("Idle", {4, 5, 6, 7});
+        mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3});
+        mDrawComponent->AddAnimation("Hurt", {4, 5, 6, 7});
+        mDrawComponent->AddAnimation("Death", {4, 5, 6, 7});
     } else if (unitType == "Orc") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Enemies/Orc.png",
                                                    "../Assets/Sprites/Units/Enemies/Orc.json", 200);
@@ -141,13 +149,12 @@ void Unit::ShowStats() {
 }
 
 void Unit::SetMovementRange() {
-    std::queue<std::tuple<int, int>> front;
+    std::queue<std::tuple<int, int> > front;
     int y_size = mGame->LEVEL_WIDTH;
     front.push(std::make_tuple(GetX(), 0));
     front.push(std::make_tuple(GetY(), 0));
     mMovementRange.insert(GetX() * y_size + GetY());
-    while (!front.empty())
-    {
+    while (!front.empty()) {
         int x = std::get<0>(front.front());
         front.pop();
         int y = std::get<0>(front.front());
@@ -156,8 +163,7 @@ void Unit::SetMovementRange() {
         if (counter >= mStats.mov) {
             continue;
         }
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             int destX = 0;
             int destY = 0;
             if (i == 0) {
