@@ -112,9 +112,6 @@ void ItemScreen::HandleKeyPress(int key) {
         if (mSelectedButtonIndex >= 0 && mSelectedButtonIndex <= static_cast<int>(mButtons.size()) - 1) {
             mButtons[mSelectedButtonIndex]->OnClick();
         }
-
-        // Plays audio
-        mGame->GetAudio()->PlaySound("CursorSelect.ogg");
     }
     // Cancelling
     else if (key == SDLK_b) {

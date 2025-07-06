@@ -296,6 +296,7 @@ void Unit::EquipWeapon(int pos) {
     }
     mGame->ShowItems();
     mGame->GetActionScreen()->SetSelectedButtonIndex(0);
+    mGame->GetAudio()->PlaySound("CursorSelect.ogg");
 }
 
 void Unit::UseItem(const std::string &item) {
@@ -310,6 +311,9 @@ void Unit::UseItem(const std::string &item) {
         mGame->SetGamePlayState(Game::GamePlayState::Map);
         mGame->SetSelectedUnit(nullptr);
         mGame->GetActionScreen()->SetSelectedButtonIndex(0);
+        mGame->GetAudio()->PlaySound("CursorSelect.ogg");
+    } else {
+        mGame->GetAudio()->PlaySound("Error.ogg");
     }
 }
 
