@@ -8,6 +8,7 @@
 #include "UIElements/TurnScreen.h"
 #include "UIElements/AttackScreen.h"
 #include "UIElements/ItemScreen.h"
+#include "UIElements/MainMenu.h"
 #include "Utils/Math.h"
 
 class Game {
@@ -29,6 +30,7 @@ public:
     };
 
     enum class GamePlayState {
+        MainMenu,
         Map,
         ShowingStats,
         MovingUnit,
@@ -97,6 +99,8 @@ public:
     class UIFont *LoadFont(const std::string &fileName);
 
     // Scene management functions
+    void StartGame();
+
     void SetGameScene(GameScene scene, float transitionTime = TRANSITION_TIME, bool fastStart = false);
 
     GameScene GetGameScene() const { return mGameScene; }
@@ -252,6 +256,7 @@ private:
     TurnScreen *mTurnScreen = nullptr;
     AttackScreen *mAttackScreen = nullptr;
     ItemScreen *mItemScreen = nullptr;
+    MainMenu *mMainMenu = nullptr;
 
     // Particles
     class ParticleSystem *mParticleSystem = nullptr;

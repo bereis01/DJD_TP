@@ -78,7 +78,7 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
+    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
 
     return true;
 }
@@ -231,7 +231,7 @@ void Game::UpdateGame() {
     mAudio->Update(deltaTime);
 
     // Checks victory/defeat
-    if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed)
+    if (mGamePlayState != GamePlayState::LevelComplete && mGamePlayState != GamePlayState::LevelFailed && mGamePlayState != GamePlayState::MainMenu)
         CheckVictory();
 }
 
@@ -252,7 +252,7 @@ void Game::CheckVictory() {
 }
 
 void Game::UpdateTurn(float deltaTime) {
-    if (mGamePlayState != GamePlayState::EnemyTurn) {
+    if (mGamePlayState == GamePlayState::Map) {
         // Checks if all units have been used
         for (auto unit: mUnits)
             if (unit->IsAvailable())
@@ -265,7 +265,7 @@ void Game::UpdateTurn(float deltaTime) {
 
         // Plays turn changing sound
         mAudio->PlaySound("EnemyTurn.ogg");
-    } else {
+    } else if (mGamePlayState == GamePlayState::EnemyTurn) {
         // Traverses the enemies, activating each one
         if (mCurrentEnemyIndex >= 0) {
             if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::None)
@@ -612,7 +612,14 @@ void Game::ChangeScene() {
     mCameraPos.Set(0.0f, 0.0f);
 
     // Scene Manager FSM: using if/else instead of switch
-    if (mNextScene == GameScene::Level1) {
+    if (mNextScene == GameScene::MainMenu) {
+        mGamePlayState = GamePlayState::MainMenu;
+        mCameraPos = Vector2(0, 0);
+        //mAudio->PlaySound("Level1.ogg", true);
+        //mParticleSystem->CreateTitleParticle("Level1");
+        mMainMenu = new MainMenu(this, "../Assets/Fonts/SuperVCR.ttf");
+        PushUI(mMainMenu);
+    } else if (mNextScene == GameScene::Level1) {
         // Loads first level
         mLevelData = LoadLevel("../Assets/Levels/Level1_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
 
@@ -641,7 +648,6 @@ void Game::ChangeScene() {
         mTrueblade->AddWeapon(w2);
         mTrueblade->AddWeapon(w3);
         mTrueblade->AddItem("Healing potion");
-        //mTrueblade->SetEquippedWeapon(w1);
         mUnits.emplace_back(mTrueblade);
 
         s = Stats("Ilyana", 20, 20, 3, 10, 10, 8, 3, 9, 5);
@@ -652,7 +658,6 @@ void Game::ChangeScene() {
         mSorceress->SetStats(s);
         mSorceress->AddWeapon(w1);
         mSorceress->AddWeapon(w2);
-        //mSorceress->SetEquippedWeapon(w1);
         mUnits.emplace_back(mSorceress);
 
         // Loads enemies
@@ -662,7 +667,6 @@ void Game::ChangeScene() {
         enemy->SetXY(19, 8);
         enemy->SetStats(ss);
         enemy->AddWeapon(w);
-        //enemy->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy);
 
         ss = Stats("Enemy2", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -671,7 +675,6 @@ void Game::ChangeScene() {
         enemy2->SetXY(15, 13);
         enemy2->SetStats(ss);
         enemy2->AddWeapon(w);
-        //enemy2->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy2);
 
         ss = Stats("Enemy3", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -680,7 +683,6 @@ void Game::ChangeScene() {
         enemy3->SetXY(13, 15);
         enemy3->SetStats(ss);
         enemy3->AddWeapon(w);
-        //enemy3->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy3);
 
         ss = Stats("Enemy4", 25, 25, 8, 4, 6, 6, 3, 0, 4);
@@ -689,7 +691,6 @@ void Game::ChangeScene() {
         enemy4->SetXY(13, 13);
         enemy4->SetStats(ss);
         enemy4->AddWeapon(w);
-        //enemy4->SetEquippedWeapon(w);
         mEnemies.emplace_back(enemy4);
 
         // Loads background image
@@ -714,6 +715,10 @@ void Game::ChangeScene() {
 
     // Set new scene
     mGameScene = mNextScene;
+}
+
+void Game::StartGame() {
+    //SetGameScene(GameScene::MainMenu, TRANSITION_TIME, false);
 }
 
 void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
