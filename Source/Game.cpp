@@ -803,7 +803,7 @@ void Game::ChangeScene() {
         mMage->AddItem("Healing potion");
         mUnits.emplace_back(mMage);
 
-        s = Stats("Ferdinand", 35, 1, 12, 2, 10, 5, 7, 5, 6);
+        s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 7, 5, 6);
         w = new Weapon("Iron axe", 80, 8, 0, 1);
         mWarrior = new Ally(this, "Warrior", s);
         mWarrior->SetXY(21, 17);
