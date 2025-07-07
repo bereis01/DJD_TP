@@ -76,4 +76,6 @@ private:
     std::vector<class Weapon *> mWeapons;
     std::unordered_set<int> mBought;
     int mGold;
+
+    std::vector<int> mUsedIndexes;
 };

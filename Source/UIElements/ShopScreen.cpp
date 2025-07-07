@@ -78,6 +78,13 @@ ShopScreen::ShopScreen(class Game *game, const std::string &fontName, int level)
 }
 
 ShopScreen::~ShopScreen() {
+    for (int i = 0; i < mWeapons.size(); i++) {
+        // Does not deallocate bought weapons
+        if (std::find(mUsedIndexes.begin(), mUsedIndexes.end(), i) == mUsedIndexes.end()) {
+            delete mWeapons[i];
+        }
+    }
+    mWeapons.clear();
 }
 
 void ShopScreen::HandleKeyPress(int key) {
@@ -207,24 +214,28 @@ void ShopScreen::BuyWeapon(int index) {
             return;
         }
         mGame->GetTrueblade()->AddWeapon(mWeapons[mSelectedButtonIndex]);
+        mUsedIndexes.emplace_back(mSelectedButtonIndex);
     } else if (index <= 5) {
         if (mGame->GetPegasusKnight()->GetAllWeapons().size() >= 4) {
             mGame->GetAudio()->PlaySound("Error.ogg");
             return;
         }
         mGame->GetPegasusKnight()->AddWeapon(mWeapons[mSelectedButtonIndex]);
+        mUsedIndexes.emplace_back(mSelectedButtonIndex);
     } else if (index <= 8) {
         if (mGame->GetWarrior()->GetAllWeapons().size() >= 4) {
             mGame->GetAudio()->PlaySound("Error.ogg");
             return;
         }
         mGame->GetWarrior()->AddWeapon(mWeapons[mSelectedButtonIndex]);
+        mUsedIndexes.emplace_back(mSelectedButtonIndex);
     } else if (index <= 10) {
         if (mGame->GetMage()->GetAllWeapons().size() >= 4) {
             mGame->GetAudio()->PlaySound("Error.ogg");
             return;
         }
         mGame->GetMage()->AddWeapon(mWeapons[mSelectedButtonIndex]);
+        mUsedIndexes.emplace_back(mSelectedButtonIndex);
     }
     mGold -= GetCost(index);
     mCurrentGold->SetText("Current gold: " + std::to_string(mGold));
