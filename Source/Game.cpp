@@ -23,7 +23,6 @@
 #include "Audio/AudioSystem.h"
 #include "UIElements/MenuScreen.h"
 #include "UIElements/ShopScreen.h"
-#include "UIElements/EndScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -992,8 +991,7 @@ void Game::ResetGameScene(float transitionTime) {
 
 void Game::UnloadScene() {
     // Delete actors and UI screens for each scene
-    if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending || mGamePlayState ==
-        GamePlayState::LevelFailed) {
+    if (mGameScene == GameScene::MainMenu) {
         while (!mActors.empty()) {
             delete mActors.back();
         }
@@ -1018,8 +1016,6 @@ void Game::UnloadScene() {
         mLevelupScreen = nullptr;
         delete mLevelFinishedScreen;
         mLevelFinishedScreen = nullptr;
-        delete mEndScreen;
-        mEndScreen = nullptr;
     } else if (mGameScene == GameScene::Level1 || mGameScene == GameScene::Level2 || mGameScene == GameScene::Level3) {
         delete mShopScreen;
         mShopScreen = nullptr;
