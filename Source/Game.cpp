@@ -783,7 +783,7 @@ void Game::ChangeScene() {
         Stats orc = Stats("Orc", 25, 25, 8, 0, 5, 5, 3, 0, 4);
         Stats skeleton = Stats("Skeleton", 20, 20, 6, 1, 7, 6, 1, 2, 4);
         Stats boss = Stats("Thales", 35, 35, 10, 2, 8, 10, 5, 5, 5);
-        bool flag = false;
+        bool flag = true;
         if (flag)
         {
             for (int i = 0; i < 9; i++) {
@@ -859,7 +859,7 @@ void Game::ChangeScene() {
         }
 
         // Adjusts cursor
-        mCursor->SetXY(27, 22);
+        mCursor->SetXY(24, 22);
 
         // Adjusts camera
         mCameraPos = Vector2(64, 128);
@@ -883,53 +883,65 @@ void Game::ChangeScene() {
         Stats skeleton = Stats("Skeleton", 26, 26, 6, 1, 7, 6, 2, 2, 4);
         Stats boss = Stats("Thales", 45, 45, 12, 2, 10, 11, 7, 7, 6);
         Weapon *w;
-        for (int i = 0; i < 20; i++) {
-            Enemy *enemy = new Enemy(this, "Orc", orc);
-            w = new Weapon("Iron Sword", 90, 6, 0, 1);
-            enemy->SetStats(orc);
+        bool flag = true;
+        if (flag)
+        {
+            for (int i = 0; i < 20; i++) {
+                Enemy *enemy = new Enemy(this, "Orc", orc);
+                w = new Weapon("Iron Sword", 90, 6, 0, 1);
+                enemy->SetStats(orc);
+                enemy->AddWeapon(w);
+                mEnemies.emplace_back(enemy);
+            }
+            for (int i = 0; i < 6; i++) {
+                Enemy *enemy = new Enemy(this, "Skeleton", skeleton);
+                w = new Weapon("Iron Bow", 90, 4, 0, 2);
+                enemy->SetStats(skeleton);
+                enemy->AddWeapon(w);
+                mEnemies.emplace_back(enemy);
+            }
+            Enemy *enemy = new Enemy(this, "Boss", boss);
+            w = new Weapon("Spear of assal", 100, 8, 0, 2);
+            enemy->SetStats(boss);
             enemy->AddWeapon(w);
             mEnemies.emplace_back(enemy);
-        }
-        for (int i = 0; i < 6; i++) {
-            Enemy *enemy = new Enemy(this, "Skeleton", skeleton);
-            w = new Weapon("Iron Bow", 90, 4, 0, 2);
-            enemy->SetStats(skeleton);
-            enemy->AddWeapon(w);
-            mEnemies.emplace_back(enemy);
-        }
-        Enemy *enemy = new Enemy(this, "Boss", boss);
-        w = new Weapon("Spear of assal", 100, 8, 0, 1);
-        enemy->SetStats(boss);
-        enemy->AddWeapon(w);
-        mEnemies.emplace_back(enemy);
 
-        mEnemies[0]->SetXY(4, 12);
-        mEnemies[1]->SetXY(5, 11);
-        mEnemies[2]->SetXY(5, 16);
-        mEnemies[3]->SetXY(8, 9);
-        mEnemies[4]->SetXY(6, 20);
-        mEnemies[5]->SetXY(9, 21);
-        mEnemies[6]->SetXY(11, 9);
-        mEnemies[7]->SetXY(12, 8);
-        mEnemies[8]->SetXY(13, 12);
-        mEnemies[9]->SetXY(14, 12);
-        mEnemies[10]->SetXY(10, 17);
-        mEnemies[11]->SetXY(17, 17);
-        mEnemies[12]->SetXY(19, 14);
-        mEnemies[13]->SetXY(20, 13);
-        mEnemies[14]->SetXY(14, 21);
-        mEnemies[15]->SetXY(15, 22);
-        mEnemies[16]->SetXY(24, 7);
-        mEnemies[17]->SetXY(25, 14);
-        mEnemies[18]->SetXY(25, 13);
-        mEnemies[19]->SetXY(21, 22);
-        mEnemies[20]->SetXY(9, 8);
-        mEnemies[21]->SetXY(9, 20);
-        mEnemies[22]->SetXY(9, 22);
-        mEnemies[23]->SetXY(19, 13);
-        mEnemies[24]->SetXY(19, 21);
-        mEnemies[25]->SetXY(25, 7);
-        mEnemies[26]->SetXY(4, 11);
+            mEnemies[0]->SetXY(4, 12);
+            mEnemies[1]->SetXY(5, 11);
+            mEnemies[2]->SetXY(5, 16);
+            mEnemies[3]->SetXY(8, 9);
+            mEnemies[4]->SetXY(6, 20);
+            mEnemies[5]->SetXY(9, 21);
+            mEnemies[6]->SetXY(11, 9);
+            mEnemies[7]->SetXY(12, 8);
+            mEnemies[8]->SetXY(13, 12);
+            mEnemies[9]->SetXY(14, 12);
+            mEnemies[10]->SetXY(10, 17);
+            mEnemies[11]->SetXY(17, 17);
+            mEnemies[12]->SetXY(19, 14);
+            mEnemies[13]->SetXY(20, 13);
+            mEnemies[14]->SetXY(14, 21);
+            mEnemies[15]->SetXY(15, 22);
+            mEnemies[16]->SetXY(24, 7);
+            mEnemies[17]->SetXY(25, 14);
+            mEnemies[18]->SetXY(25, 13);
+            mEnemies[19]->SetXY(21, 22);
+            mEnemies[20]->SetXY(9, 8);
+            mEnemies[21]->SetXY(9, 20);
+            mEnemies[22]->SetXY(9, 22);
+            mEnemies[23]->SetXY(19, 13);
+            mEnemies[24]->SetXY(19, 21);
+            mEnemies[25]->SetXY(25, 7);
+            mEnemies[26]->SetXY(4, 11);
+        } else {
+            Enemy *enemy = new Enemy(this, "Orc", orc);
+            w = new Weapon("Spear of assal", 100, 8, 0, 1);
+            enemy->SetStats(boss);
+            enemy->AddWeapon(w);
+            enemy->SetXY(21, 22);
+            enemy->SetCurrentHp(1);
+            mEnemies.emplace_back(enemy);
+        }
 
 
         // Loads background image
