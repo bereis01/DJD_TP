@@ -210,23 +210,23 @@ void Game::ProcessInput() {
                         break;
                     }
                 }
-                    // =========== PROTÓTIPO DE PAUSE
-                    /*
-                if (key == SDLK_ESCAPE) {
-                    mLevelPaused = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf", true);
+                // =========== PROTÓTIPO DE PAUSE
+                /*
+            if (key == SDLK_ESCAPE) {
+                mLevelPaused = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf", true);
 
-                    std::string startButton = "RETURN TO GAME";
-                    mLevelPaused->AddButton(startButton, Vector2((GetWindowWidth() - 300) / 2, 450), Vector2(130, 30),
-                    [this]() { PopUI(); },
-                    Vector2(startButton.size() * 10, 15));
+                std::string startButton = "RETURN TO GAME";
+                mLevelPaused->AddButton(startButton, Vector2((GetWindowWidth() - 300) / 2, 450), Vector2(130, 30),
+                [this]() { PopUI(); },
+                Vector2(startButton.size() * 10, 15));
 
-                    std::string quitButton = "QUIT";
-                    mLevelPaused->AddButton(quitButton, Vector2((GetWindowWidth() - 300) / 2 + 200, 450), Vector2(130, 30),
-                              [this]() { Quit(); },
-                              Vector2(quitButton.size() * 10, 15));
-                    PushUI(mLevelPaused);
-                }
-                */
+                std::string quitButton = "QUIT";
+                mLevelPaused->AddButton(quitButton, Vector2((GetWindowWidth() - 300) / 2 + 200, 450), Vector2(130, 30),
+                          [this]() { Quit(); },
+                          Vector2(quitButton.size() * 10, 15));
+                PushUI(mLevelPaused);
+            }
+            */
 
                 // Handle key press for UI screens
                 if (!mUIStack.empty()) {
@@ -333,7 +333,8 @@ void Game::UpdateTurn(float deltaTime) {
             } else if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::Dead) {
                 mEnemies[mCurrentEnemyIndex]->SetEnemyState(Enemy::EnemyState::None);
                 GetAudio()->PlaySound("Death.ogg");
-                GetParticleSystem()->CreateAnimatedParticle(mEnemies[mCurrentEnemyIndex]->GetX(), mEnemies[mCurrentEnemyIndex]->GetY(), "Death");
+                GetParticleSystem()->CreateAnimatedParticle(mEnemies[mCurrentEnemyIndex]->GetX(),
+                                                            mEnemies[mCurrentEnemyIndex]->GetY(), "Death");
                 mEnemies[mCurrentEnemyIndex]->SetState(ActorState::Destroy);
                 mCurrentEnemyIndex--;
             }
@@ -803,8 +804,7 @@ void Game::ChangeScene() {
         Stats skeleton = Stats("Skeleton", 20, 20, 6, 1, 7, 6, 1, 2, 4);
         Stats boss = Stats("Thales", 35, 35, 10, 2, 8, 10, 5, 5, 5);
         bool flag = true;
-        if (flag)
-        {
+        if (flag) {
             for (int i = 0; i < 9; i++) {
                 Enemy *enemy = new Enemy(this, "Orc", orc);
                 w = new Weapon("Iron Sword", 90, 6, 0, 1);
@@ -903,8 +903,7 @@ void Game::ChangeScene() {
         Stats boss = Stats("Thales", 45, 45, 12, 2, 10, 11, 7, 7, 6);
         Weapon *w;
         bool flag = true;
-        if (flag)
-        {
+        if (flag) {
             for (int i = 0; i < 20; i++) {
                 Enemy *enemy = new Enemy(this, "Orc", orc);
                 w = new Weapon("Iron Sword", 90, 6, 0, 1);
@@ -961,7 +960,6 @@ void Game::ChangeScene() {
             enemy->SetCurrentHp(1);
             mEnemies.emplace_back(enemy);
         }
-
 
         // Loads background image
         mBackground = LoadTexture("../Assets/Levels/Level2.png");
@@ -1022,7 +1020,8 @@ void Game::ResetGameScene(float transitionTime) {
 
 void Game::UnloadScene() {
     // Delete actors and UI screens for each scene
-    if (mGameScene == GameScene::MainMenu) {
+    if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending || mGameScene == GameScene::Level2
+        || mGamePlayState == GamePlayState::LevelFailed) {
         while (!mActors.empty()) {
             delete mActors.back();
         }
@@ -1047,6 +1046,8 @@ void Game::UnloadScene() {
         mLevelupScreen = nullptr;
         delete mLevelFinishedScreen;
         mLevelFinishedScreen = nullptr;
+        delete mEndScreen;
+        mEndScreen = nullptr;
     } else if (mGameScene == GameScene::Level1 || mGameScene == GameScene::Level2 || mGameScene == GameScene::Level3) {
         delete mShopScreen;
         mShopScreen = nullptr;

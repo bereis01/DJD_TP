@@ -249,7 +249,10 @@ void LevelupScreen::Upgrade() {
         target->SetStats(s);
     }
     if (isOver) {
-        mGame->SetGameScene(Game::GameScene::Level2);
+        if (mGame->GetGameScene() == Game::GameScene::Level1)
+            mGame->SetGameScene(Game::GameScene::Level2);
+        else if (mGame->GetGameScene() == Game::GameScene::Level2)
+            mGame->SetGameScene(Game::GameScene::Ending);
 
         // Plays audio
         mGame->GetAudio()->PlaySound("Finish.ogg");
