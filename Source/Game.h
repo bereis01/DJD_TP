@@ -11,6 +11,7 @@
 #include "UIElements/MenuScreen.h"
 #include "UIElements/ShopScreen.h"
 #include "UIElements/LevelupScreen.h"
+#include "UIElements/EndScreen.h"
 #include "Utils/Math.h"
 #include "Audio/AudioSystem.h"
 
@@ -21,7 +22,8 @@ public:
         Level1,
         Level2,
         Level3,
-        Shop
+        Shop,
+        Ending
     };
 
     enum class SceneManagerState {
@@ -273,6 +275,7 @@ private:
     ShopScreen *mShopScreen = nullptr;
     LevelupScreen *mLevelupScreen = nullptr;
     UIScreen *mLevelFinishedScreen = nullptr;
+    class EndScreen *mEndScreen = nullptr;
 
     // Particles
     class ParticleSystem *mParticleSystem = nullptr;

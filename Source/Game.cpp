@@ -23,6 +23,7 @@
 #include "Audio/AudioSystem.h"
 #include "UIElements/MenuScreen.h"
 #include "UIElements/ShopScreen.h"
+#include "UIElements/EndScreen.h"
 
 Game::Game(int windowWidth, int windowHeight)
     : mWindow(nullptr)
@@ -80,8 +81,7 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
-    //SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
+    SetGameScene(GameScene::Ending, TRANSITION_TIME, true);
 
     return true;
 }
@@ -248,7 +248,7 @@ void Game::UpdateGame() {
     // Updates audio
     mAudio->Update(deltaTime);
 
-    if (mGameScene != GameScene::MainMenu) {
+    if (mGameScene != GameScene::MainMenu && mGameScene != GameScene::Ending) {
         // Update camera position
         UpdateCamera(deltaTime);
 
@@ -448,7 +448,7 @@ void Game::GenerateOutput() {
     // Draws background texture considering camera position
     if (mBackground) {
         SDL_Rect dstRect = {0, 0, 0, 0};
-        if (mGameScene == GameScene::MainMenu) {
+        if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending) {
             dstRect = {0, 0, mWindowWidth, mWindowHeight};
             SDL_SetTextureBlendMode(mBackground, SDL_BLENDMODE_BLEND);
             SDL_SetTextureAlphaMod(mBackground, 150);
@@ -632,6 +632,8 @@ void Game::Shutdown() {
     mLevelupScreen = nullptr;
     delete mLevelFinishedScreen;
     mLevelFinishedScreen = nullptr;
+    delete mEndScreen;
+    mEndScreen = nullptr;
 
     // Deletes particle system
     delete mParticleSystem;
@@ -897,6 +899,19 @@ void Game::ChangeScene() {
         // Shows title
         mParticleSystem->CreateTitleParticle("Level2");
         mParticleSystem->CreateTitleParticle("Instructions", 5, 1, 1, true, Vector2(0, 100));
+    } else if (mGameScene == GameScene::Ending) {
+        // Loads background image
+        mBackground = LoadTexture("../Assets/UI/MenuBackground.png");
+
+        // Shows title
+        mParticleSystem->CreateTitleParticle("Title", 10.0f, 5.0f, -1.0f, false);
+
+        // Plays music
+        mMusic = mAudio->PlaySound("Menu.ogg", true);
+
+        // Shows menu buttons
+        mEndScreen = new EndScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mUIStack.emplace_back(mEndScreen);
     }
 
     // Set new scene
@@ -906,7 +921,7 @@ void Game::ChangeScene() {
 void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
     // Sanity checks
     if (scene != GameScene::MainMenu && scene != GameScene::Level1 && scene != GameScene::Level2 && scene !=
-        GameScene::Level3 && scene != GameScene::Shop) {
+        GameScene::Level3 && scene != GameScene::Shop && scene != GameScene::Ending) {
         SDL_Log("Failed to set game scene!");
         return;
     }
@@ -928,7 +943,7 @@ void Game::ResetGameScene(float transitionTime) {
 
 void Game::UnloadScene() {
     // Delete actors and UI screens for each scene
-    if (mGameScene == GameScene::MainMenu) {
+    if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending) {
         while (!mActors.empty()) {
             delete mActors.back();
         }
@@ -953,6 +968,8 @@ void Game::UnloadScene() {
         mLevelupScreen = nullptr;
         delete mLevelFinishedScreen;
         mLevelFinishedScreen = nullptr;
+        delete mEndScreen;
+        mEndScreen = nullptr;
     } else if (mGameScene == GameScene::Level1 || mGameScene == GameScene::Level2 || mGameScene == GameScene::Level3) {
         delete mShopScreen;
         mShopScreen = nullptr;
