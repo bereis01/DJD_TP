@@ -276,6 +276,7 @@ private:
     ShopScreen *mShopScreen = nullptr;
     LevelupScreen *mLevelupScreen = nullptr;
     UIScreen *mLevelFinishedScreen = nullptr;
+    UIScreen *mLevelPaused = nullptr;
     class EndScreen *mEndScreen = nullptr;
 
     // Particles

@@ -210,6 +210,23 @@ void Game::ProcessInput() {
                         break;
                     }
                 }
+                    // =========== PROTÓTIPO DE PAUSE
+                    /*
+                if (key == SDLK_ESCAPE) {
+                    mLevelPaused = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf", true);
+
+                    std::string startButton = "RETURN TO GAME";
+                    mLevelPaused->AddButton(startButton, Vector2((GetWindowWidth() - 300) / 2, 450), Vector2(130, 30),
+                    [this]() { PopUI(); },
+                    Vector2(startButton.size() * 10, 15));
+
+                    std::string quitButton = "QUIT";
+                    mLevelPaused->AddButton(quitButton, Vector2((GetWindowWidth() - 300) / 2 + 200, 450), Vector2(130, 30),
+                              [this]() { Quit(); },
+                              Vector2(quitButton.size() * 10, 15));
+                    PushUI(mLevelPaused);
+                }
+                */
 
                 // Handle key press for UI screens
                 if (!mUIStack.empty()) {
@@ -315,6 +332,8 @@ void Game::UpdateTurn(float deltaTime) {
                 mCurrentEnemyIndex--;
             } else if (mEnemies[mCurrentEnemyIndex]->GetEnemyState() == Enemy::EnemyState::Dead) {
                 mEnemies[mCurrentEnemyIndex]->SetEnemyState(Enemy::EnemyState::None);
+                GetAudio()->PlaySound("Death.ogg");
+                GetParticleSystem()->CreateAnimatedParticle(mEnemies[mCurrentEnemyIndex]->GetX(), mEnemies[mCurrentEnemyIndex]->GetY(), "Death");
                 mEnemies[mCurrentEnemyIndex]->SetState(ActorState::Destroy);
                 mCurrentEnemyIndex--;
             }
