@@ -57,7 +57,7 @@ Unit::Unit(Game *game, Stats stats, bool isEnemy, const std::string &unitType) :
     } else if (unitType == "Pegasus") {
         mDrawComponent = new DrawAnimatedComponent(this, "../Assets/Sprites/Units/Allies/Pegasus.png",
                                                    "../Assets/Sprites/Units/Allies/Pegasus.json", 200,
-                                                   50, 32, 9, 0);
+                                                   50, 42, 9, 9);
         mDrawComponent->AddAnimation("Idle", {4, 5, 6, 7});
         mDrawComponent->AddAnimation("Attack", {0, 1, 2, 3});
         mDrawComponent->AddAnimation("Hurt", {4, 5, 6, 7});
