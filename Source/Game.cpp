@@ -899,15 +899,15 @@ void Game::ChangeScene() {
         // Shows title
         mParticleSystem->CreateTitleParticle("Level2");
         mParticleSystem->CreateTitleParticle("Instructions", 5, 1, 1, true, Vector2(0, 100));
-    } else if (mGameScene == GameScene::Ending) {
+    } else if (mNextScene == GameScene::Ending) {
         // Loads background image
         mBackground = LoadTexture("../Assets/UI/MenuBackground.png");
 
         // Shows title
-        mParticleSystem->CreateTitleParticle("Title", 10.0f, 5.0f, -1.0f, false);
+        mParticleSystem->CreateTitleParticle("End", 10.0f, 2.5f, -1.0f, false);
 
         // Plays music
-        mMusic = mAudio->PlaySound("Menu.ogg", true);
+        mMusic = mAudio->PlaySound("Ending.ogg");
 
         // Shows menu buttons
         mEndScreen = new EndScreen(this, "../Assets/Fonts/SuperVCR.ttf");
@@ -932,7 +932,7 @@ void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
     mSceneManagerTimer = transitionTime;
 
     // Stops music from previous scene
-    if (mNextScene != GameScene::MainMenu)
+    if (mNextScene != GameScene::MainMenu && mNextScene != GameScene::Ending)
         mAudio->StopSound(mMusic);
 }
 

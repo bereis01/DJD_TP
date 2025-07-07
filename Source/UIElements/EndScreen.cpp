@@ -11,12 +11,12 @@ void EndScreen::Update(float deltaTime) {
     } else {
         // Creates interactive buttons
         std::string startButton = "BACK TO MENU";
-        AddButton(startButton, Vector2((mGame->GetWindowWidth() - 200) / 2, 450), Vector2(100, 30),
+        AddButton(startButton, Vector2((mGame->GetWindowWidth() - 300) / 2, 450), Vector2(130, 30),
                   [this]() { mGame->SetGameScene(Game::GameScene::MainMenu); },
                   Vector2(startButton.size() * CHAR_WIDTH, WORD_HEIGHT));
 
         std::string quitButton = "QUIT";
-        AddButton(quitButton, Vector2((mGame->GetWindowWidth() - 200) / 2 + 100, 450), Vector2(100, 30),
+        AddButton(quitButton, Vector2((mGame->GetWindowWidth() - 300) / 2 + 200, 450), Vector2(130, 30),
                   [this]() { mGame->Quit(); },
                   Vector2(quitButton.size() * CHAR_WIDTH, WORD_HEIGHT));
 

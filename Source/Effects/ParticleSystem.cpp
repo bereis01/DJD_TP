@@ -38,6 +38,8 @@ void ParticleSystem::CreateTitleParticle(const std::string &type, float timer, f
         titleTexture = mGame->LoadTexture("../Assets/UI/Level2.png");
     else if (type == "Level3")
         titleTexture = mGame->LoadTexture("../Assets/UI/Level3.png");
+    else if (type == "End")
+        titleTexture = mGame->LoadTexture("../Assets/UI/End.png");
     else if (type == "Instructions") {
         std::string instructions = "Defeat all the enemies!";
         titleTexture = mFont->RenderText(instructions, Color::White, 48);
