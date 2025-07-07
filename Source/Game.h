@@ -12,6 +12,7 @@
 #include "UIElements/ShopScreen.h"
 #include "UIElements/LevelupScreen.h"
 #include "UIElements/EndScreen.h"
+#include "UIElements/PauseScreen.h"
 #include "Utils/Math.h"
 #include "Audio/AudioSystem.h"
 
@@ -47,7 +48,7 @@ public:
         LevelComplete,
         LevelFailed,
         Shopping,
-        // DoneShopping,
+        Paused,
     };
 
     static const int LEVEL_WIDTH = 30; // In tiles
@@ -175,6 +176,9 @@ public:
     // Audio functions
     class AudioSystem *GetAudio() { return mAudio; }
 
+    // Pause mechanic
+    void TogglePause();
+
 private:
     // Game processing functions
     void ProcessInput();
@@ -276,7 +280,7 @@ private:
     ShopScreen *mShopScreen = nullptr;
     LevelupScreen *mLevelupScreen = nullptr;
     UIScreen *mLevelFinishedScreen = nullptr;
-    UIScreen *mLevelPaused = nullptr;
+    PauseScreen *mPauseScreen = nullptr;
     class EndScreen *mEndScreen = nullptr;
 
     // Particles
@@ -285,4 +289,7 @@ private:
     // Audio
     AudioSystem *mAudio = nullptr;
     SoundHandle mMusic;
+
+    // Pause mechanic;
+    GamePlayState mOldState;
 };

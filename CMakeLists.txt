@@ -103,6 +103,8 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/LevelupScreen.h
         Source/UIElements/EndScreen.cpp
         Source/UIElements/EndScreen.h
+        Source/UIElements/PauseScreen.cpp
+        Source/UIElements/PauseScreen.h
 )
 
 target_link_libraries(${PROJECT_NAME}
