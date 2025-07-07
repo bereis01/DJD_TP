@@ -272,6 +272,7 @@ private:
     ItemScreen *mItemScreen = nullptr;
     ShopScreen *mShopScreen = nullptr;
     LevelupScreen *mLevelupScreen = nullptr;
+    UIScreen *mLevelFinishedScreen = nullptr;
 
     // Particles
     class ParticleSystem *mParticleSystem = nullptr;

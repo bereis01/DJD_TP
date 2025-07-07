@@ -7,7 +7,8 @@ public:
     static const int LIVE_TIMER = 5.0f; // In seconds
 
     TitleParticle(Game *game, SDL_Texture *texture, const Vector2 &size, float timer = LIVE_TIMER,
-                  float fadeInTimer = 1.0f, float fadeOutTimer = 1.0f, bool setTimer = true);
+                  float fadeInTimer = 1.0f, float fadeOutTimer = 1.0f, bool setTimer = true,
+                  Vector2 offset = Vector2::Zero);
 
     void OnUpdate(float deltaTime) override;
 
@@ -24,4 +25,8 @@ private:
 
     // Component that moves the particle
     RigidBodyComponent *mRigidBodyComponent = nullptr;
+
+    // Attributes
+    Vector2 mSize;
+    Vector2 mOffset;
 };

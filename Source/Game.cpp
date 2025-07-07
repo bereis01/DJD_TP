@@ -509,32 +509,46 @@ void Game::GenerateOutput() {
 
     // Victory screen
     if (mGamePlayState == GamePlayState::LevelComplete) {
-        // Victory text
-        auto VictoryText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
-        VictoryText->AddText("VICTORY", Vector2(225, 270), Vector2(350, 100));
-        VictoryText->AddText("Press ENTER to continue", Vector2(225, 420), Vector2(350, 30));
-        mUIStack.emplace_back(VictoryText);
-
-        // Blue background
+        // Fade background
         SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
-        SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 0.5 * 255);
+        SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 0.25 * 255);
         SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(mRenderer, &drawRect);
+
+        // Victory text
+        mLevelFinishedScreen = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mLevelFinishedScreen->AddImage("../Assets/UI/Victory.png",
+                                       Vector2(((GetWindowWidth() - 640) / 2),
+                                               ((GetWindowHeight() - 360) / 2)),
+                                       Vector2(640, 360));
+        std::string instructions = "Press [ENTER] to continue";
+        mLevelFinishedScreen->AddText(instructions,
+                                      Vector2(((GetWindowWidth() - (10.0f * instructions.size())) / 2),
+                                              ((GetWindowHeight() - 15.0f) / 2) + 100),
+                                      Vector2(10.0f * instructions.size(), 15.0f));
+        mUIStack.emplace_back(mLevelFinishedScreen);
     }
 
     // Fail screen
     if (mGamePlayState == GamePlayState::LevelFailed) {
-        // Defeat text
-        auto DefeatText = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
-        DefeatText->AddText("DEFEAT", Vector2(250, 270), Vector2(300, 100));
-        DefeatText->AddText("Press ENTER to restart", Vector2(225, 420), Vector2(350, 30));
-        mUIStack.emplace_back(DefeatText);
-
-        // Red background
+        // Fade background
         SDL_Rect drawRect = {0, 0, GetWindowWidth(), GetWindowHeight()};
-        SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 0.5 * 255);
+        SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 0.25 * 255);
         SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(mRenderer, &drawRect);
+
+        // Defeat text
+        mLevelFinishedScreen = new UIScreen(this, "../Assets/Fonts/SuperVCR.ttf");
+        mLevelFinishedScreen->AddImage("../Assets/UI/Defeat.png",
+                                       Vector2(((GetWindowWidth() - 640) / 2),
+                                               ((GetWindowHeight() - 360) / 2)),
+                                       Vector2(640, 360));
+        std::string instructions = "Press [ENTER] to restart";
+        mLevelFinishedScreen->AddText(instructions,
+                                      Vector2(((GetWindowWidth() - (10.0f * instructions.size())) / 2),
+                                              ((GetWindowHeight() - 15.0f) / 2) + 100),
+                                      Vector2(10.0f * instructions.size(), 15.0f));
+        mUIStack.emplace_back(mLevelFinishedScreen);
     }
 
     // Swap front buffer and back buffer
@@ -584,6 +598,11 @@ UIFont *Game::LoadFont(const std::string &fileName) {
 void Game::Shutdown() {
     // Unload current Scene
     UnloadScene();
+
+    // Deletes actors
+    while (!mActors.empty()) {
+        delete mActors.back();
+    }
 
     // Deletes particle system
     delete mParticleSystem;
@@ -757,6 +776,7 @@ void Game::ChangeScene() {
 
         // Shows title
         mParticleSystem->CreateTitleParticle("Level1");
+        mParticleSystem->CreateTitleParticle("Instructions", 5, 1, 1, true, Vector2(0, 100));
     } else if (mNextScene == GameScene::Level2) {
         // Loads first level
         mLevelData = LoadLevel("../Assets/Levels/Level2_Base.csv", LEVEL_WIDTH, LEVEL_HEIGHT);
@@ -834,7 +854,8 @@ void Game::ChangeScene() {
         mMusic = mAudio->PlaySound("Level1.ogg", true);
 
         // Shows title
-        mParticleSystem->CreateTitleParticle("Level1");
+        mParticleSystem->CreateTitleParticle("Level2");
+        mParticleSystem->CreateTitleParticle("Instructions", 5, 1, 1, true, Vector2(0, 100));
     }
 
     // Set new scene

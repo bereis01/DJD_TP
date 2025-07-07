@@ -24,7 +24,7 @@ void ParticleSystem::CreateAnimatedParticle(int x, int y, const std::string &typ
 }
 
 void ParticleSystem::CreateTitleParticle(const std::string &type, float timer, float fadeInTimer, float fadeOutTimer,
-                                         bool setTimer) {
+                                         bool setTimer, Vector2 offset) {
     int WIDTH = 640;
     int HEIGHT = 360;
 
@@ -33,11 +33,22 @@ void ParticleSystem::CreateTitleParticle(const std::string &type, float timer, f
     if (type == "Title")
         titleTexture = mGame->LoadTexture("../Assets/UI/Title.png");
     else if (type == "Level1")
-        titleTexture = mGame->LoadTexture("../Assets/UI/Level1Title.png");
+        titleTexture = mGame->LoadTexture("../Assets/UI/Level1.png");
+    else if (type == "Level2")
+        titleTexture = mGame->LoadTexture("../Assets/UI/Level2.png");
+    else if (type == "Level3")
+        titleTexture = mGame->LoadTexture("../Assets/UI/Level3.png");
+    else if (type == "Instructions") {
+        std::string instructions = "Defeat all the enemies!";
+        titleTexture = mFont->RenderText(instructions, Color::White, 48);
+        WIDTH = 10.0f * instructions.size();
+        HEIGHT = 15.0f;
+    }
 
     // Creates the text particle
     TitleParticle *titleParticle = new
-            TitleParticle(mGame, titleTexture, Vector2(WIDTH, HEIGHT), timer, fadeInTimer, fadeOutTimer, setTimer);
+            TitleParticle(mGame, titleTexture, Vector2(WIDTH, HEIGHT), timer, fadeInTimer, fadeOutTimer, setTimer,
+                          offset);
     titleParticle->SetPosition(Vector2((mGame->GetWindowWidth() - WIDTH) / 2 + mGame->GetCameraPos().x,
-                                       (mGame->GetWindowHeight() - HEIGHT) / 2 + mGame->GetCameraPos().y));
+                                       (mGame->GetWindowHeight() - HEIGHT) / 2 + mGame->GetCameraPos().y) + offset);
 }

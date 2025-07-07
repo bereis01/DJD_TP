@@ -9,7 +9,7 @@ public:
     void CreateTextParticle(int x, int y, const std::string &text);
 
     void CreateTitleParticle(const std::string &type, float timer = 5.0f, float fadeInTimer = 1.0f,
-                             float fadeOutTimer = 1.0f, bool setTimer = true);
+                             float fadeOutTimer = 1.0f, bool setTimer = true, Vector2 offset = Vector2::Zero);
 
     // Animated particle
     void CreateAnimatedParticle(int x, int y, const std::string &type);
