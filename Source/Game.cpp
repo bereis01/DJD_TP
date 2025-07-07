@@ -816,7 +816,7 @@ void Game::ChangeScene() {
         Stats orc = Stats("Orc", 25, 25, 8, 0, 5, 5, 3, 0, 4);
         Stats skeleton = Stats("Skeleton", 20, 20, 6, 1, 7, 6, 1, 2, 4);
         Stats boss = Stats("Thales", 35, 35, 10, 2, 8, 10, 5, 5, 5);
-        bool flag = false;
+        bool flag = true;
         if (flag) {
             for (int i = 0; i < 9; i++) {
                 Enemy *enemy = new Enemy(this, "Orc", orc);
@@ -916,7 +916,7 @@ void Game::ChangeScene() {
         Stats skeleton = Stats("Skeleton", 26, 26, 6, 1, 7, 6, 2, 2, 4);
         Stats boss = Stats("Thales", 45, 45, 12, 2, 10, 11, 7, 7, 6);
         Weapon *w;
-        bool flag = false;
+        bool flag = true;
         if (flag) {
             for (int i = 0; i < 20; i++) {
                 Enemy *enemy = new Enemy(this, "Orc", orc);
