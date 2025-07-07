@@ -920,6 +920,7 @@ void Game::ChangeScene() {
 
         // Shows title
         mParticleSystem->CreateTitleParticle("End", 10.0f, 2.5f, -1.0f, false);
+        mParticleSystem->CreateTitleParticle("Congratulations", 10.0f, 2.5f, -1.0f, false, Vector2(0, 80));
 
         // Plays music
         mMusic = mAudio->PlaySound("Ending.ogg");

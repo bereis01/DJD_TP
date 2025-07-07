@@ -45,6 +45,11 @@ void ParticleSystem::CreateTitleParticle(const std::string &type, float timer, f
         titleTexture = mFont->RenderText(instructions, Color::White, 48);
         WIDTH = 10.0f * instructions.size();
         HEIGHT = 15.0f;
+    } else if (type == "Congratulations") {
+        std::string congratulations = "Congratulations, you've won!";
+        titleTexture = mFont->RenderText(congratulations, Color::White, 48, 2048);
+        WIDTH = 10.0f * congratulations.size();
+        HEIGHT = 15.0f;
     }
 
     // Creates the text particle
