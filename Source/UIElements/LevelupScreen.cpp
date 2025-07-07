@@ -11,9 +11,12 @@ LevelupScreen::LevelupScreen(class Game *game, const std::string &fontName, int 
     mSecondChoice = false;
     SCREEN_SIZE = Vector2(game->GetWindowWidth(), game->GetWindowHeight());
     HORIZONTAL_OFFSET = Vector2(SCREEN_SIZE.x / 4.5, 0);
+
     AddImage("../Assets/UI/ShopBackground.png", SCREEN_POS, SCREEN_SIZE);
-    AddText("Level Up", Vector2(SCREEN_SIZE.x / 2 - 125, 30), Vector2(250, 69));
-    Vector2 dim = Vector2(29 * 18, 30);
+    //AddText("Level Up", Vector2(SCREEN_SIZE.x / 2 - 125, 30), Vector2(250, 69));
+    AddImage("../Assets/UI/Upgrade.png", Vector2((mGame->GetWindowWidth() - 384) / 2, -40), Vector2(384, 216));
+
+    Vector2 dim = Vector2(29 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT);
     mInfoText = AddText("Give +1 strength to two units", Vector2(SCREEN_SIZE.x / 2 - dim.x / 2, 142), dim);
 
     AddButton("Mia", FIRST_BUTTON_POS, BUTTON_SIZE, [this]() { Upgrade(); },
@@ -167,7 +170,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Give +1 magic to two units";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
             } else {
                 mSecondChoice = true;
@@ -180,7 +183,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Give +1 skill to two units";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
             } else {
                 mSecondChoice = true;
@@ -193,7 +196,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Give +1 speed to two units";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
             } else {
                 mSecondChoice = true;
@@ -206,7 +209,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Give +1 defense to two units";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
             } else {
                 mSecondChoice = true;
@@ -219,7 +222,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Give +1 resistance to two units";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
             } else {
                 mSecondChoice = true;
@@ -232,7 +235,7 @@ void LevelupScreen::Upgrade() {
                 mSecondChoice = false;
                 std::string t = "Done!";
                 mInfoText->SetText(t);
-                mInfoText->SetSize(Vector2(t.size() * 18, 30));
+                mInfoText->SetSize(Vector2(t.size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
                 mInfoText->SetPosition(Vector2(SCREEN_SIZE.x / 2 - (t.size() * 18) / 2, 142));
                 isOver = true;
             } else {

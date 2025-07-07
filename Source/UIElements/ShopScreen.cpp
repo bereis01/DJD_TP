@@ -33,10 +33,14 @@ ShopScreen::ShopScreen(class Game *game, const std::string &fontName, int level)
         mWeapons.emplace_back(w);
     }
     SCREEN_SIZE = Vector2(game->GetWindowWidth(), game->GetWindowHeight());
+
     AddImage("../Assets/UI/ShopBackground.png", SCREEN_POS, SCREEN_SIZE);
-    AddText("Buy Weapons", Vector2(SCREEN_SIZE.x / 2 - 125, 30), Vector2(250, 69));
-    mCurrentGold = AddText("Current gold: 8", Vector2(400, 130), Vector2(250, 30));
-    mWriteUnit = AddText("Unit: ", UNIT_ICON_POS - Vector2(140, 0), Vector2(130, 30));
+
+    //AddText("Buy Weapons", Vector2(SCREEN_SIZE.x / 2 - 125, 30), Vector2(250, 69));
+    AddImage("../Assets/UI/Shop.png", Vector2((mGame->GetWindowWidth() - 384) / 2, -40), Vector2(384, 216));
+
+    mCurrentGold = AddText("Current gold: 8", Vector2(400, 130), Vector2(15 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
+    mWriteUnit = AddText("Unit: ", UNIT_ICON_POS - Vector2(140, 0), Vector2(5 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
     //AddText("Unit: ", UNIT_ICON_POS - Vector2(140, 0), Vector2(130, 30));
     mUnitIcon = AddImage("../Assets/Sprites/Units/TrueBlade.png", UNIT_ICON_POS, UNIT_ICON_SIZE);
 
@@ -68,7 +72,7 @@ ShopScreen::ShopScreen(class Game *game, const std::string &fontName, int level)
     mRng = AddText("5", RNG_POS + Vector2(CHAR_WIDTH * 6 + WORD_OFFSET, 0), Vector2(CHAR_WIDTH, WORD_HEIGHT),
                    POINT_SIZE);
 
-    mCost = AddText("Gold cost: 5", COST_POS, Vector2(170, 30), POINT_SIZE);
+    mCost = AddText("Gold cost: 5", COST_POS, Vector2(12 * CHAR_WIDTH * 2, 2 * WORD_HEIGHT), POINT_SIZE);
 
     mDetais = AddImage("../Assets/UI/PlainBackground.png", DETAIL_SCREEN_POS, DETAIL_SCREEN_SIZE);
 }
@@ -144,20 +148,24 @@ void ShopScreen::SetCost(int index) {
         case 3:
         case 6:
             mCost->SetText("Gold cost: 1");
+            mCost->SetSize(Vector2(12 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
             break;
         case 1:
         case 4:
         case 7:
             mCost->SetText("Gold cost: 2");
+            mCost->SetSize(Vector2(12 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
             break;
         case 2:
         case 5:
         case 8:
         case 9:
             mCost->SetText("Gold cost: 3");
+            mCost->SetSize(Vector2(12 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
             break;
         case 10:
             mCost->SetText("Gold cost: 4");
+            mCost->SetSize(Vector2(12 * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
             break;
         default:
             mCost->SetText(" ");
@@ -220,6 +228,7 @@ void ShopScreen::BuyWeapon(int index) {
     }
     mGold -= GetCost(index);
     mCurrentGold->SetText("Current gold: " + std::to_string(mGold));
+    mCurrentGold->SetSize(Vector2(("Current gold: " + std::to_string(mGold)).size() * 2 * CHAR_WIDTH, 2 * WORD_HEIGHT));
     mBought.insert(index);
     mGame->GetAudio()->PlaySound("CursorSelect.ogg");
 }

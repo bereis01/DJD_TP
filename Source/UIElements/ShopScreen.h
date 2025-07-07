@@ -6,7 +6,7 @@
 class ShopScreen : public UIScreen {
 public:
     const int POINT_SIZE = 56;
-    const int WORD_HEIGHT = 20.0f;
+    const int WORD_HEIGHT = 15.0f;
     const int CHAR_WIDTH = 10.0f;
     const int BUTTON_SIZE = 130;
     const int WORD_OFFSET = 5.0f;
@@ -18,7 +18,7 @@ public:
     const Vector2 UNIT_ICON_POS = Vector2(540, 188);
     const Vector2 UNIT_ICON_SIZE = Vector2(88, 88);
 
-    Vector2 DETAIL_SCREEN_POS = Vector2(400, 300);
+    Vector2 DETAIL_SCREEN_POS = Vector2(440, 300);
     const Vector2 DETAIL_SCREEN_SIZE = Vector2(250, 140);
 
     Vector2 NAME_POS = Vector2(69, 10) + DETAIL_SCREEN_POS;
@@ -26,7 +26,7 @@ public:
     Vector2 HIT_POS = Vector2(150, 55) + DETAIL_SCREEN_POS;
     Vector2 CRIT_POS = Vector2(20, 95) + DETAIL_SCREEN_POS;
     Vector2 RNG_POS = Vector2(150, 95) + DETAIL_SCREEN_POS;
-    Vector2 COST_POS = Vector2(42, 150) + DETAIL_SCREEN_POS;
+    Vector2 COST_POS = Vector2(-40, 150) + DETAIL_SCREEN_POS;
 
     ShopScreen(Game *game, const std::string &fontName, int level = 2);
 
