@@ -851,7 +851,7 @@ void Game::ChangeScene() {
         PushUI(mTurnScreen);
 
         // Plays music
-        mMusic = mAudio->PlaySound("Level1.ogg", true);
+        mMusic = mAudio->PlaySound("Level2.ogg", true);
 
         // Shows title
         mParticleSystem->CreateTitleParticle("Level2");

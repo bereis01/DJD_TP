@@ -29,6 +29,12 @@ void Enemy::OnUpdate(float deltaTime) {
     // Calls Unit update
     Unit::OnUpdate(deltaTime);
 
+    // Updates type indicator
+    if (mEnemyState != EnemyState::None)
+        mTypeIndicator->SetAlpha(150);
+    else
+        mTypeIndicator->SetAlpha(50);
+
     // Updates life indicator
     mGreenBar->SetSize(Vector2((float(mStats.currHp) / float(mStats.hp)) * (Game::TILE_SIZE - 6), 2));
 
