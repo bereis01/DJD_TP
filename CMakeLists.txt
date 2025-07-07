@@ -49,8 +49,6 @@ add_executable(${PROJECT_NAME}
         Source/Components/DrawComponents/DrawPolygonComponent.h
         Source/Components/DrawComponents/DrawAnimatedComponent.cpp
         Source/Components/DrawComponents/DrawAnimatedComponent.h
-        Source/Actors/Tile.cpp
-        Source/Actors/Tile.h
         Source/Actors/Cursor.cpp
         Source/Actors/Cursor.h
         Source/Actors/Unit.cpp

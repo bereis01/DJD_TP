@@ -197,8 +197,6 @@ private:
     // Load the level from a CSV file as a 2D array
     int **LoadLevel(const std::string &fileName, int width, int height);
 
-    void BuildLevel(int **levelData, int width, int height);
-
     // Scene management functions
     void UpdateSceneManager(float deltaTime);
 

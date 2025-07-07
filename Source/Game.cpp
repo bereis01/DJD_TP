@@ -10,7 +10,6 @@
 #include "Utils/Random.h"
 #include "Game.h"
 #include "Actors/Actor.h"
-#include "Actors/Tile.h"
 #include "Actors/Cursor.h"
 #include "Actors/Ally.h"
 #include "Actors/Enemy.h"
@@ -86,28 +85,6 @@ bool Game::Initialize() {
     //SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
 
     return true;
-}
-
-void Game::BuildLevel(int **levelData, int width, int height) {
-    // Traverses the level data matrix, instantiating actors
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            switch (levelData[i][j]) {
-                case 0: {
-                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Grass.png");
-                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
-                    break;
-                }
-                case 1: {
-                    Tile *tile = new Tile(this, "../Assets/Sprites/Blocks/Water.png");
-                    tile->SetPosition(Vector2(j * TILE_SIZE, i * TILE_SIZE));
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-    }
 }
 
 int **Game::LoadLevel(const std::string &fileName, int width, int height) {
