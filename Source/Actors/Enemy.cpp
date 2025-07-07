@@ -186,8 +186,8 @@ void Enemy::OnUpdate(float deltaTime) {
 
             if (static_cast<float>(mStats.currHp) < 0.25f * static_cast<float>(mStats.hp)) {
                 if (Random::GetFloat() < chanceHealLow) {
-                    mStats.currHp += static_cast<int>(Math::Clamp(
-                        Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
+                    mStats.currHp = static_cast<int>(Math::Clamp(
+                        mStats.currHp + Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
                         0.0f, static_cast<float>(mStats.hp)));
 
                     // Plays audio
@@ -198,8 +198,8 @@ void Enemy::OnUpdate(float deltaTime) {
                 }
             } else {
                 if (Random::GetFloat() < chanceHeal) {
-                    mStats.currHp += static_cast<int>(Math::Clamp(
-                        Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
+                    mStats.currHp = static_cast<int>(Math::Clamp(
+                        mStats.currHp + Random::GetFloatRange(0.33, 0.66) * static_cast<float>(mStats.hp),
                         0.0f, static_cast<float>(mStats.hp)));
 
                     // Plays audio

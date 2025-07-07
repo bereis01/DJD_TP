@@ -49,7 +49,6 @@ public:
     UIImage *AddImage(const std::string &imagePath, const Vector2 &pos, const Vector2 &dims,
                       const Vector3 &color = Color::White);
 
-    // TODO Understand later
     void SetSelectedButtonIndex(int index);
 
     bool IsInteractive() const { return mInteractive; }

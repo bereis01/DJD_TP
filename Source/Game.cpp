@@ -886,7 +886,7 @@ void Game::ResetGameScene(float transitionTime) {
 }
 
 void Game::UnloadScene() {
-    // Delete actors and UI screens
+    // Delete actors and UI screens for main menu
     if (mGameScene == GameScene::MainMenu) {
         while (!mActors.empty()) {
             delete mActors.back();
