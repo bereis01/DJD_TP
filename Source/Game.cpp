@@ -80,7 +80,7 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
+    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
     //SetGameScene(GameScene::Level1, TRANSITION_TIME, true);
 
     return true;
@@ -732,7 +732,7 @@ void Game::ChangeScene() {
         mTrueblade->AddItem("Healing potion");
         mUnits.emplace_back(mTrueblade);
 
-        s = Stats("Marcia", 30, 30, 9, 7, 10, 20, 4, 9, 7);
+        s = Stats("Marcia", 31, 31, 9, 7, 10, 20, 4, 9, 7);
         w = new Weapon("Iron lance", 85, 7, 0, 1);
         mPegasusKnight = new Ally(this, "Pegasus", s);
         mPegasusKnight->SetXY(20, 12);

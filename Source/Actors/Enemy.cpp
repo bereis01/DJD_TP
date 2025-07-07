@@ -114,7 +114,7 @@ void Enemy::OnUpdate(float deltaTime) {
                         if (MovementIsInRange(targetX + directionX, targetY))
                             targetX += directionX;
                     if (!(targetY + directionY >= Game::LEVEL_WIDTH))
-                        if (!MovementIsInRange(targetX, targetY + directionY))
+                        if (MovementIsInRange(targetX, targetY + directionY))
                             targetY += directionY;
                 } else if (mUnitType == "Boss") {
                     // Moves randomly a certain amount of times
