@@ -144,6 +144,7 @@ public:
     class Ally *GetPegasusKnight() { return mPegasusKnight; }
     class Ally *GetMage() { return mMage; }
     class Ally *GetWarrior() { return mWarrior; }
+    void RecreateUnits();
 
     void SetSelectedUnit(Unit *unit) { mSelectedUnit = unit; }
     Unit *GetSelectedUnit() const { return mSelectedUnit; }

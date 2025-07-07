@@ -188,6 +188,7 @@ void Game::ProcessInput() {
                         mLevelFinishedScreen = nullptr;
 
                         // Creates the shop screen
+                        RecreateUnits();
                         mShopScreen = new ShopScreen(this, "../Assets/Fonts/SuperVCR.ttf", 2);
                         SetGamePlayState(GamePlayState::Shopping);
                         PopUI();
@@ -802,7 +803,7 @@ void Game::ChangeScene() {
         mMage->AddItem("Healing potion");
         mUnits.emplace_back(mMage);
 
-        s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 7, 5, 6);
+        s = Stats("Ferdinand", 35, 1, 12, 2, 10, 5, 7, 5, 6);
         w = new Weapon("Iron axe", 80, 8, 0, 1);
         mWarrior = new Ally(this, "Warrior", s);
         mWarrior->SetXY(21, 17);
@@ -1132,9 +1133,19 @@ Enemy *Game::GetEnemyByPosition(int x, int y) {
 }
 
 void Game::RemoveAlly(Ally *ally) {
-    // Searches the enemy vector for enemies
+    // Searches the ally vector for enemies
+    std::string name = ally->GetStats().name;
     auto iter = std::find(mUnits.begin(), mUnits.end(), ally);
     mUnits.erase(iter);
+    if (name == "Mia") {
+        mTrueblade = nullptr;
+    } else if (name == "Marcia") {
+        mPegasusKnight = nullptr;
+    } else if (name == "Hubert") {
+        mMage = nullptr;
+    } else if (name == "Ferdinand") {
+        mWarrior = nullptr;
+    }
 }
 
 void Game::RemoveEnemy(Enemy *enemy) {
@@ -1212,4 +1223,47 @@ void Game::GoToExpScreen() {
 
     // Plays audio
     mAudio->PlaySound("PowerUp.ogg");
+}
+
+void Game::RecreateUnits() {
+    if (mTrueblade == nullptr) {
+        Stats s = Stats("Mia", 25, 25, 9, 4, 12, 25, 4, 5, 6);
+        Weapon *w = new Weapon("Iron sword", 90, 6, 0, 1);
+        mTrueblade = new Ally(this, "TrueBlade", s);
+        mTrueblade->SetXY(20, 16);
+        mTrueblade->SetStats(s);
+        mTrueblade->AddWeapon(w);
+        mUnits.emplace_back(mTrueblade);
+    }
+
+    if (mPegasusKnight == nullptr) {
+        Stats s = Stats("Marcia", 31, 31, 9, 7, 10, 20, 4, 9, 7);
+        Weapon *w = new Weapon("Iron lance", 85, 7, 0, 1);
+        mPegasusKnight = new Ally(this, "Pegasus", s);
+        mPegasusKnight->SetXY(20, 12);
+        mPegasusKnight->SetStats(s);
+        mPegasusKnight->AddWeapon(w);
+        mPegasusKnight->SetFlyer(true);
+        mUnits.emplace_back(mPegasusKnight);
+    }
+
+    if (mMage == nullptr) {
+        Stats s = Stats("Hubert", 20, 20, 3, 10, 10, 8, 3, 11, 5);
+        Weapon *w = new Weapon("Thunder", 80, 5, 10, 2, true);
+        mMage = new Ally(this, "Wizard", s);
+        mMage->SetXY(21, 12);
+        mMage->SetStats(s);
+        mMage->AddWeapon(w);
+        mUnits.emplace_back(mMage);
+    }
+
+    if (mWarrior == nullptr) {
+        Stats s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 7, 5, 6);
+        Weapon *w = new Weapon("Iron axe", 80, 8, 0, 1);
+        mWarrior = new Ally(this, "Warrior", s);
+        mWarrior->SetXY(21, 17);
+        mWarrior->SetStats(s);
+        mWarrior->AddWeapon(w);
+        mUnits.emplace_back(mWarrior);
+    }
 }
