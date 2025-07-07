@@ -35,6 +35,7 @@ public:
     };
 
     enum class GamePlayState {
+        None,
         Map,
         ShowingStats,
         MovingUnit,

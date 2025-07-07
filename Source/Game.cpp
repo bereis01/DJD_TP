@@ -81,7 +81,7 @@ bool Game::Initialize() {
     mAudio = new AudioSystem();
 
     // Starts the game
-    SetGameScene(GameScene::Ending, TRANSITION_TIME, true);
+    SetGameScene(GameScene::MainMenu, TRANSITION_TIME, true);
 
     return true;
 }
@@ -187,12 +187,24 @@ void Game::ProcessInput() {
 
                         // Creates the shop screen
                         mShopScreen = new ShopScreen(this, "../Assets/Fonts/SuperVCR.ttf", 2);
-                        mGamePlayState = GamePlayState::Shopping;
+                        SetGamePlayState(GamePlayState::Shopping);
                         PopUI();
                         PushUI(mShopScreen);
 
                         // Plays audio
                         mAudio->PlaySound("Store.ogg");
+
+                        break;
+                    }
+                    if (mGamePlayState == GamePlayState::LevelFailed) {
+                        // Deletes the defeat text
+                        delete mLevelFinishedScreen;
+                        mLevelFinishedScreen = nullptr;
+                        PopUI();
+
+                        // Reverts the game to the main menu
+                        SetGameScene(GameScene::MainMenu);
+                        SetGamePlayState(GamePlayState::None);
 
                         break;
                     }
@@ -705,6 +717,9 @@ void Game::ChangeScene() {
         // Shows menu buttons
         mMenuScreen = new MenuScreen(this, "../Assets/Fonts/SuperVCR.ttf");
         mUIStack.emplace_back(mMenuScreen);
+
+        // Sets game state
+        SetGamePlayState(GamePlayState::None);
     }
     // First phase
     else if (mNextScene == GameScene::Level1) {
@@ -727,41 +742,41 @@ void Game::ChangeScene() {
         // Loads units (with stats and weapons)
         Stats s = Stats("Mia", 25, 25, 9, 4, 12, 25, 4, 5, 6);
         Weapon *w = new Weapon("Iron sword", 90, 6, 0, 1);
-        mTrueblade = new Ally(this, "TrueBlade", s);
-        mTrueblade->SetXY(20, 16);
-        mTrueblade->SetStats(s);
-        mTrueblade->AddWeapon(w);
-        mTrueblade->AddItem("Healing potion");
-        mUnits.emplace_back(mTrueblade);
-
-        s = Stats("Marcia", 31, 31, 9, 7, 10, 20, 4, 9, 7);
-        w = new Weapon("Iron lance", 85, 7, 0, 1);
-        mPegasusKnight = new Ally(this, "Pegasus", s);
-        mPegasusKnight->SetXY(20, 12);
-        mPegasusKnight->SetStats(s);
-        mPegasusKnight->AddWeapon(w);
-        mPegasusKnight->SetFlyer(true);
-        mPegasusKnight->AddItem("Healing gem");
-        mUnits.emplace_back(mPegasusKnight);
-
-        s = Stats("Hubert", 20, 20, 3, 10, 10, 8, 3, 11, 5);
-        w = new Weapon("Thunder", 80, 5, 10, 2, true);
-        mMage = new Ally(this, "Wizard", s);
-        mMage->SetXY(21, 12);
-        mMage->SetStats(s);
-        mMage->AddWeapon(w);
-        mMage->AddItem("Healing potion");
-        mUnits.emplace_back(mMage);
-
-        s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 7, 5, 6);
-        w = new Weapon("Iron axe", 80, 8, 0, 1);
-        mWarrior = new Ally(this, "Warrior", s);
-        mWarrior->SetXY(21, 17);
-        mWarrior->SetStats(s);
-        mWarrior->AddWeapon(w);
-        mWarrior->AddItem("Healing potion");
-        mWarrior->AddItem("Healing gem");
-        mUnits.emplace_back(mWarrior);
+        // mTrueblade = new Ally(this, "TrueBlade", s);
+        // mTrueblade->SetXY(20, 16);
+        // mTrueblade->SetStats(s);
+        // mTrueblade->AddWeapon(w);
+        // mTrueblade->AddItem("Healing potion");
+        // mUnits.emplace_back(mTrueblade);
+        //
+        // s = Stats("Marcia", 31, 31, 9, 7, 10, 20, 4, 9, 7);
+        // w = new Weapon("Iron lance", 85, 7, 0, 1);
+        // mPegasusKnight = new Ally(this, "Pegasus", s);
+        // mPegasusKnight->SetXY(20, 12);
+        // mPegasusKnight->SetStats(s);
+        // mPegasusKnight->AddWeapon(w);
+        // mPegasusKnight->SetFlyer(true);
+        // mPegasusKnight->AddItem("Healing gem");
+        // mUnits.emplace_back(mPegasusKnight);
+        //
+        // s = Stats("Hubert", 20, 20, 3, 10, 10, 8, 3, 11, 5);
+        // w = new Weapon("Thunder", 80, 5, 10, 2, true);
+        // mMage = new Ally(this, "Wizard", s);
+        // mMage->SetXY(21, 12);
+        // mMage->SetStats(s);
+        // mMage->AddWeapon(w);
+        // mMage->AddItem("Healing potion");
+        // mUnits.emplace_back(mMage);
+        //
+        // s = Stats("Ferdinand", 35, 35, 12, 2, 10, 5, 7, 5, 6);
+        // w = new Weapon("Iron axe", 80, 8, 0, 1);
+        // mWarrior = new Ally(this, "Warrior", s);
+        // mWarrior->SetXY(21, 17);
+        // mWarrior->SetStats(s);
+        // mWarrior->AddWeapon(w);
+        // mWarrior->AddItem("Healing potion");
+        // mWarrior->AddItem("Healing gem");
+        // mUnits.emplace_back(mWarrior);
 
         // Loads enemies
         Stats orc = Stats("Orc", 25, 25, 8, 0, 5, 5, 3, 0, 4);
@@ -932,8 +947,7 @@ void Game::SetGameScene(GameScene scene, float transitionTime, bool fastStart) {
     mSceneManagerTimer = transitionTime;
 
     // Stops music from previous scene
-    if (mNextScene != GameScene::MainMenu && mNextScene != GameScene::Ending)
-        mAudio->StopSound(mMusic);
+    mAudio->StopSound(mMusic);
 }
 
 void Game::ResetGameScene(float transitionTime) {
@@ -943,7 +957,8 @@ void Game::ResetGameScene(float transitionTime) {
 
 void Game::UnloadScene() {
     // Delete actors and UI screens for each scene
-    if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending) {
+    if (mGameScene == GameScene::MainMenu || mGameScene == GameScene::Ending || mGamePlayState ==
+        GamePlayState::LevelFailed) {
         while (!mActors.empty()) {
             delete mActors.back();
         }
