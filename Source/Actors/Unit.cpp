@@ -340,6 +340,8 @@ void Unit::UseItem(const std::string &item) {
             // Plays visual effects
             mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Heal");
         }
+        auto iter = std::find(mItens.begin(), mItens.end(), item);
+        mItens.erase(iter);
         mAvailable = false;
         mGame->GetUIStack().pop_back();
         mGame->SetGamePlayState(Game::GamePlayState::Map);
