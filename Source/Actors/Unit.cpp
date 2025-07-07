@@ -273,9 +273,6 @@ void Unit::Attack(class Unit *target, bool isCounter) {
             }
             target->Die();
 
-            // Shows death particle
-            mGame->GetParticleSystem()->CreateAnimatedParticle(target->GetX(), target->GetY(), "Death");
-
             mAvailable = false;
             return;
         }
@@ -356,6 +353,9 @@ void Unit::UseItem(const std::string &item) {
 void Unit::Die() {
     // Plays audio
     mGame->GetAudio()->PlaySound("Death.ogg");
+
+    // Shows death particle
+    mGame->GetParticleSystem()->CreateAnimatedParticle(GetX(), GetY(), "Death");
 
     SetState(ActorState::Destroy);
 }

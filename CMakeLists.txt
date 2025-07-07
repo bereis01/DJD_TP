@@ -101,6 +101,8 @@ add_executable(${PROJECT_NAME}
         Source/UIElements/ShopScreen.h
         Source/UIElements/LevelupScreen.cpp
         Source/UIElements/LevelupScreen.h
+        Source/UIElements/EndScreen.cpp
+        Source/UIElements/EndScreen.h
 )
 
 target_link_libraries(${PROJECT_NAME}
