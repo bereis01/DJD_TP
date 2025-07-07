@@ -177,8 +177,15 @@ void Game::ProcessInput() {
                         }
                     }
                 }
+
+                // Deals with level completion
                 if (key == SDLK_RETURN) {
                     if (mGamePlayState == GamePlayState::LevelComplete) {
+                        // Deletes the victory text
+                        delete mLevelFinishedScreen;
+                        mLevelFinishedScreen = nullptr;
+
+                        // Creates the shop screen
                         mShopScreen = new ShopScreen(this, "../Assets/Fonts/SuperVCR.ttf", 2);
                         mGamePlayState = GamePlayState::Shopping;
                         PopUI();
@@ -604,6 +611,28 @@ void Game::Shutdown() {
         delete mActors.back();
     }
 
+    // Deletes UI screens
+    delete mMenuScreen;
+    mMenuScreen = nullptr;
+    delete mStatScreen;
+    mStatScreen = nullptr;
+    delete mActionScreen;
+    mActionScreen = nullptr;
+    delete mTurnScreen;
+    mTurnScreen = nullptr;
+    delete mAttackScreen;
+    mAttackScreen = nullptr;
+    delete mActionScreen;
+    mActionScreen = nullptr;
+    delete mItemScreen;
+    mItemScreen = nullptr;
+    delete mShopScreen;
+    mShopScreen = nullptr;
+    delete mLevelupScreen;
+    mLevelupScreen = nullptr;
+    delete mLevelFinishedScreen;
+    mLevelFinishedScreen = nullptr;
+
     // Deletes particle system
     delete mParticleSystem;
 
@@ -886,17 +915,37 @@ void Game::ResetGameScene(float transitionTime) {
 }
 
 void Game::UnloadScene() {
-    // Delete actors and UI screens for main menu
+    // Delete actors and UI screens for each scene
     if (mGameScene == GameScene::MainMenu) {
         while (!mActors.empty()) {
             delete mActors.back();
         }
 
+        delete mMenuScreen;
+        mMenuScreen = nullptr;
         delete mStatScreen;
-        delete mAttackScreen;
+        mStatScreen = nullptr;
         delete mActionScreen;
-        delete mItemScreen;
+        mActionScreen = nullptr;
         delete mTurnScreen;
+        mTurnScreen = nullptr;
+        delete mAttackScreen;
+        mAttackScreen = nullptr;
+        delete mActionScreen;
+        mActionScreen = nullptr;
+        delete mItemScreen;
+        mItemScreen = nullptr;
+        delete mShopScreen;
+        mShopScreen = nullptr;
+        delete mLevelupScreen;
+        mLevelupScreen = nullptr;
+        delete mLevelFinishedScreen;
+        mLevelFinishedScreen = nullptr;
+    } else if (mGameScene == GameScene::Level1 || mGameScene == GameScene::Level2 || mGameScene == GameScene::Level3) {
+        delete mShopScreen;
+        mShopScreen = nullptr;
+        delete mLevelupScreen;
+        mLevelupScreen = nullptr;
     }
 
     // Clears UI screen stack
